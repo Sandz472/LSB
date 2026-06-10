@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install pytest hypothesis psycopg2-binary pandas
+      - name: Unit tests
+        # Exit code 5 = no tests collected, allowed until the first module session
+        run: |
+          pytest -q tests; rc=$?
+          if [ $rc -ne 0 ] && [ $rc -ne 5 ]; then exit $rc; fi
+      - name: Golden-fixture replay
+        run: |
+          if find tests/fixtures/golden -type f ! -name .gitkeep | grep -q .; then
+            echo "CI FAILED: golden fixtures exist but the replay runner is not wired yet"
+            exit 1
+          else
+            echo "No golden fixtures yet (expected before Session 17) - skipping."
+          fi
