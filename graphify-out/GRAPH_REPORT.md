@@ -1,13 +1,13 @@
 # Graph Report - .  (2026-06-10)
 
 ## Corpus Check
-- 28 files · ~6,704 words
+- 28 files · ~6,754 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 - 116 nodes · 94 edges · 45 communities (33 shown, 12 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.87)
-- Token cost: 68,867 input · 0 output
+- Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_Governance & Phase Control|Governance & Phase Control]]
@@ -44,31 +44,31 @@
 6. `Stage 3: Bayesian Evidence Engine` - 5 edges
 7. `Replay Harness` - 5 edges
 8. `market_snapshot Table (Observation Spine)` - 5 edges
-9. `Advisor Interface (The Advisor Seam)` - 4 edges
-10. `Gate G3: GO/NO-GO at Week 7` - 4 edges
+9. `Golden-Fixture Replay Check` - 4 edges
+10. `M9 Order Execution Handler` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `ADR-001: Broker Bridge — Native-Windows MT5 with EA-Socket Fallback` --cites--> `LSB Master Blueprint v2.1`  [EXTRACTED]
-  docs/decisions/ADR-001-broker-bridge.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
-- `Native PostgreSQL 16 Dev Database (no Docker)` --references--> `LSB Master Blueprint v2.1`  [EXTRACTED]
-  docs/PHASE_STATUS.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
 - `LSB System Requirements v2.0 (markdown conversion)` --references--> `LSB System Requirements v2.0 (Immutable Spec)`  [EXTRACTED]
-  docs/LSB_System_Requirements_v2.0.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
-- `Advisor Interface (risk-reduce/veto only)` --semantically_similar_to--> `Bayesian Advisor (Phase 5-8)`  [INFERRED] [semantically similar]
-  CLAUDE.md → docs/PHASE_STATUS.md
-- `LSB Phase Status` --cites--> `LSB Master Blueprint v2.1`  [EXTRACTED]
-  docs/PHASE_STATUS.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
+  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_System_Requirements_v2.0.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
+- `Native PostgreSQL 16 Dev Database (no Docker)` --references--> `LSB Master Blueprint v2.1`  [EXTRACTED]
+  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/PHASE_STATUS.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
+- `ADR-001: Broker Bridge — Native-Windows MT5 with EA-Socket Fallback` --cites--> `LSB Master Blueprint v2.1`  [EXTRACTED]
+  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/decisions/ADR-001-broker-bridge.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
+- `Golden-Fixture Replay Check` --conceptually_related_to--> `Replay Harness`  [INFERRED]
+  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/.github/workflows/ci.yml → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/PHASE_STATUS.md
+- `LSB Governing Instructions (CLAUDE.md)` --references--> `LSB System Requirements v2.0 (Immutable Spec)`  [EXTRACTED]
+  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/CLAUDE.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
-- **Per-Candle Evaluation Sequence (M1 -> M13)** — lsb_master_blueprint_v2_1_m1_market_data_ingestion, lsb_master_blueprint_v2_1_m2_indicator_engine, lsb_master_blueprint_v2_1_m3_trend_analysis, lsb_master_blueprint_v2_1_m4_structure_detection, lsb_master_blueprint_v2_1_m5_liquidity_zone_engine, lsb_master_blueprint_v2_1_m6_volatility_monitor, lsb_master_blueprint_v2_1_m12_session_news_filter, lsb_master_blueprint_v2_1_m7_entry_qualification, lsb_master_blueprint_v2_1_m8_risk_computation, lsb_master_blueprint_v2_1_m9_order_execution, lsb_master_blueprint_v2_1_m13_logging_analytics [EXTRACTED 1.00]
-- **Seven Warehouse Tables Form the Decision Warehouse** — lsb_master_blueprint_v2_1_market_snapshot, lsb_master_blueprint_v2_1_trade_signal, lsb_master_blueprint_v2_1_trade_execution, lsb_master_blueprint_v2_1_trade_outcome, lsb_master_blueprint_v2_1_hypothesis_snapshot, lsb_master_blueprint_v2_1_state_transition, lsb_master_blueprint_v2_1_config_version, lsb_master_blueprint_v2_1_decision_warehouse [EXTRACTED 1.00]
-- **Intelligence Rail: Implementations of the Advisor Interface** — lsb_master_blueprint_v2_1_advisor_interface, lsb_master_blueprint_v2_1_nulladvisor, lsb_master_blueprint_v2_1_bayesian_evidence_engine, lsb_master_blueprint_v2_1_hypothesis_engine [EXTRACTED 1.00]
 - **Mandatory Per-Candle Data Flow Sequence (Section 2.2)** — docs_lsb_system_requirements_v2_0_m1_market_data_ingestion, docs_lsb_system_requirements_v2_0_m2_indicator_engine, docs_lsb_system_requirements_v2_0_m3_trend_analysis_engine, docs_lsb_system_requirements_v2_0_m4_structure_detection_engine, docs_lsb_system_requirements_v2_0_m5_liquidity_zone_engine, docs_lsb_system_requirements_v2_0_m6_volatility_monitor, docs_lsb_system_requirements_v2_0_m12_session_market_filter, docs_lsb_system_requirements_v2_0_m11_risk_protection_controller, docs_lsb_system_requirements_v2_0_m7_entry_qualification_engine, docs_lsb_system_requirements_v2_0_m8_risk_computation_engine, docs_lsb_system_requirements_v2_0_m9_order_execution_handler, docs_lsb_system_requirements_v2_0_m10_trade_management_engine, docs_lsb_system_requirements_v2_0_m13_logging_analytics_engine [EXTRACTED 1.00]
 - **Capital Protection Stack (protect capital first)** — docs_lsb_system_requirements_v2_0_m8_risk_computation_engine, docs_lsb_system_requirements_v2_0_m11_risk_protection_controller, docs_lsb_system_requirements_v2_0_risk_tier_matrix, docs_lsb_system_requirements_v2_0_drawdown_thresholds, docs_lsb_system_requirements_v2_0_structural_stop_loss, docs_lsb_system_requirements_v2_0_atr_state_classification [INFERRED 0.75]
 - **Broker Bridge Decision Space for the M9 Interface (ADR-001)** — decisions_adr_001_broker_bridge_native_windows_mt5, decisions_adr_001_broker_bridge_ea_socket_bridge, decisions_adr_001_broker_bridge_wine_on_linux, decisions_adr_001_broker_bridge_simulatedbroker, docs_lsb_system_requirements_v2_0_m9_order_execution_handler [EXTRACTED 1.00]
+- **Per-Candle Evaluation Sequence (M1 -> M13)** — lsb_master_blueprint_v2_1_m1_market_data_ingestion, lsb_master_blueprint_v2_1_m2_indicator_engine, lsb_master_blueprint_v2_1_m3_trend_analysis, lsb_master_blueprint_v2_1_m4_structure_detection, lsb_master_blueprint_v2_1_m5_liquidity_zone_engine, lsb_master_blueprint_v2_1_m6_volatility_monitor, lsb_master_blueprint_v2_1_m12_session_news_filter, lsb_master_blueprint_v2_1_m7_entry_qualification, lsb_master_blueprint_v2_1_m8_risk_computation, lsb_master_blueprint_v2_1_m9_order_execution, lsb_master_blueprint_v2_1_m13_logging_analytics [EXTRACTED 1.00]
+- **Seven Warehouse Tables Form the Decision Warehouse** — lsb_master_blueprint_v2_1_market_snapshot, lsb_master_blueprint_v2_1_trade_signal, lsb_master_blueprint_v2_1_trade_execution, lsb_master_blueprint_v2_1_trade_outcome, lsb_master_blueprint_v2_1_hypothesis_snapshot, lsb_master_blueprint_v2_1_state_transition, lsb_master_blueprint_v2_1_config_version, lsb_master_blueprint_v2_1_decision_warehouse [EXTRACTED 1.00]
+- **Intelligence Rail: Implementations of the Advisor Interface** — lsb_master_blueprint_v2_1_advisor_interface, lsb_master_blueprint_v2_1_nulladvisor, lsb_master_blueprint_v2_1_bayesian_evidence_engine, lsb_master_blueprint_v2_1_hypothesis_engine [EXTRACTED 1.00]
 
 ## Communities (45 total, 12 thin omitted)
 
@@ -121,7 +121,7 @@ Cohesion: 0.67
 Nodes (3): EMA Hierarchy (21/50/89), M2 Indicator Engine, M3 Trend Analysis Engine
 
 ## Knowledge Gaps
-- **33 isolated node(s):** `LSB Master Blueprint v2.0 (Superseded)`, `Liquidity Strategy Bot (LSB)`, `Stage 2: Analytics & the Data Asset`, `8-Week Demo Forward Test (Non-Compressible)`, `ADR-001 Broker Bridge Decision (MT5 Native Windows)` (+28 more)
+- **33 isolated node(s):** `Advisor Interface (risk-reduce/veto only)`, `M1 Market Data Ingestion`, `M2 Indicator Engine`, `M6 Volatility Monitor`, `M7 Entry Qualification Engine` (+28 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -134,5 +134,5 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.161) - this node is a cross-community bridge._
 - **Why does `M8 Risk Computation Engine` connect `Liquidity & Risk Qualification` to `Governance & Phase Control`, `Broker Bridge Decision`?**
   _High betweenness centrality (0.100) - this node is a cross-community bridge._
-- **What connects `Convert docs/LSB_System_Requirements_v2.0.docx to a markdown sidecar.  graphify`, `LSB Master Blueprint v2.0 (Superseded)`, `Liquidity Strategy Bot (LSB)` to the rest of the system?**
+- **What connects `Convert docs/LSB_System_Requirements_v2.0.docx to a markdown sidecar.  graphify`, `Determinism Law`, `Advisor Interface (risk-reduce/veto only)` to the rest of the system?**
   _40 weakly-connected nodes found - possible documentation gaps or missing edges._
