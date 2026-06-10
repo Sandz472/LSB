@@ -1,0 +1,12 @@
+# graphify machine-local state (graph artifacts themselves are committed)
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+graphify-out/cache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Claude Code local settings
+.claude/settings.local.json
