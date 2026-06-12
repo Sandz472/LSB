@@ -7,6 +7,9 @@ dependencies = [
     "pandas",
     "psycopg2-binary",
     "pyyaml",
+    "pyarrow",
+    "requests",
+    "websockets",
 ]
 
 [project.optional-dependencies]

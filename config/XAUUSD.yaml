@@ -1,0 +1,18 @@
+schema_version: 1
+instrument: XAUUSD
+display_name: "Gold / US Dollar"
+asset_class: fx          # fx | synthetic
+timeframes: [H1]
+pip_size: 0.01
+contract_size: 100
+
+broker_costs:
+  spread_points: 25.0
+  slippage_atr_mult: 0.08
+  commission_per_lot: 7.0
+  swap_long_points: -6.0
+  swap_short_points: -1.0
+
+walkforward:
+  train_months: 18
+  test_months: 6
