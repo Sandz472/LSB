@@ -26,8 +26,11 @@ Docker, or deployment directories exist yet. These are Phase B work
 ## Environment decisions
 
 - **Dev database:** native PostgreSQL on Windows — *no Docker locally*
-  (low-spec workstation). Installation is due at Session A1, the first
-  session that touches the database. Docker arrives only at Session B8.
+  (low-spec workstation). Installed at Session A1 as a portable binary
+  distribution under `%LOCALAPPDATA%\PostgreSQL\17` (no admin rights, no
+  Windows service); start/stop via `scripts/start_postgres.ps1`. Dev
+  database `lsb_dev` and role `lsb` created per `.env.example`. Docker
+  arrives only at Session B8.
 - **CI:** `.github/workflows/ci.yml` runs `pytest` on every commit
   (zero tests collected is acceptable until Session A4). The
   golden-fixture determinism replay (Gate GA-1) is wired in at
