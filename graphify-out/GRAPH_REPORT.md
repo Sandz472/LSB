@@ -1,138 +1,93 @@
-# Graph Report - .  (2026-06-10)
+# Graph Report - .  (2026-06-12)
 
 ## Corpus Check
-- 28 files · ~6,754 words
-- Verdict: corpus is large enough that graph structure adds value.
+- Corpus is ~2,754 words - fits in a single context window. You may not need a graph.
 
 ## Summary
-- 116 nodes · 94 edges · 45 communities (33 shown, 12 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.87)
-- Token cost: 0 input · 0 output
+- 64 nodes · 88 edges · 9 communities (7 shown, 2 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.85)
+- Token cost: 71,954 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Governance & Phase Control|Governance & Phase Control]]
-- [[_COMMUNITY_Implementation Playbook & Gates|Implementation Playbook & Gates]]
-- [[_COMMUNITY_Advisor Intelligence & Validation|Advisor Intelligence & Validation]]
-- [[_COMMUNITY_Deterministic Engine Core|Deterministic Engine Core]]
-- [[_COMMUNITY_Decision Capture Schema|Decision Capture Schema]]
-- [[_COMMUNITY_Broker Bridge Decision|Broker Bridge Decision]]
-- [[_COMMUNITY_Liquidity & Risk Qualification|Liquidity & Risk Qualification]]
-- [[_COMMUNITY_State Machine & Risk Protection|State Machine & Risk Protection]]
-- [[_COMMUNITY_Liquidity Sweep Scoring|Liquidity Sweep Scoring]]
-- [[_COMMUNITY_Volatility & Synthetics Config|Volatility & Synthetics Config]]
-- [[_COMMUNITY_Triangle Structure Detection|Triangle Structure Detection]]
-- [[_COMMUNITY_Trend & Indicator Engines|Trend & Indicator Engines]]
-- [[_COMMUNITY_Advisor Seam|Advisor Seam]]
-- [[_COMMUNITY_Blueprint Indicators & Trend|Blueprint Indicators & Trend]]
-- [[_COMMUNITY_Spec Conversion Script|Spec Conversion Script]]
-- [[_COMMUNITY_M12 Session Filter (Spec)|M12 Session Filter (Spec)]]
-- [[_COMMUNITY_M13 Logging (Spec)|M13 Logging (Spec)]]
-- [[_COMMUNITY_M1 Data Ingestion (Spec)|M1 Data Ingestion (Spec)]]
-- [[_COMMUNITY_M10 Trade Management|M10 Trade Management]]
-- [[_COMMUNITY_M12 SessionNews Filter|M12 Session/News Filter]]
-- [[_COMMUNITY_M1 Market Data Ingestion|M1 Market Data Ingestion]]
-- [[_COMMUNITY_M4 Structure Detection|M4 Structure Detection]]
-- [[_COMMUNITY_M6 Volatility Monitor|M6 Volatility Monitor]]
-- [[_COMMUNITY_M8 Risk Computation|M8 Risk Computation]]
+- [[_COMMUNITY_Gates and Verdicts|Gates and Verdicts]]
+- [[_COMMUNITY_Track 2 Hardening and State Machine|Track 2 Hardening and State Machine]]
+- [[_COMMUNITY_Phase A Scaffold, Config and Data Pipeline|Phase A Scaffold, Config and Data Pipeline]]
+- [[_COMMUNITY_Signal and Backtest Engine|Signal and Backtest Engine]]
+- [[_COMMUNITY_Determinism and Walk-Forward|Determinism and Walk-Forward]]
+- [[_COMMUNITY_Source Docs and Phase A Doctrine|Source Docs and Phase A Doctrine]]
+- [[_COMMUNITY_Musk Rule and Module Cuts|Musk Rule and Module Cuts]]
+- [[_COMMUNITY_Claude Settings Permissions|Claude Settings Permissions]]
+- [[_COMMUNITY_Claude Settings Root Node|Claude Settings Root Node]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `LSB Governing Instructions (CLAUDE.md)` - 7 edges
-2. `M8 Risk Computation Engine` - 6 edges
-3. `LSB Master Blueprint v2.1` - 5 edges
-4. `LSB System Requirements v2.0 (Immutable Spec)` - 5 edges
-5. `Decision Warehouse (The Moat)` - 5 edges
-6. `Stage 3: Bayesian Evidence Engine` - 5 edges
-7. `Replay Harness` - 5 edges
-8. `market_snapshot Table (Observation Spine)` - 5 edges
-9. `Golden-Fixture Replay Check` - 4 edges
-10. `M9 Order Execution Handler` - 4 edges
+1. `Module Cut: M1-M14 to Five Core Modules` - 7 edges
+2. `LSB Implementation Plan v3.0` - 6 edges
+3. `Phase A Schema (migration 001_core.sql)` - 6 edges
+4. `Track 2: Hardening (Sessions B5-B10)` - 6 edges
+5. `Sessions A4-A5: Signal Engine (Eight Gates)` - 5 edges
+6. `Sessions A6-A7: Backtest Engine + SimulatedBroker` - 5 edges
+7. `Session A9: Walk-Forward Harness` - 5 edges
+8. `Physics Rule (Launch Windows)` - 4 edges
+9. `Config Hash / config_version System` - 4 edges
+10. `wf_run table` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `LSB System Requirements v2.0 (markdown conversion)` --references--> `LSB System Requirements v2.0 (Immutable Spec)`  [EXTRACTED]
-  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_System_Requirements_v2.0.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
-- `Native PostgreSQL 16 Dev Database (no Docker)` --references--> `LSB Master Blueprint v2.1`  [EXTRACTED]
-  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/PHASE_STATUS.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
-- `ADR-001: Broker Bridge — Native-Windows MT5 with EA-Socket Fallback` --cites--> `LSB Master Blueprint v2.1`  [EXTRACTED]
-  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/decisions/ADR-001-broker-bridge.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
-- `Golden-Fixture Replay Check` --conceptually_related_to--> `Replay Harness`  [INFERRED]
-  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/.github/workflows/ci.yml → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/PHASE_STATUS.md
-- `LSB Governing Instructions (CLAUDE.md)` --references--> `LSB System Requirements v2.0 (Immutable Spec)`  [EXTRACTED]
-  C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/CLAUDE.md → C:/Dev/work/SSR Holdings/Sampu Dynamics/LSB Strategy Bot/docs/LSB_Master_Blueprint_v2.1.pdf
+- `LSB v3.0 Spec and Playbook (PDF)` --semantically_similar_to--> `LSB Implementation Plan v3.0`  [INFERRED] [semantically similar]
+  LSB_v3.0_Spec_and_Playbook.pdf → LSB_Implementation_Plan_v3.0.md
+- `LSB v3.0 Spec and Playbook (PDF)` --references--> `LSB Master Blueprint v2.1`  [EXTRACTED]
+  LSB_v3.0_Spec_and_Playbook.pdf → LSB_Implementation_Plan_v3.0.md
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
-- **Mandatory Per-Candle Data Flow Sequence (Section 2.2)** — docs_lsb_system_requirements_v2_0_m1_market_data_ingestion, docs_lsb_system_requirements_v2_0_m2_indicator_engine, docs_lsb_system_requirements_v2_0_m3_trend_analysis_engine, docs_lsb_system_requirements_v2_0_m4_structure_detection_engine, docs_lsb_system_requirements_v2_0_m5_liquidity_zone_engine, docs_lsb_system_requirements_v2_0_m6_volatility_monitor, docs_lsb_system_requirements_v2_0_m12_session_market_filter, docs_lsb_system_requirements_v2_0_m11_risk_protection_controller, docs_lsb_system_requirements_v2_0_m7_entry_qualification_engine, docs_lsb_system_requirements_v2_0_m8_risk_computation_engine, docs_lsb_system_requirements_v2_0_m9_order_execution_handler, docs_lsb_system_requirements_v2_0_m10_trade_management_engine, docs_lsb_system_requirements_v2_0_m13_logging_analytics_engine [EXTRACTED 1.00]
-- **Capital Protection Stack (protect capital first)** — docs_lsb_system_requirements_v2_0_m8_risk_computation_engine, docs_lsb_system_requirements_v2_0_m11_risk_protection_controller, docs_lsb_system_requirements_v2_0_risk_tier_matrix, docs_lsb_system_requirements_v2_0_drawdown_thresholds, docs_lsb_system_requirements_v2_0_structural_stop_loss, docs_lsb_system_requirements_v2_0_atr_state_classification [INFERRED 0.75]
-- **Broker Bridge Decision Space for the M9 Interface (ADR-001)** — decisions_adr_001_broker_bridge_native_windows_mt5, decisions_adr_001_broker_bridge_ea_socket_bridge, decisions_adr_001_broker_bridge_wine_on_linux, decisions_adr_001_broker_bridge_simulatedbroker, docs_lsb_system_requirements_v2_0_m9_order_execution_handler [EXTRACTED 1.00]
-- **Per-Candle Evaluation Sequence (M1 -> M13)** — lsb_master_blueprint_v2_1_m1_market_data_ingestion, lsb_master_blueprint_v2_1_m2_indicator_engine, lsb_master_blueprint_v2_1_m3_trend_analysis, lsb_master_blueprint_v2_1_m4_structure_detection, lsb_master_blueprint_v2_1_m5_liquidity_zone_engine, lsb_master_blueprint_v2_1_m6_volatility_monitor, lsb_master_blueprint_v2_1_m12_session_news_filter, lsb_master_blueprint_v2_1_m7_entry_qualification, lsb_master_blueprint_v2_1_m8_risk_computation, lsb_master_blueprint_v2_1_m9_order_execution, lsb_master_blueprint_v2_1_m13_logging_analytics [EXTRACTED 1.00]
-- **Seven Warehouse Tables Form the Decision Warehouse** — lsb_master_blueprint_v2_1_market_snapshot, lsb_master_blueprint_v2_1_trade_signal, lsb_master_blueprint_v2_1_trade_execution, lsb_master_blueprint_v2_1_trade_outcome, lsb_master_blueprint_v2_1_hypothesis_snapshot, lsb_master_blueprint_v2_1_state_transition, lsb_master_blueprint_v2_1_config_version, lsb_master_blueprint_v2_1_decision_warehouse [EXTRACTED 1.00]
-- **Intelligence Rail: Implementations of the Advisor Interface** — lsb_master_blueprint_v2_1_advisor_interface, lsb_master_blueprint_v2_1_nulladvisor, lsb_master_blueprint_v2_1_bayesian_evidence_engine, lsb_master_blueprint_v2_1_hypothesis_engine [EXTRACTED 1.00]
+- **Phase A Sessions (A0-A11) Forming the Path to Gate GA** — implementation_plan_v3_0_session_a0_scaffold, implementation_plan_v3_0_session_a1_config_schema, implementation_plan_v3_0_session_a2_data_pipeline_1, implementation_plan_v3_0_session_a3_data_pipeline_n, implementation_plan_v3_0_session_a4_a5_signal_engine, implementation_plan_v3_0_session_a6_a7_backtest_engine, implementation_plan_v3_0_session_a8_determinism_gate, implementation_plan_v3_0_session_a9_walkforward_harness, implementation_plan_v3_0_session_a10_verdict_report, implementation_plan_v3_0_session_a11_full_run_gate_ga, implementation_plan_v3_0_gate_ga [EXTRACTED 1.00]
+- **Five Core Modules Surviving Phase A (C1-C5)** — implementation_plan_v3_0_c1_data_pipeline, implementation_plan_v3_0_c2_signal_engine, implementation_plan_v3_0_c3_backtest_engine, implementation_plan_v3_0_c4_walkforward_harness, implementation_plan_v3_0_c5_verdict_report [EXTRACTED 1.00]
+- **Track 2 Hardening Sessions (B5-B10) Running Parallel to Forward Test** — implementation_plan_v3_0_session_b5_live_tables, implementation_plan_v3_0_session_b6_risk_portfolio, implementation_plan_v3_0_session_b7_monitoring_alerting, implementation_plan_v3_0_session_b8_docker, implementation_plan_v3_0_session_b9_vps_shadow, implementation_plan_v3_0_session_b10_interrogations, implementation_plan_v3_0_track2_hardening [EXTRACTED 1.00]
 
-## Communities (45 total, 12 thin omitted)
+## Communities (9 total, 2 thin omitted)
 
-### Community 0 - "Governance & Phase Control"
-Cohesion: 0.23
-Nodes (12): Determinism Law, LSB Governing Instructions (CLAUDE.md), ADR-001: Broker Bridge — Native-Windows MT5 with EA-Socket Fallback, LSB System Requirements v2.0 (markdown conversion), LSB Phase Status, Native PostgreSQL 16 Dev Database (no Docker), Phase 4 — Live Infrastructure (human unlock only), LSB Master Blueprint v2.0 (Superseded) (+4 more)
+### Community 0 - "Gates and Verdicts"
+Cohesion: 0.17
+Nodes (15): ADR-002: Go/No-Go Decision, C5: Verdict Report, Config Hash / config_version System, The Freeze Rule (Weeks 5-13), Gate GA: GO/NO-GO (End of Week 3), Gate GB: Forward-Test Verdict (Week 13), GO/NO-GO Thresholds (Blueprint v2.1 Part 14), Phase B: Forward Test + Parallel Hardening (Weeks 4-13) (+7 more)
 
-### Community 1 - "Implementation Playbook & Gates"
+### Community 1 - "Track 2 Hardening and State Machine"
 Cohesion: 0.22
-Nodes (11): ADR-001 Broker Bridge Decision (MT5 Native Windows), Backtest-First Sequencing, Claude Code Implementation Playbook (Part 15), Gate G3: GO/NO-GO at Week 7, Graphify Knowledge Layer, Human Approval Gate (Enforced in Code), M9 Order Execution, Replay Harness (+3 more)
+Nodes (11): State Machine Cut: 9 -> 0 (Phase A) -> 5 (Phase B), Session B10: Two Interrogations (Deleted States + Graphify Seeding), Session B2: Five-State Operating Machine, Session B5: Restore Remaining v2.1 Tables (002_live.sql), Session B6: Risk and Portfolio Modules, Session B7: Monitoring and Alerting, Session B8: Docker Images, Session B9: VPS Provisioning + Shadow Deployment (+3 more)
 
-### Community 2 - "Advisor Intelligence & Validation"
-Cohesion: 0.25
-Nodes (9): Advisor Interface (The Advisor Seam), Stage 3: Bayesian Evidence Engine, Determinism Invariant, 8-Week Demo Forward Test (Non-Compressible), Golden Fixtures (Determinism in CI), Stage 4: Quantum-Inspired Hypothesis Engine, hypothesis_snapshot Table, MarketStateVector (Regime Belief State) (+1 more)
+### Community 2 - "Phase A Scaffold, Config and Data Pipeline"
+Cohesion: 0.31
+Nodes (9): ADR-001: Broker Bridge Decision, candle table, config_version table, Phase A Schema (migration 001_core.sql), Session A0: Scaffold, Session A1: Config System + Schema, Session A2: Data Pipeline, Instrument #1, Session A3: Data Pipeline, Instruments #2-#n (+1 more)
 
-### Community 3 - "Deterministic Engine Core"
-Cohesion: 0.22
-Nodes (9): Stage 2: Analytics & the Data Asset, Decision Warehouse (The Moat), Stage 1: Deterministic Engine, Eight Entry Gates, M11 Risk Protection, M14 Alerting, M7 Entry Qualification, Nine-State Operating Machine (+1 more)
+### Community 3 - "Signal and Backtest Engine"
+Cohesion: 0.32
+Nodes (8): C2: Signal Engine, C3: Backtest Engine, Eight Entry Gates (Strategy Logic), Pessimistic Fill Model (Blueprint v2.1 Part 7.1), Sessions A4-A5: Signal Engine (Eight Gates), Sessions A6-A7: Backtest Engine + SimulatedBroker, Session B1: MT5 Demo Bridge, Session B3: Live Loop Wiring
 
-### Community 4 - "Decision Capture Schema"
-Cohesion: 0.29
-Nodes (8): config_hash (Reproducibility Stamp), config_version Table, M13 Logging & Analytics, market_snapshot Table (Observation Spine), R-multiple (The One Normalised Number), trade_execution Table, trade_outcome Table (Append-Only), trade_signal Table
+### Community 4 - "Determinism and Walk-Forward"
+Cohesion: 0.40
+Nodes (6): Determinism Contract (Golden-Fixture Replay), Gate GA-1: Determinism in CI, Session A8: Determinism Gate (Gate GA-1), Session A9: Walk-Forward Harness, sim_trade table, wf_run table
 
-### Community 5 - "Broker Bridge Decision"
-Cohesion: 0.29
-Nodes (7): EA Socket Bridge (Fallback), Native-Windows MT5 Bridge, SimulatedBroker, Wine-on-Linux Bridge (Rejected), M10 Trade Management Engine, M9 Order Execution Handler, Replay Harness
+### Community 5 - "Source Docs and Phase A Doctrine"
+Cohesion: 0.40
+Nodes (6): Jobs Rule (Scope Deletion), LSB Implementation Plan v3.0, LSB Master Blueprint v2.1, Phase A: Prove (Weeks 1-3), LSB v3.0 Spec and Playbook (PDF), Spec Immutability During Phase A
 
-### Community 6 - "Liquidity & Risk Qualification"
-Cohesion: 0.29
-Nodes (7): Liquidity Sweep, M5 Liquidity Zone Engine, M7 Entry Qualification Engine, M8 Risk Computation Engine, Risk Tier Matrix (1.0% / 0.5% / 0.25% / 0%), Structural Stop Loss Placement, Sweep Probability Score (0-100)
-
-### Community 7 - "State Machine & Risk Protection"
-Cohesion: 0.67
-Nodes (4): Drawdown Thresholds (daily 3% / weekly 6%), M11 Risk Protection Controller, M14 Alerting & Notification System, Bot Operating State Machine
-
-### Community 8 - "Liquidity Sweep Scoring"
+### Community 6 - "Musk Rule and Module Cuts"
 Cohesion: 0.50
-Nodes (4): Liquidity Sweep, Liquidity Strategy Bot (LSB), M5 Liquidity Zone Engine, Five-Factor Sweep Probability Score (0-100)
-
-### Community 9 - "Volatility & Synthetics Config"
-Cohesion: 0.67
-Nodes (3): Deriv Synthetics Per-Instrument Config, ATR State Classification (COMPRESSED/NORMAL/ELEVATED/EXTREME), M6 Volatility Monitor
-
-### Community 10 - "Triangle Structure Detection"
-Cohesion: 0.67
-Nodes (3): Ascending Triangle (Bearish Setup), Descending Triangle (Bullish Setup), M4 Structure Detection Engine
-
-### Community 11 - "Trend & Indicator Engines"
-Cohesion: 0.67
-Nodes (3): EMA Hierarchy (21/50/89), M2 Indicator Engine, M3 Trend Analysis Engine
+Nodes (5): C1: Data Pipeline, C4: Walk-Forward Harness, Module Cut: M1-M14 to Five Core Modules, Musk Rule (Sequencing), Session C2: The 10% Review
 
 ## Knowledge Gaps
-- **33 isolated node(s):** `Advisor Interface (risk-reduce/veto only)`, `M1 Market Data Ingestion`, `M2 Indicator Engine`, `M6 Volatility Monitor`, `M7 Entry Qualification Engine` (+28 more)
+- **8 isolated node(s):** `allow`, `Claude Settings Local Permissions`, `Phase C: Scale (Week 13+)`, `Session B7: Monitoring and Alerting`, `Session B8: Docker Images` (+3 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `LSB System Requirements v2.0 (Immutable Spec)` connect `Governance & Phase Control` to `Implementation Playbook & Gates`, `Deterministic Engine Core`?**
-  _High betweenness centrality (0.176) - this node is a cross-community bridge._
-- **Why does `LSB Governing Instructions (CLAUDE.md)` connect `Governance & Phase Control` to `Liquidity & Risk Qualification`, `State Machine & Risk Protection`?**
-  _High betweenness centrality (0.161) - this node is a cross-community bridge._
-- **Why does `M8 Risk Computation Engine` connect `Liquidity & Risk Qualification` to `Governance & Phase Control`, `Broker Bridge Decision`?**
-  _High betweenness centrality (0.100) - this node is a cross-community bridge._
-- **What connects `Convert docs/LSB_System_Requirements_v2.0.docx to a markdown sidecar.  graphify`, `Determinism Law`, `Advisor Interface (risk-reduce/veto only)` to the rest of the system?**
-  _40 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `LSB Implementation Plan v3.0` connect `Source Docs and Phase A Doctrine` to `Gates and Verdicts`, `Determinism and Walk-Forward`, `Musk Rule and Module Cuts`?**
+  _High betweenness centrality (0.198) - this node is a cross-community bridge._
+- **Why does `Module Cut: M1-M14 to Five Core Modules` connect `Musk Rule and Module Cuts` to `Gates and Verdicts`, `Signal and Backtest Engine`?**
+  _High betweenness centrality (0.153) - this node is a cross-community bridge._
+- **Why does `Session A9: Walk-Forward Harness` connect `Determinism and Walk-Forward` to `Gates and Verdicts`, `Musk Rule and Module Cuts`?**
+  _High betweenness centrality (0.145) - this node is a cross-community bridge._
+- **What connects `allow`, `Claude Settings Local Permissions`, `Phase C: Scale (Week 13+)` to the rest of the system?**
+  _8 weakly-connected nodes found - possible documentation gaps or missing edges._

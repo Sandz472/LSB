@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies
         run: pip install pytest hypothesis psycopg2-binary pandas
       - name: Unit tests
-        # Exit code 5 = no tests collected, allowed until the first module session
+        # Exit code 5 = no tests collected, allowed until Session A4
         run: |
           pytest -q tests; rc=$?
           if [ $rc -ne 0 ] && [ $rc -ne 5 ]; then exit $rc; fi
@@ -25,5 +25,5 @@ jobs:
             echo "CI FAILED: golden fixtures exist but the replay runner is not wired yet"
             exit 1
           else
-            echo "No golden fixtures yet (expected before Session 17) - skipping."
+            echo "No golden fixtures yet (expected before Session A8) - skipping."
           fi

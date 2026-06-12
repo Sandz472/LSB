@@ -2,7 +2,8 @@
 
 - **Status:** Accepted
 - **Date:** 2026-06-10
-- **Source:** Blueprint Part 4.1 (page 9); week-1 decision per Fix F4
+- **Source:** Master Blueprint v2.1 Part 4.1 (page 9); carried forward
+  unchanged by Implementation Plan v3.0 (inherited decisions list)
 
 ## Decision
 
@@ -18,12 +19,15 @@ capital (fragile under terminal updates).
 
 ## Consequences
 
-- Implementation is **Phase-4 work**, after a G3 GO. Until then M9 talks
-  to the replay harness's `SimulatedBroker`, which implements the same
-  M9 interface — the core never knows which bridge it's talking to.
-- Phase-4 acceptance must satisfy the reliability contract (Part 4.2):
-  heartbeat → ORDER-SAFE on connectivity loss, restart reconciliation
-  against the DB, idempotent client order IDs.
+- Implementation is **Session B1 work** (Phase B Track 1, "MT5 demo
+  bridge"), conditional on a Gate GA GO. Until then, the backtest engine
+  (Sessions A6–A7) talks only to `SimulatedBroker`, which implements the
+  v2.1 Part 7.1 pessimistic fill model and the same broker interface the
+  real bridge must conform to — a conformance test suite (Session B1)
+  proves both brokers satisfy it identically.
+- Session B1 acceptance must satisfy the reliability contract (Blueprint
+  Part 4.2): heartbeat → ORDER-SAFE on connectivity loss, restart
+  reconciliation against the DB, idempotent client order IDs.
 - Deriv synthetics (Boom/Crash) get per-instrument configs and distinct
   ATR-EXTREME thresholds (Appendix A); never share parameters across
   synthetic and conventional instruments.

@@ -1,24 +1,34 @@
 # LSB Phase Status
 
 > Only a human edits this file. Claude Code may not cross a locked phase
-> (CLAUDE.md rule 9; Blueprint Part 15.9).
+> (Implementation Plan v3.0, Part 0 — Physics rule).
 
 | Phase | Scope | Status |
 |---|---|---|
-| Phase 0 | Setup, governing files, scaffold (Sessions 0) | **ACTIVE** |
-| Phase 1 | Data, config/schema, state machine, replay harness (Sessions 1–4, Gate G1) | LOCKED until Session 0 acceptance passes |
-| Phase 2 | The Engine — modules M1–M14 offline (Sessions 5–17, Gate G2) | LOCKED |
-| Phase 3 | Walk-forward validation, GO/NO-GO verdict (Sessions 18–19, Gate G3) | LOCKED |
-| Phase 4 | Live infrastructure — broker adapter, alerting, deploy (Sessions 20–22, Gate G4) | **LOCKED — human unlock only, after a G3 GO** |
-| Phase 5–8 | Forward test, Bayesian advisor, hypothesis engine, research layer (Sessions 23–29, Gates G5–G6) | **LOCKED — human unlock only** |
+| Phase A | "Prove" — scaffold, config/schema, data audit, signal engine, backtest, determinism, walk-forward, verdict (Sessions A0–A11, Gate GA) | **ACTIVE** |
+| Phase B | Forward test + parallel hardening — broker bridge, 5-state machine, live loop, monitoring, Docker, VPS shadow (Sessions B1–B10, Gate GB) | **LOCKED — human unlock only, after a Gate GA GO** |
+| Phase C | "Scale" — VPS promotion, 10% review, outcome learning activation (Sessions C1–C3) | **LOCKED — human unlock only, after a Gate GB GO** |
+
+## Phase A schema
+
+Migration `001_core.sql` (Session A1) — four tables: `config_version`,
+`candle`, `signal`, `wf_run` (+ child `sim_trade`). The seven-table v2.1
+schema is restored verbatim in Phase B Track 2 (Session B5); its DDL
+already exists and deferring it costs nothing.
+
+## Out of scope for Phase A
+
+Per Implementation Plan v3.0, Session A0: no broker, state-machine,
+Docker, or deployment directories exist yet. These are Phase B work
+(`src/lsb/broker/` — Session B1, operating-machine module — Session B2,
+`docker/` — Session B8).
 
 ## Environment decisions
 
-- **Dev database:** native PostgreSQL 16 on Windows — *no Docker locally*
-  (low-spec workstation; deviation from Blueprint Step 0 item 6, dev
-  environment only). Installation is due at **Session 2**, the first
-  session that touches the database. The VPS/container architecture for
-  Phase 4 (Blueprint Part 15.7) is unaffected and waits for the gate.
-- **CI:** local script `scripts/ci.ps1` (no GitHub remote yet);
-  `.github/workflows/ci.yml` is in place and activates when a remote is
-  added.
+- **Dev database:** native PostgreSQL on Windows — *no Docker locally*
+  (low-spec workstation). Installation is due at Session A1, the first
+  session that touches the database. Docker arrives only at Session B8.
+- **CI:** `.github/workflows/ci.yml` runs `pytest` on every commit
+  (zero tests collected is acceptable until Session A4). The
+  golden-fixture determinism replay (Gate GA-1) is wired in at
+  Session A8.

@@ -1,7 +1,7 @@
 [project]
 name = "lsb"
 version = "0.0.1"
-description = "LSB Strategy Bot — five-stage deterministic trading system (Blueprint v2.1)"
+description = "LSB Strategy Bot — Phase A: validate the liquidity sweep edge via deterministic walk-forward (Implementation Plan v3.0)"
 requires-python = ">=3.11"
 dependencies = [
     "pandas",
