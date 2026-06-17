@@ -14,10 +14,11 @@ from typing import Sequence
 from lsb.data.config import SignalParams
 from lsb.signals import Candle
 
-# Tolerance for "flat" resistance/support: swing high/low range < this multiple
-# of the resistance/support level (used to validate the horizontal leg).
-_FLAT_TOLERANCE_PCT = 0.005   # 0.5% — configurable candidate; kept internal for now
-_SWING_LOOKBACK = 2           # N bars on each side for pivot detection
+# Triangle-leg flatness tolerance and swing-pivot lookback are now instrument
+# config (SignalParams.triangle_flat_tolerance_pct / .swing_lookback). The
+# default below is used only by the bare _swing_highs/_swing_lows helpers when
+# called without an explicit lookback (kept for backwards-compatible signatures).
+_DEFAULT_SWING_LOOKBACK = 2
 
 
 class StructureState(Enum):
@@ -56,7 +57,7 @@ _NO_STRUCTURE = StructureResult(
 )
 
 
-def _swing_highs(candles: Sequence[Candle], lookback: int = _SWING_LOOKBACK) -> list[int]:
+def _swing_highs(candles: Sequence[Candle], lookback: int = _DEFAULT_SWING_LOOKBACK) -> list[int]:
     """Indices of swing highs (bar.high ≥ all neighbors within lookback)."""
     result = []
     for i in range(lookback, len(candles) - lookback):
@@ -66,7 +67,7 @@ def _swing_highs(candles: Sequence[Candle], lookback: int = _SWING_LOOKBACK) -> 
     return result
 
 
-def _swing_lows(candles: Sequence[Candle], lookback: int = _SWING_LOOKBACK) -> list[int]:
+def _swing_lows(candles: Sequence[Candle], lookback: int = _DEFAULT_SWING_LOOKBACK) -> list[int]:
     """Indices of swing lows (bar.low ≤ all neighbors within lookback)."""
     result = []
     for i in range(lookback, len(candles) - lookback):
@@ -140,8 +141,8 @@ def detect_triangle(h4_candles: Sequence[Candle], p: SignalParams) -> StructureR
     window = list(h4_candles[-p.triangle_max_candles:])
     current_idx = len(window) - 1
 
-    highs_idx = _swing_highs(window)
-    lows_idx = _swing_lows(window)
+    highs_idx = _swing_highs(window, p.swing_lookback)
+    lows_idx = _swing_lows(window, p.swing_lookback)
 
     # Need at least 2 swing highs and 2 swing lows.
     if len(highs_idx) < 2 or len(lows_idx) < 2:
@@ -153,7 +154,7 @@ def detect_triangle(h4_candles: Sequence[Candle], p: SignalParams) -> StructureR
     resistance = sum(high_vals) / len(high_vals)
     high_range = max(high_vals) - min(high_vals)
 
-    if high_range <= resistance * _FLAT_TOLERANCE_PCT and resistance > 0:
+    if high_range <= resistance * p.triangle_flat_tolerance_pct and resistance > 0:
         # Check rising lows.
         low_vals = [window[i].low for i in lows_idx]
         rising = all(low_vals[j] > low_vals[j - 1] for j in range(1, len(low_vals)))
@@ -199,7 +200,7 @@ def detect_triangle(h4_candles: Sequence[Candle], p: SignalParams) -> StructureR
     support = sum(low_vals) / len(low_vals)
     low_range = max(low_vals) - min(low_vals)
 
-    if low_range <= support * _FLAT_TOLERANCE_PCT and support > 0:
+    if low_range <= support * p.triangle_flat_tolerance_pct and support > 0:
         high_vals = [window[i].high for i in highs_idx]
         falling = all(high_vals[j] < high_vals[j - 1] for j in range(1, len(high_vals)))
         if falling:

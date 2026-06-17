@@ -31,13 +31,14 @@ _SIGNAL_PARAMS = SignalParams(
     atr_elevated_multiplier=1.25, atr_extreme_multiplier=2.0,
     ema_compression_atr_mult=0.10, slope_threshold_atr_mult=0.05,
     triangle_min_candles=8, triangle_max_candles=60,
+    triangle_flat_tolerance_pct=0.005, swing_lookback=2,
     apex_proximity_min=0.75, apex_proximity_max=0.95,
     block_min_touches=2, block_min_width_pips=5.0,
     sweep_penetration_pips=2.0, sweep_expiry_candles=3, sweep_score_min=50,
 )
 
 _EURUSD_CONFIG = InstrumentConfig(
-    schema_version=2, instrument='EURUSD', display_name='Euro/USD',
+    schema_version=3, instrument='EURUSD', display_name='Euro/USD',
     asset_class='fx', timeframes=('H1',), pip_size=0.0001, contract_size=100000,
     broker_costs=BrokerCosts(1.2, 0.05, 7.0, -0.8, -0.3),
     walkforward=WalkForwardWindow(18, 6),
