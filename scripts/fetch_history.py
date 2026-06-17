@@ -7,12 +7,11 @@ Sources:
     low, high as integers scaled by 10/pip_size, volume as float32),
     resampled to H1. Falls back to Stooq's H1 CSV export if Dukascopy is
     unreachable.
-
-  BOOM500 -- Deriv `ticks_history` websocket API (style=candles,
-    granularity=3600), paginated backwards via `end` until `start` is covered.
+  BTCUSD -- Binance public klines API (BTC/USDT spot, no auth required).
+    Dukascopy only provides ~15 months of BTC history; Binance covers 3y+.
 
 Usage:
-    python scripts/fetch_history.py --instrument {EURUSD,XAUUSD,BOOM500,all} [--years 3]
+    python scripts/fetch_history.py --instrument {EURUSD,XAUUSD,BTCUSD,all} [--years 3]
 """
 
 import argparse
@@ -40,6 +39,7 @@ HISTORY_DIR = ROOT / "data" / "history"
 CONFIG_DIR = ROOT / "config"
 
 DUKASCOPY_BASE = "https://datafeed.dukascopy.com/datafeed"
+BINANCE_KLINES_URL = "https://api.binance.com/api/v3/klines"
 DERIV_WS_URL = "wss://ws.derivws.com/websockets/v3?app_id=1089"
 DERIV_GRANULARITY = 3600
 DERIV_MAX_COUNT = 5000
@@ -173,6 +173,52 @@ def fetch_stooq_h1(symbol: str, start: date, end: date) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
+# Binance (BTCUSD)
+# ---------------------------------------------------------------------------
+
+def fetch_binance_h1(start: date, end: date) -> pd.DataFrame:
+    """Download H1 BTC/USDT klines from Binance public API (no auth required).
+
+    Binance returns up to 1 000 candles per request; we paginate forward via
+    startTime.  Prices are already in human-readable USD — no pip_size scaling.
+    """
+    start_ms = int(datetime.combine(start, datetime.min.time(), tzinfo=timezone.utc).timestamp() * 1000)
+    end_ms = int(datetime.combine(end + timedelta(days=1), datetime.min.time(), tzinfo=timezone.utc).timestamp() * 1000)
+
+    session = requests.Session()
+    rows: list[tuple] = []
+    cursor_ms = start_ms
+
+    while cursor_ms < end_ms:
+        resp = session.get(
+            BINANCE_KLINES_URL,
+            params={
+                "symbol": "BTCUSDT",
+                "interval": "1h",
+                "startTime": cursor_ms,
+                "endTime": end_ms - 1,
+                "limit": 1000,
+            },
+            timeout=15,
+        )
+        resp.raise_for_status()
+        batch = resp.json()
+        if not batch:
+            break
+        for k in batch:
+            ts = datetime.fromtimestamp(k[0] / 1000, tz=timezone.utc)
+            rows.append((ts, float(k[1]), float(k[2]), float(k[3]), float(k[4]), float(k[5])))
+        cursor_ms = batch[-1][0] + 3_600_000  # advance past the last returned candle
+
+    if not rows:
+        raise ValueError(f"No Binance data retrieved for BTCUSD {start}..{end}")
+
+    df = pd.DataFrame(rows, columns=["ts", "open", "high", "low", "close", "volume"])
+    df["spread"] = None
+    return df[OHLCV_COLUMNS]
+
+
+# ---------------------------------------------------------------------------
 # Deriv (BOOM500)
 # ---------------------------------------------------------------------------
 
@@ -233,18 +279,18 @@ def fetch_ohlcv(instrument: str, start: date, end: date, config: InstrumentConfi
         except Exception as exc:  # noqa: BLE001 - record and fall back
             print(f"  Dukascopy fetch failed ({exc!r}); falling back to Stooq")
             return fetch_stooq_h1(instrument.lower(), start, end), "stooq"
-    if instrument == "BOOM500":
-        return fetch_deriv_h1(instrument, start, end), "deriv"
+    if instrument == "BTCUSD":
+        return fetch_binance_h1(start, end), "binance"
     raise ValueError(f"No fetch source configured for instrument {instrument!r}")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--instrument", required=True, choices=["EURUSD", "XAUUSD", "BOOM500", "all"])
+    parser.add_argument("--instrument", required=True, choices=["EURUSD", "XAUUSD", "BTCUSD", "all"])
     parser.add_argument("--years", type=float, default=3.0)
     args = parser.parse_args()
 
-    instruments = ["EURUSD", "XAUUSD", "BOOM500"] if args.instrument == "all" else [args.instrument]
+    instruments = ["EURUSD", "XAUUSD", "BTCUSD"] if args.instrument == "all" else [args.instrument]
     end = date.today()
     start = end - timedelta(days=round(args.years * 365.25))
 

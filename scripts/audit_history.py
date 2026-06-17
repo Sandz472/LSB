@@ -11,7 +11,7 @@ anomaly types (duplicates, weekend bars, DST artifacts, spread outliers) are
 informational only.
 
 Usage:
-    python scripts/audit_history.py --instrument {EURUSD,XAUUSD,BOOM500,all} [--load]
+    python scripts/audit_history.py --instrument {EURUSD,XAUUSD,BTCUSD,all} [--load]
 """
 
 import argparse
@@ -313,11 +313,11 @@ def audit_instrument(instrument: str, do_load: bool) -> bool:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--instrument", required=True, choices=["EURUSD", "XAUUSD", "BOOM500", "all"])
+    parser.add_argument("--instrument", required=True, choices=["EURUSD", "XAUUSD", "BTCUSD", "all"])
     parser.add_argument("--load", action="store_true")
     args = parser.parse_args()
 
-    instruments = ["EURUSD", "XAUUSD", "BOOM500"] if args.instrument == "all" else [args.instrument]
+    instruments = ["EURUSD", "XAUUSD", "BTCUSD"] if args.instrument == "all" else [args.instrument]
     ok = True
     for instrument in instruments:
         if not audit_instrument(instrument, args.load):

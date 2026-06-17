@@ -1,0 +1,18 @@
+schema_version: 1
+instrument: BTCUSD
+display_name: "Bitcoin / US Dollar"
+asset_class: crypto       # fx | synthetic | crypto
+timeframes: [H1]
+pip_size: 1.0             # Dukascopy encodes BTC as integer/10 (verified 2026-06-17: ~$63,500 range)
+contract_size: 1
+
+broker_costs:
+  spread_points: 30.0     # first-pass estimate; verify against broker spec at Session A7
+  slippage_atr_mult: 0.10
+  commission_per_lot: 0.0
+  swap_long_points: 0.0
+  swap_short_points: 0.0
+
+walkforward:
+  train_months: 18
+  test_months: 6
