@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 instrument: BTCUSD
 display_name: "Bitcoin / US Dollar"
 asset_class: crypto       # fx | synthetic | crypto
@@ -16,3 +16,27 @@ broker_costs:
 walkforward:
   train_months: 18
   test_months: 6
+
+# Signal/gate parameters. For crypto, block_min_width_pips and sweep_penetration_pips are
+# interpreted by the engine as percentage × price / pip_size (see signals/liquidity.py).
+# Values below represent spec §7 thresholds: 0.05% width → stored as 0.05, 0.02% penetration.
+# Tune after walk-forward; never share params across synthetic and conventional instruments.
+signals:
+  ema_short_period: 21
+  ema_mid_period: 50
+  ema_long_period: 89
+  ema_slope_lookback: 3
+  atr_period: 14
+  atr_elevated_multiplier: 1.25
+  atr_extreme_multiplier: 2.0
+  ema_compression_atr_mult: 0.10
+  slope_threshold_atr_mult: 0.05
+  triangle_min_candles: 8
+  triangle_max_candles: 60
+  apex_proximity_min: 0.75
+  apex_proximity_max: 0.95
+  block_min_touches: 2
+  block_min_width_pips: 0.05   # interpreted as 0.05% for crypto (see signals/liquidity.py)
+  sweep_penetration_pips: 0.02  # interpreted as 0.02% for crypto
+  sweep_expiry_candles: 3
+  sweep_score_min: 50

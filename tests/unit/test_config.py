@@ -18,8 +18,8 @@ def test_identical_configs_hash_identically():
 
 def test_different_configs_hash_differently():
     eurusd = load_config(CONFIG_DIR / "EURUSD.yaml")
-    boom500 = load_config(CONFIG_DIR / "BOOM500.yaml")
-    assert config_hash(eurusd) != config_hash(boom500)
+    xauusd = load_config(CONFIG_DIR / "XAUUSD.yaml")
+    assert config_hash(eurusd) != config_hash(xauusd)
 
 
 def test_config_hash_is_sha256_hex():

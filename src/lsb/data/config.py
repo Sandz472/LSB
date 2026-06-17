@@ -30,6 +30,35 @@ class WalkForwardWindow:
 
 
 @dataclass(frozen=True)
+class SignalParams:
+    """Gate/indicator parameters for the M7 entry qualifier (Sessions A4–A5).
+
+    All defaults match LSB_System_Requirements_v2.0.md §16 / Appendix A.
+    block_min_width_pips and sweep_penetration_pips are in instrument pip units;
+    for crypto/index the engine interprets these as percentage × price / pip_size
+    (handled in signals/liquidity.py based on asset_class).
+    """
+    ema_short_period: int          # 21
+    ema_mid_period: int            # 50
+    ema_long_period: int           # 89
+    ema_slope_lookback: int        # 3 candles back for slope
+    atr_period: int                # 14 (spec: do not change)
+    atr_elevated_multiplier: float # 1.25× baseline ATR → ELEVATED
+    atr_extreme_multiplier: float  # 2.0× baseline ATR → EXTREME
+    ema_compression_atr_mult: float  # |EMA21−EMA89| < ATR×mult → INVALID
+    slope_threshold_atr_mult: float  # slope abs < ATR×mult → NEUTRAL
+    triangle_min_candles: int      # 8 H4 candles minimum for triangle
+    triangle_max_candles: int      # 60 H4 candles maximum
+    apex_proximity_min: float      # 0.75 — price must be ≥75% to apex
+    apex_proximity_max: float      # 0.95 — price must be ≤95% to apex
+    block_min_touches: int         # 2 touches to confirm a block
+    block_min_width_pips: float    # 5 pips (FX) / see docstring for crypto
+    sweep_penetration_pips: float  # 2 pips wick extension to qualify
+    sweep_expiry_candles: int      # 3 H1 candles before sweep expires
+    sweep_score_min: int           # Gate-4 threshold (0–100)
+
+
+@dataclass(frozen=True)
 class InstrumentConfig:
     schema_version: int
     instrument: str
@@ -40,6 +69,7 @@ class InstrumentConfig:
     contract_size: float
     broker_costs: BrokerCosts
     walkforward: WalkForwardWindow
+    signals: SignalParams
 
 
 def load_config(path: Path) -> InstrumentConfig:
@@ -54,6 +84,7 @@ def load_config(path: Path) -> InstrumentConfig:
         contract_size=raw["contract_size"],
         broker_costs=BrokerCosts(**raw["broker_costs"]),
         walkforward=WalkForwardWindow(**raw["walkforward"]),
+        signals=SignalParams(**raw["signals"]),
     )
 
 
