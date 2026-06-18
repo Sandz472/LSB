@@ -69,6 +69,11 @@ class SignalParams:
     min_rr_ratio: float                  # minimum R:R ratio; spec default 2.5
     sl_buffer_pips: float                # stop buffer above rejection wick, NORMAL ATR (§9.1)
     sl_buffer_pips_elevated: float       # stop buffer, ELEVATED ATR (§9.1; default 4.0)
+    # Pyramiding — ADR-003 (owner decision; NOT in Requirements v2.0 or Blueprint v2.1)
+    pyramid_enabled: bool = False
+    pyramid_max_legs: int = 3
+    pyramid_add_at_r: float = 1.0        # newest leg must be ≥ this R before adding another
+    pyramid_same_direction_only: bool = True
 
 
 @dataclass(frozen=True)

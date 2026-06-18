@@ -39,6 +39,30 @@ New modules: `signals/session.py`, `signals/risk.py`.
 documented stub-passes for all Phase-A evaluations. Live trading still requires Phase B
 (Gate GB GO), so no un-checked setup can reach a broker order.
 
+## Backtest engine (Session A6)
+
+`src/lsb/backtest/` — event-driven replay core. Modules:
+
+| Module | Role |
+|---|---|
+| `data.py` | Parquet loader → `list[Candle]`, schema-validated, sorted |
+| `clock.py` | `ReplayClock` — injectable clock, emits candle timestamps, no wall-clock reads |
+| `broker.py` | `Broker` Protocol + `NaiveBroker` (optimistic fill) + `PendingOrder`/`Fill` |
+| `position.py` | `Position` dataclass + `PosState` enum + `r_now()` |
+| `manage.py` | §11.2 breakeven, §11.3 EMA21 trail, §11.4 partial/full exits, §10.3 expiry |
+| `book.py` | `PositionBook` — ADR-003 pyramiding policy, book-wide exits |
+| `sink.py` | `NullSink` (CI-safe, in-memory) + `DbSink` (wraps `signals/persist.py`) |
+| `loop.py` | `run_backtest()` — per-candle driver with look-ahead guard |
+
+`schema_version` bumped 4→5 (four `pyramid_*` fields in `SignalParams` per ADR-003).
+CLI: `scripts/run_backtest.py EURUSD [--db] [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--all]`.
+
+**Owner decision (ADR-003):** Pyramiding built in from A6. Off by default
+(`pyramid_enabled: false`). See `docs/decisions/ADR-003-pyramiding.md`.
+
+**Scope boundary:** A6 writes `signal` rows only. `wf_run`/`sim_trade` (walk-forward
+windows) → A9. Pessimistic fill (SimulatedBroker) → A7. Equity/stats/verdict → A10.
+
 ## Data pipeline (Sessions A2–A3, combined)
 
 Fetch → audit → load pipeline complete. `scripts/fetch_history.py` pulls

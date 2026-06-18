@@ -1,4 +1,4 @@
-schema_version: 4
+schema_version: 5
 instrument: EURUSD
 display_name: "Euro / US Dollar"
 asset_class: fx          # fx | synthetic | crypto
@@ -48,3 +48,8 @@ signals:
   min_rr_ratio: 2.5
   sl_buffer_pips: 2.0
   sl_buffer_pips_elevated: 4.0
+  # Pyramiding — ADR-003 defaults (owner decision, not in spec)
+  pyramid_enabled: false
+  pyramid_max_legs: 3
+  pyramid_add_at_r: 1.0
+  pyramid_same_direction_only: true
