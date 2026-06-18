@@ -1,4 +1,4 @@
-schema_version: 6
+schema_version: 7
 instrument: EURUSD
 display_name: "Euro / US Dollar"
 asset_class: fx          # fx | synthetic | crypto
@@ -31,7 +31,7 @@ signals:
   slope_threshold_atr_mult: 0.05
   triangle_min_candles: 8
   triangle_max_candles: 60
-  triangle_flat_tolerance_pct: 0.005
+  triangle_flat_tolerance_pct: 0.005   # swing range ≤ pct×level (0.5% of price, EURUSD calibrated)
   swing_lookback: 2
   # §6.1.1/§6.1.2 sloped-leg + compression (spec defaults)
   triangle_min_higher_lows: 2

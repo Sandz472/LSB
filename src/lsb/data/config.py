@@ -49,7 +49,7 @@ class SignalParams:
     slope_threshold_atr_mult: float  # slope abs < ATR×mult → NEUTRAL
     triangle_min_candles: int      # 8 H4 candles minimum for triangle
     triangle_max_candles: int      # 60 H4 candles maximum
-    triangle_flat_tolerance_pct: float  # 0.005 — swing range ≤ this × level = "flat" leg
+    triangle_flat_tolerance_pct: float  # flat-leg: swing range ≤ pct × level (per-instrument calibrated)
     swing_lookback: int            # 2 — N bars each side for swing pivot detection
     apex_proximity_min: float      # 0.75 — price must be ≥75% to apex
     apex_proximity_max: float      # 0.95 — price must be ≤95% to apex

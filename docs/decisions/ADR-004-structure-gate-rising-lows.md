@@ -79,3 +79,14 @@ v2.1 sensitivity-sweep protocol.
   selective for a statistically meaningful walk-forward (A9). Flagged for an owner
   decision on whether the apex-proximity / step thresholds warrant a sensitivity
   sweep before A9. Do not tune thresholds to manufacture trades without that sign-off.
+
+## Update (2026-06-18) — apex sweep result
+
+The apex-proximity sensitivity sweep (`scripts/sweep_apex.py`) **falsified** the
+hypothesis above that apex is the next-tightest constraint. Widening apex from
+[0.75, 0.95] to [0.50, 1.00] raises EURUSD structure-admitted bars 3 → 51 but
+fully-qualified stays **0 at every setting**; XAUUSD/BTCUSD admit 0 structure bars
+even at apex [0, 1]. **Decision: leave apex thresholds unchanged.** The real wall is
+downstream — **gate 3 (liquidity sweep) rejects 100%** of the 116 EURUSD
+structure-admitted setups and has never passed in 3 years. That is the next
+investigation (tracked separately), same dead-gate pattern as this ADR.

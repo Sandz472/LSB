@@ -34,12 +34,36 @@ def eurusd():
     return cfg, candles
 
 
+@pytest.fixture(scope="module")
+def xauusd():
+    cfg = load_config(_CONFIG / "XAUUSD.yaml")
+    candles = load_parquet(history_path(_HISTORY, "XAUUSD"))
+    return cfg, candles
+
+
+@pytest.fixture(scope="module")
+def btcusd():
+    cfg = load_config(_CONFIG / "BTCUSD.yaml")
+    candles = load_parquet(history_path(_HISTORY, "BTCUSD"))
+    return cfg, candles
+
+
 def _detect_at(cfg, candles, i):
     p = cfg.signals
     win = candles[i - MIN_H1_WINDOW + 1: i + 1]
     h4 = resample_h1_to_h4(win)
     sub = h4[-p.triangle_max_candles:] if len(h4) > p.triangle_max_candles else h4
     return detect_triangle(sub, p)
+
+
+def _confirmed_in_history(cfg, candles, step=5):
+    """Sampled sweep: count confirmed triangles over the full history."""
+    confirmed = 0
+    for i in range(MIN_H1_WINDOW, len(candles), step):
+        s = _detect_at(cfg, candles, i).state
+        if s in (StructureState.ASCENDING_TRIANGLE, StructureState.DESCENDING_TRIANGLE):
+            confirmed += 1
+    return confirmed
 
 
 def test_ascending_triangle_reachable(eurusd):
@@ -65,12 +89,33 @@ def test_descending_triangle_reachable(eurusd):
 def test_confirmed_triangles_exist_in_history(eurusd):
     """Sampled sweep: at least a handful of confirmed triangles over the history."""
     cfg, candles = eurusd
-    confirmed = 0
-    for i in range(MIN_H1_WINDOW, len(candles), 5):  # step 5 → fast, still catches clusters
-        s = _detect_at(cfg, candles, i).state
-        if s in (StructureState.ASCENDING_TRIANGLE, StructureState.DESCENDING_TRIANGLE):
-            confirmed += 1
+    confirmed = _confirmed_in_history(cfg, candles)
     assert confirmed >= 1, (
         f"Only {confirmed} confirmed triangles in sampled EURUSD history — "
         "structure gate has effectively regressed to always-NONE"
+    )
+
+
+def test_xauusd_structure_gate_alive(xauusd):
+    """XAU/BTC gate was dead (0 confirmed) before the ATR-relative flat-leg fix.
+
+    The ATR-relative tolerance (k=2.3) normalizes across asset classes so that
+    all three instruments reach ~7-11% flat-leg admit rate. This guard ensures
+    the gate cannot silently die again for either instrument.
+    """
+    cfg, candles = xauusd
+    confirmed = _confirmed_in_history(cfg, candles)
+    assert confirmed >= 1, (
+        f"Only {confirmed} confirmed XAUUSD triangles in sampled history — "
+        "flat-leg ATR normalization may have regressed"
+    )
+
+
+def test_btcusd_structure_gate_alive(btcusd):
+    """Gate was dead (0 confirmed) for BTC before the ATR-relative flat-leg fix."""
+    cfg, candles = btcusd
+    confirmed = _confirmed_in_history(cfg, candles)
+    assert confirmed >= 1, (
+        f"Only {confirmed} confirmed BTCUSD triangles in sampled history — "
+        "flat-leg ATR normalization may have regressed"
     )
