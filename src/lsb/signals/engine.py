@@ -1,10 +1,8 @@
-"""Signal engine — evaluates gates 1–4 for a candle window.
+"""Signal engine — evaluates all eight M7 entry gates for a candle window.
 
 Accepts a sequence of H1 Candle objects and a fully-loaded InstrumentConfig
 (including SignalParams). Returns a SignalResult with per-gate pass/fail and
 reasons, suitable for persisting to the `signal` table.
-
-Gates 5–8 and the full eight-gate conjunction are Session A5.
 
 No I/O, no side effects: pure transformation of a candle window to a result.
 """
@@ -22,10 +20,16 @@ from lsb.signals.gates import (
     gate_2_structure_present,
     gate_3_liquidity_sweep,
     gate_4_sweep_quality,
+    gate_5_candle_confirmation,
+    gate_6_volatility_acceptable,
+    gate_7_session_clear,
+    gate_8_risk_viable,
 )
-from lsb.signals.indicators import atr_series, ema_series
+from lsb.signals.indicators import ATRState, CandleType, atr_series, classify_candle, ema_series
 from lsb.signals.liquidity import detect_sweep, identify_block
 from lsb.signals.resample import resample_h1_to_h4
+from lsb.signals.risk import rr_target, structural_stop
+from lsb.signals.session import minutes_to_edge, session_of
 from lsb.signals.structure import StructureState, detect_triangle
 from lsb.signals.trend import TrendState, current_atr_state, current_emas, trend_state
 
@@ -41,8 +45,8 @@ class SignalResult:
     timeframe: str
     ts: object            # evaluation candle timestamp
     config_hash: str
-    direction: str | None   # 'long' | 'short' | None if no structure
-    qualified: bool          # True if all 4 gates pass (A4 scope only)
+    direction: str | None   # 'long' | 'short' | None if direction undetermined
+    qualified: bool          # True if all eight gates pass (eight-gate conjunction)
     rejected_at_gate: int | None
     gates: tuple[GateResult, ...]
 
@@ -52,7 +56,7 @@ def evaluate(
     config: InstrumentConfig,
     config_hash_val: str,
 ) -> SignalResult:
-    """Evaluate gates 1–4 for the last candle in h1_window.
+    """Evaluate all eight M7 gates for the last candle in h1_window.
 
     h1_window must be sorted ascending by timestamp, with the candle under
     evaluation at index -1. The window must be at least MIN_H1_WINDOW candles.
@@ -66,7 +70,7 @@ def evaluate(
             timeframe='H1',
             ts=ts,
             config_hash=config_hash_val,
-            direction=None if gate_num <= 2 else gates[1].detail.get('direction'),
+            direction=direction if gate_num > 2 else None,
             qualified=False,
             rejected_at_gate=gate_num,
             gates=tuple(gates),
@@ -121,13 +125,59 @@ def evaluate(
     if not g4.passed:
         return _reject(4, gates)
 
+    # --- Gates 5–8 (Session A5) ---
+    atr_vals = atr_series(h1_window, p.atr_period)
+    atr_last = atr_vals[-1] if atr_vals else 1e-6
+
+    # Gate 5 — candle confirmation
+    confirm_type = classify_candle(h1_window[-1], h1_window[-2], atr_last)
+    body = abs(h1_window[-1].close - h1_window[-1].open)
+    if direction == 'short':
+        dir_wick = h1_window[-1].high - max(h1_window[-1].open, h1_window[-1].close)
+        closes_beyond = h1_window[-1].close < block.upper
+    else:
+        dir_wick = min(h1_window[-1].open, h1_window[-1].close) - h1_window[-1].low
+        closes_beyond = h1_window[-1].close > block.lower
+    wick_ratio = dir_wick / body if body > 0 else 0.0
+
+    g5 = gate_5_candle_confirmation(confirm_type, closes_beyond, wick_ratio, direction, p)
+    gates.append(g5)
+    if not g5.passed:
+        return _reject(5, gates)
+
+    # Gate 6 — volatility acceptable
+    spread = h1_window[-1].spread
+    spread_pips = (spread / config.pip_size) if spread is not None else None
+    g6 = gate_6_volatility_acceptable(atr_st, spread_pips, p)
+    gates.append(g6)
+    if not g6.passed:
+        return _reject(6, gates)
+
+    # Gate 7 — session & news
+    g7 = gate_7_session_clear(session_of(ts), minutes_to_edge(ts), p)
+    gates.append(g7)
+    if not g7.passed:
+        return _reject(7, gates)
+
+    # Gate 8 — risk viable
+    entry_price = h1_window[-1].low if direction == 'short' else h1_window[-1].high
+    stop = structural_stop(h1_window[-1], direction, atr_st, p, config.pip_size)
+    if stop is not None and atr_last > 0:
+        _, rr = rr_target(entry_price, stop, h1_window, atr_last, direction, p)
+    else:
+        rr = 0.0
+    g8 = gate_8_risk_viable(rr, stop is not None, p)
+    gates.append(g8)
+    if not g8.passed:
+        return _reject(8, gates)
+
     return SignalResult(
         instrument=config.instrument,
         timeframe='H1',
         ts=ts,
         config_hash=config_hash_val,
         direction=direction,
-        qualified=True,
+        qualified=True,   # true eight-gate conjunction
         rejected_at_gate=None,
         gates=tuple(gates),
     )

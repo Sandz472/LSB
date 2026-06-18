@@ -58,6 +58,17 @@ class SignalParams:
     sweep_penetration_pips: float  # 2 pips wick extension to qualify
     sweep_expiry_candles: int      # 3 H1 candles before sweep expires
     sweep_score_min: int           # Gate-4 threshold (0–100)
+    # Gate 5 — candle confirmation (§8 cond 5)
+    rejection_wick_body_mult: float    # directional wick ≥ N× body; spec default 2.0
+    # Gate 6 — volatility acceptable (§9.3)
+    allowed_atr_states: tuple[str, ...]  # ATRState names that pass; default NORMAL + ELEVATED
+    max_spread_pips: float               # per-bar spread cap in pip units
+    # Gate 7 — session & news (§8 cond 6)
+    session_edge_buffer_min: int         # minutes buffer from session boundary
+    # Gate 8 — risk viable (§9.1, §9.4)
+    min_rr_ratio: float                  # minimum R:R ratio; spec default 2.5
+    sl_buffer_pips: float                # stop buffer above rejection wick, NORMAL ATR (§9.1)
+    sl_buffer_pips_elevated: float       # stop buffer, ELEVATED ATR (§9.1; default 4.0)
 
 
 @dataclass(frozen=True)
@@ -76,6 +87,9 @@ class InstrumentConfig:
 
 def load_config(path: Path) -> InstrumentConfig:
     raw = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    sig_raw = dict(raw["signals"])
+    if "allowed_atr_states" in sig_raw:
+        sig_raw["allowed_atr_states"] = tuple(sig_raw["allowed_atr_states"])
     return InstrumentConfig(
         schema_version=raw["schema_version"],
         instrument=raw["instrument"],
@@ -86,7 +100,7 @@ def load_config(path: Path) -> InstrumentConfig:
         contract_size=raw["contract_size"],
         broker_costs=BrokerCosts(**raw["broker_costs"]),
         walkforward=WalkForwardWindow(**raw["walkforward"]),
-        signals=SignalParams(**raw["signals"]),
+        signals=SignalParams(**sig_raw),
     )
 
 

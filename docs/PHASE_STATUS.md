@@ -16,6 +16,29 @@ Migration `001_core.sql` (Session A1) — four tables: `config_version`,
 schema is restored verbatim in Phase B Track 2 (Session B5); its DDL
 already exists and deferring it costs nothing.
 
+## Signal engine (Sessions A4–A5)
+
+Gates 1–8 of the M7 entry qualifier are complete. `src/lsb/signals/`:
+
+| Gate | Name | Status |
+|---|---|---|
+| 1 | Trend alignment | done (A4) |
+| 2 | Structure present | done (A4) |
+| 3 | Liquidity sweep confirmed | done (A4) |
+| 4 | Sweep quality (5-factor score) | done (A4) |
+| 5 | Candle confirmation | done (A5) — REJECTION/ENGULFING in direction + wick/body ≥ 2× + close beyond swept level |
+| 6 | Volatility acceptable | done (A5) — blocks EXTREME ATR; spread ≤ max_spread_pips |
+| 7 | Session & news | done (A5) — session UTC bands + edge buffer; **news/liquidity = stub-pass (M12, Phase B)** |
+| 8 | Risk viable | done (A5) — structural stop §9.1 + R:R ≥ 2.5 §9.4; **drawdown/tier = stub-pass (M11, Phase B)** |
+
+`evaluate()` now runs all eight gates short-circuiting; `SignalResult.qualified` is the true
+eight-gate conjunction. `schema_version` bumped 3→4 (gate 5–8 params in `SignalParams`).
+New modules: `signals/session.py`, `signals/risk.py`.
+
+**Phase-A qualification note:** Gate 7's news filter and Gate 8's drawdown/tier check are
+documented stub-passes for all Phase-A evaluations. Live trading still requires Phase B
+(Gate GB GO), so no un-checked setup can reach a broker order.
+
 ## Data pipeline (Sessions A2–A3, combined)
 
 Fetch → audit → load pipeline complete. `scripts/fetch_history.py` pulls

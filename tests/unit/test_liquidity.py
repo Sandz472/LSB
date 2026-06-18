@@ -35,10 +35,17 @@ _SIGNAL_PARAMS = SignalParams(
     apex_proximity_min=0.75, apex_proximity_max=0.95,
     block_min_touches=2, block_min_width_pips=5.0,
     sweep_penetration_pips=2.0, sweep_expiry_candles=3, sweep_score_min=50,
+    rejection_wick_body_mult=2.0,
+    allowed_atr_states=('NORMAL', 'ELEVATED'),
+    max_spread_pips=3.0,
+    session_edge_buffer_min=30,
+    min_rr_ratio=2.5,
+    sl_buffer_pips=2.0,
+    sl_buffer_pips_elevated=4.0,
 )
 
 _EURUSD_CONFIG = InstrumentConfig(
-    schema_version=3, instrument='EURUSD', display_name='Euro/USD',
+    schema_version=4, instrument='EURUSD', display_name='Euro/USD',
     asset_class='fx', timeframes=('H1',), pip_size=0.0001, contract_size=100000,
     broker_costs=BrokerCosts(1.2, 0.05, 7.0, -0.8, -0.3),
     walkforward=WalkForwardWindow(18, 6),

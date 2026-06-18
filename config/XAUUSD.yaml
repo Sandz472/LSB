@@ -1,4 +1,4 @@
-schema_version: 3
+schema_version: 4
 instrument: XAUUSD
 display_name: "Gold / US Dollar"
 asset_class: fx          # fx | synthetic | crypto
@@ -39,3 +39,11 @@ signals:
   sweep_penetration_pips: 2.0
   sweep_expiry_candles: 3
   sweep_score_min: 50
+  # Gate 5–8 parameters (Session A5; spec defaults — tune only after walk-forward)
+  rejection_wick_body_mult: 2.0
+  allowed_atr_states: [NORMAL, ELEVATED]
+  max_spread_pips: 50.0    # XAUUSD: pips at $0.01/pip; 50 pips = $0.50 cap
+  session_edge_buffer_min: 30
+  min_rr_ratio: 2.5
+  sl_buffer_pips: 2.0
+  sl_buffer_pips_elevated: 4.0
