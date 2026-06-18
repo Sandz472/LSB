@@ -9,7 +9,13 @@ from datetime import datetime, timezone
 
 from lsb.data.config import SignalParams
 from lsb.signals import Candle
-from lsb.signals.structure import StructureState, detect_triangle
+from lsb.signals.structure import (
+    StructureState,
+    detect_triangle,
+    _rising_lows,
+    _falling_highs,
+    _compression_ok,
+)
 
 PARAMS = SignalParams(
     ema_short_period=21, ema_mid_period=50, ema_long_period=89,
@@ -165,6 +171,55 @@ class TestDescendingTriangle:
         candles = _build_descending_triangle()
         result = detect_triangle(candles, PARAMS)
         assert result.state != StructureState.ASCENDING_TRIANGLE
+
+
+class TestRisingLowsHelper:
+    """Regression guard for the §6.1.1 rising-lows leg.
+
+    The original implementation used all(low[j] > low[j-1]) — a strict all-pivot
+    monotonicity test that NEVER passed on real H4 data (one noisy lower pivot
+    vetoed the whole pattern), leaving Gate 2 permanently dead. These tests lock
+    in the corrected behaviour: an on-balance climb tolerant of intermediate noise.
+    """
+
+    def test_noisy_but_rising_passes(self):
+        # Net climb 1.000 → 1.040 with a noisy dip in the middle.
+        lows = [1.000, 1.010, 1.004, 1.025, 1.040]
+        assert _rising_lows(lows, step_pct=0.002, min_points=2)
+
+    def test_strict_monotonic_still_passes(self):
+        lows = [1.000, 1.018, 1.036]
+        assert _rising_lows(lows, step_pct=0.002, min_points=2)
+
+    def test_flat_lows_rejected(self):
+        lows = [1.000, 1.0005, 1.0009]  # steps below 0.20%
+        assert not _rising_lows(lows, step_pct=0.002, min_points=2)
+
+    def test_falling_lows_rejected(self):
+        lows = [1.040, 1.020, 1.000]
+        assert not _rising_lows(lows, step_pct=0.002, min_points=2)
+
+    def test_min_points_enforced(self):
+        # Only one qualifying step → 2 points; min_points=3 should reject.
+        lows = [1.000, 1.030]
+        assert _rising_lows(lows, step_pct=0.002, min_points=2)
+        assert not _rising_lows(lows, step_pct=0.002, min_points=3)
+
+    def test_falling_highs_mirror(self):
+        highs = [1.200, 1.190, 1.195, 1.170, 1.150]  # net fall with noise
+        assert _falling_highs(highs, step_pct=0.002, min_points=2)
+        assert not _falling_highs([1.150, 1.170, 1.200], step_pct=0.002, min_points=2)
+
+
+class TestCompressionHelper:
+    def test_compression_pass(self):
+        # last range 0.04 ≤ 0.60 × first range 0.10
+        window = [_h4(0, 1.0, 1.10, 1.00, 1.05), _h4(1, 1.0, 1.04, 1.00, 1.02)]
+        assert _compression_ok(window, 0, 0.60)
+
+    def test_compression_fail(self):
+        window = [_h4(0, 1.0, 1.05, 1.00, 1.02), _h4(1, 1.0, 1.10, 1.00, 1.05)]
+        assert not _compression_ok(window, 0, 0.60)
 
 
 class TestNoStructure:

@@ -23,7 +23,7 @@ Gates 1–8 of the M7 entry qualifier are complete. `src/lsb/signals/`:
 | Gate | Name | Status |
 |---|---|---|
 | 1 | Trend alignment | done (A4) |
-| 2 | Structure present | done (A4) |
+| 2 | Structure present | done (A4); **rising-lows leg corrected in A6 — see ADR-004** (strict all-pivot monotonicity made gate 2 permanently dead; now §6.1.1 ≥2 higher lows each ≥0.20% + compression ≤60%) |
 | 3 | Liquidity sweep confirmed | done (A4) |
 | 4 | Sweep quality (5-factor score) | done (A4) |
 | 5 | Candle confirmation | done (A5) — REJECTION/ENGULFING in direction + wick/body ≥ 2× + close beyond swept level |
@@ -54,7 +54,8 @@ documented stub-passes for all Phase-A evaluations. Live trading still requires 
 | `sink.py` | `NullSink` (CI-safe, in-memory) + `DbSink` (wraps `signals/persist.py`) |
 | `loop.py` | `run_backtest()` — per-candle driver with look-ahead guard |
 
-`schema_version` bumped 4→5 (four `pyramid_*` fields in `SignalParams` per ADR-003).
+`schema_version` bumped 4→5 (four `pyramid_*` fields per ADR-003), then 5→6
+(three `triangle_*` fields per ADR-004 structure-gate fix).
 CLI: `scripts/run_backtest.py EURUSD [--db] [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--all]`.
 
 **Owner decision (ADR-003):** Pyramiding built in from A6. Off by default

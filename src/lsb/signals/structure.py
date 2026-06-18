@@ -77,6 +77,51 @@ def _swing_lows(candles: Sequence[Candle], lookback: int = _DEFAULT_SWING_LOOKBA
     return result
 
 
+def _rising_lows(low_vals: list[float], step_pct: float, min_points: int) -> bool:
+    """§6.1.1 rising-lows leg: ≥ min_points swing lows forming an ascending line,
+    each confirmed low at least step_pct above the previously confirmed low.
+
+    Greedily walks the chronological swing lows, anchoring on the first and
+    counting each subsequent low that steps up by ≥ step_pct. A real ascending
+    triangle has rising lows on balance; this tolerates noisy lower pivots in
+    between (unlike a strict all-pivot monotonicity test) while still requiring
+    a genuine, quantified climb. Returns True if the ascending sequence has at
+    least min_points points.
+    """
+    if not low_vals:
+        return False
+    seq = 1
+    anchor = low_vals[0]
+    for v in low_vals[1:]:
+        if anchor > 0 and v >= anchor * (1.0 + step_pct):
+            seq += 1
+            anchor = v
+    return seq >= min_points
+
+
+def _falling_highs(high_vals: list[float], step_pct: float, min_points: int) -> bool:
+    """§6.1.2 falling-highs leg: mirror of _rising_lows for descending triangles."""
+    if not high_vals:
+        return False
+    seq = 1
+    anchor = high_vals[0]
+    for v in high_vals[1:]:
+        if anchor > 0 and v <= anchor * (1.0 - step_pct):
+            seq += 1
+            anchor = v
+    return seq >= min_points
+
+
+def _compression_ok(
+    window: Sequence[Candle], pattern_start_idx: int, ratio: float
+) -> bool:
+    """§6.1.1 compression: current candle range ≤ ratio × pattern-start candle range."""
+    start = max(0, min(pattern_start_idx, len(window) - 1))
+    first_range = window[start].high - window[start].low
+    last_range = window[-1].high - window[-1].low
+    return first_range > 0 and last_range <= ratio * first_range
+
+
 def _linear_regression(xs: list[float], ys: list[float]) -> tuple[float, float]:
     """Returns (slope, intercept) of the least-squares line through (xs, ys)."""
     n = len(xs)
@@ -155,15 +200,30 @@ def detect_triangle(h4_candles: Sequence[Candle], p: SignalParams) -> StructureR
     high_range = max(high_vals) - min(high_vals)
 
     if high_range <= resistance * p.triangle_flat_tolerance_pct and resistance > 0:
-        # Check rising lows.
+        # Check rising lows (§6.1.1): ≥ triangle_min_higher_lows ascending swing
+        # lows, each ≥ triangle_low_step_pct above the prior confirmed low.
         low_vals = [window[i].low for i in lows_idx]
-        rising = all(low_vals[j] > low_vals[j - 1] for j in range(1, len(low_vals)))
+        rising = _rising_lows(low_vals, p.triangle_low_step_pct, p.triangle_min_higher_lows)
         if rising:
             pattern_start = min(highs_idx[0], lows_idx[0])
             low_xs = [float(i) for i in lows_idx]
             slope, intercept = _linear_regression(low_xs, low_vals)
             prox = _apex_proximity(current_idx, pattern_start, slope, intercept, resistance)
             if p.apex_proximity_min <= prox <= p.apex_proximity_max:
+                # §6.1.1 compression: confirmed only if price has compressed into the apex.
+                if not _compression_ok(window, pattern_start, p.triangle_compression_ratio):
+                    return StructureResult(
+                        state=StructureState.FORMING,
+                        apex_proximity=prox,
+                        resistance_level=resistance,
+                        resistance_high=None,
+                        resistance_low=None,
+                        support_level=None,
+                        support_high=None,
+                        support_low=None,
+                        resistance_touches=len(highs_idx),
+                        pattern_start_idx=pattern_start,
+                    )
                 # Block boundaries (spec §7.1.1):
                 # upper = highest swing high wick, lower = lowest swing high close
                 res_high = max(window[i].high for i in highs_idx)
@@ -202,7 +262,9 @@ def detect_triangle(h4_candles: Sequence[Candle], p: SignalParams) -> StructureR
 
     if low_range <= support * p.triangle_flat_tolerance_pct and support > 0:
         high_vals = [window[i].high for i in highs_idx]
-        falling = all(high_vals[j] < high_vals[j - 1] for j in range(1, len(high_vals)))
+        # Check falling highs (§6.1.2): ≥ triangle_min_higher_lows descending swing
+        # highs, each ≥ triangle_low_step_pct below the prior confirmed high.
+        falling = _falling_highs(high_vals, p.triangle_low_step_pct, p.triangle_min_higher_lows)
         if falling:
             pattern_start = min(highs_idx[0], lows_idx[0])
             high_xs = [float(i) for i in highs_idx]
@@ -217,6 +279,20 @@ def detect_triangle(h4_candles: Sequence[Candle], p: SignalParams) -> StructureR
                     if span > 0 else 0.0
                 )
                 if p.apex_proximity_min <= prox <= p.apex_proximity_max:
+                    # §6.1.2 compression: confirmed only if price has compressed into the apex.
+                    if not _compression_ok(window, pattern_start, p.triangle_compression_ratio):
+                        return StructureResult(
+                            state=StructureState.FORMING,
+                            apex_proximity=prox,
+                            resistance_level=None,
+                            resistance_high=None,
+                            resistance_low=None,
+                            support_level=support,
+                            support_high=None,
+                            support_low=None,
+                            resistance_touches=len(lows_idx),
+                            pattern_start_idx=pattern_start,
+                        )
                     # Block boundaries (spec §7.1.2 mirror of 7.1.1):
                     # upper = highest swing low close, lower = lowest swing low wick
                     sup_high = max(window[i].close for i in lows_idx)

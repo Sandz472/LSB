@@ -1,4 +1,4 @@
-schema_version: 5
+schema_version: 6
 instrument: BTCUSD
 display_name: "Bitcoin / US Dollar"
 asset_class: crypto       # fx | synthetic | crypto
@@ -35,6 +35,10 @@ signals:
   triangle_max_candles: 60
   triangle_flat_tolerance_pct: 0.005
   swing_lookback: 2
+  # §6.1.1/§6.1.2 sloped-leg + compression (spec defaults)
+  triangle_min_higher_lows: 2
+  triangle_low_step_pct: 0.002
+  triangle_compression_ratio: 0.60
   apex_proximity_min: 0.75
   apex_proximity_max: 0.95
   block_min_touches: 2

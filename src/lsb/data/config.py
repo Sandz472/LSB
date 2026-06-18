@@ -69,6 +69,11 @@ class SignalParams:
     min_rr_ratio: float                  # minimum R:R ratio; spec default 2.5
     sl_buffer_pips: float                # stop buffer above rejection wick, NORMAL ATR (§9.1)
     sl_buffer_pips_elevated: float       # stop buffer, ELEVATED ATR (§9.1; default 4.0)
+    # §6.1.1/§6.1.2 rising-lows / falling-highs sloped leg + compression ratio.
+    # Defaults match spec §6.1.1 (0.20% step, 60% compression, minimum 2 sloped pivots).
+    triangle_min_higher_lows: int = 2       # min swing lows (asc) / highs (desc) forming the sloped leg
+    triangle_low_step_pct: float = 0.002    # each higher low ≥ this fraction above the prior (§6.1.1)
+    triangle_compression_ratio: float = 0.60  # current candle range ≤ this × pattern-start range (§6.1.1)
     # Pyramiding — ADR-003 (owner decision; NOT in Requirements v2.0 or Blueprint v2.1)
     pyramid_enabled: bool = False
     pyramid_max_legs: int = 3
