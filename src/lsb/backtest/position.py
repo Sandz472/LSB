@@ -50,6 +50,12 @@ class Position:
     # §11.4 50% partial exit events (may have multiple across a trade)
     partial_exits: list[PartialExitEvent] = field(default_factory=list)
 
+    # A7 cost fields — recorded at close, do NOT affect r_at_close (A10 aggregates).
+    # commission: currency/lot (scale by contract size in A10).
+    # swap: price-units = nights_held × swap_pts × pip_size (convert via contract size in A10).
+    commission: float = field(default=0.0)
+    swap: float = field(default=0.0)
+
     # Close metadata
     close_price: float | None = field(default=None)
     close_ts: Any = field(default=None)

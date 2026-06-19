@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from lsb.data.config import load_config, config_hash as compute_hash
+from lsb.backtest.broker import SimulatedBroker
 from lsb.backtest.data import load_parquet, history_path
 from lsb.backtest.loop import run_backtest
 from lsb.backtest.sink import DbSink, NullSink
@@ -62,7 +63,8 @@ def _run_instrument(instr: str, args) -> None:
     else:
         sink = NullSink()
 
-    book, sink = run_backtest(candles, cfg, h, sink=sink)
+    sim_broker = SimulatedBroker(cfg.broker_costs, cfg.pip_size)
+    book, sink = run_backtest(candles, cfg, h, sink=sink, broker=sim_broker)
 
     closed = book.closed_legs()
     active = book.active_legs()

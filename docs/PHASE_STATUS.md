@@ -39,7 +39,7 @@ New modules: `signals/session.py`, `signals/risk.py`.
 documented stub-passes for all Phase-A evaluations. Live trading still requires Phase B
 (Gate GB GO), so no un-checked setup can reach a broker order.
 
-## Backtest engine (Session A6)
+## Backtest engine (Sessions A6–A7)
 
 `src/lsb/backtest/` — event-driven replay core. Modules:
 
@@ -47,22 +47,31 @@ documented stub-passes for all Phase-A evaluations. Live trading still requires 
 |---|---|
 | `data.py` | Parquet loader → `list[Candle]`, schema-validated, sorted |
 | `clock.py` | `ReplayClock` — injectable clock, emits candle timestamps, no wall-clock reads |
-| `broker.py` | `Broker` Protocol + `NaiveBroker` (optimistic fill) + `PendingOrder`/`Fill` |
-| `position.py` | `Position` dataclass + `PosState` enum + `r_now()` |
+| `broker.py` | `Broker` Protocol + `NaiveBroker` (optimistic) + `SimulatedBroker` (§7.1 pessimistic) + `PendingOrder`/`Fill` |
+| `position.py` | `Position` dataclass + `PosState` enum + `r_now()` + `commission`/`swap` cost fields |
 | `manage.py` | §11.2 breakeven, §11.3 EMA21 trail, §11.4 partial/full exits, §10.3 expiry |
 | `book.py` | `PositionBook` — ADR-003 pyramiding policy, book-wide exits |
 | `sink.py` | `NullSink` (CI-safe, in-memory) + `DbSink` (wraps `signals/persist.py`) |
 | `loop.py` | `run_backtest()` — per-candle driver with look-ahead guard |
 
 `schema_version` bumped 4→5 (four `pyramid_*` fields per ADR-003), then 5→6
-(three `triangle_*` fields per ADR-004 structure-gate fix).
+(three `triangle_*` fields per ADR-004 structure-gate fix). No bump for A7
+(`BrokerCosts` was already in the config schema from A1).
 CLI: `scripts/run_backtest.py EURUSD [--db] [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--all]`.
 
 **Owner decision (ADR-003):** Pyramiding built in from A6. Off by default
 (`pyramid_enabled: false`). See `docs/decisions/ADR-003-pyramiding.md`.
 
-**Scope boundary:** A6 writes `signal` rows only. `wf_run`/`sim_trade` (walk-forward
-windows) → A9. Pessimistic fill (SimulatedBroker) → A7. Equity/stats/verdict → A10.
+**Session A7 — SimulatedBroker (§7.1 pessimistic fill model):**
+- Spread: historical `candle.spread` when present, else per-instrument constant from `BrokerCosts`; applied at entry only (D4).
+- Slippage: `slippage_atr_mult × ATR`, doubled in EXTREME state; always against the position (D5). ATR state tagged on `PendingOrder` at staging time.
+- Gap-through-trigger (entry): `base = max(trigger, candle.open)` long / `min(trigger, candle.open)` short.
+- Gap-through-stop (exit): `fill_stop()` routes via `min(stop, candle.open)` long / `max(stop, candle.open)` short — honest case.
+- Target exits: fill exactly at target; no positive slippage credited (Q3).
+- Commission/swap: computed and recorded as `Position.commission` (currency/lot) and `Position.swap` (price-units = nights × swap_pts × pip). Do **not** affect `r_at_close` — A10 aggregates for equity (D3/Q1).
+- `NaiveBroker` kept for A8 golden-fixture determinism; `SimulatedBroker` is the CLI default from A7 onward.
+
+**Scope boundary:** `wf_run`/`sim_trade` (walk-forward windows) → A9. Equity/stats/verdict → A10.
 
 ## Data pipeline (Sessions A2–A3, combined)
 

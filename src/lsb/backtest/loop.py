@@ -28,7 +28,7 @@ from lsb.signals.indicators import ATRState, ema_series, atr_series
 from lsb.signals.risk import structural_stop, rr_target
 from lsb.signals.trend import current_atr_state
 
-from lsb.backtest.broker import Broker, Fill, NaiveBroker, PendingOrder
+from lsb.backtest.broker import Broker, Fill, NaiveBroker, PendingOrder, SimulatedBroker
 from lsb.backtest.book import PositionBook
 from lsb.backtest.clock import ReplayClock
 from lsb.backtest.manage import (
@@ -85,14 +85,14 @@ def run_backtest(
         pending = _process_pending(pending, candle, bar_idx, config, broker, book)
 
         # --- 2. & 3. Stop/target + management ---
-        _manage_book(book, candle, h1_win, config)
+        _manage_book(book, candle, h1_win, config, broker)
 
         # --- 4. Signal evaluation ---
         result: SignalResult = evaluate(h1_win, config, config_hash_val)
         sink.write(result)
 
         # --- 5. Book-wide §11.4 defensive exits ---
-        _defensive_exits(book, result, candle, bar_idx)
+        _defensive_exits(book, result, candle, bar_idx, config)
 
         # --- 6. Stage new pending order if qualified ---
         if result.qualified and result.direction is not None:
@@ -143,17 +143,34 @@ def _process_pending(
     return still_pending
 
 
+def _record_costs(leg, close_ts, config: InstrumentConfig) -> None:
+    """Record commission and swap on the leg (D3). Does not affect r_at_close."""
+    costs = config.broker_costs
+    nights = max(0, (close_ts - leg.fill_ts).days) if leg.fill_ts is not None else 0
+    swap_pts = costs.swap_long_points if leg.direction == 'long' else costs.swap_short_points
+    leg.commission = costs.commission_per_lot
+    leg.swap = nights * swap_pts * config.pip_size
+
+
 def _manage_book(
     book: PositionBook,
     candle: Candle,
     h1_win: list[Candle],
     config: InstrumentConfig,
+    broker: Broker,
 ) -> None:
     """Apply per-candle management to every active leg."""
     p = config.signals
     atr_vals = atr_series(h1_win, p.atr_period)
     ema21_vals = ema_series([c.close for c in h1_win], p.ema_short_period)
     ema21 = ema21_vals[-1] if ema21_vals else candle.close
+
+    # Pre-compute exit slippage once per bar for SimulatedBroker
+    sim_slip: float | None = None
+    if isinstance(broker, SimulatedBroker):
+        atr_last = atr_vals[-1] if atr_vals else 1e-6
+        atr_st_name = current_atr_state(h1_win, p).name
+        sim_slip = broker.slip_for(atr_last, atr_st_name)
 
     for leg in book.active_legs():
         # --- 2. Check stop/target ---
@@ -162,12 +179,17 @@ def _manage_book(
 
         if s_hit and t_hit:
             # Same-bar ambiguity: stop first (worst case, consistent with NaiveBroker)
-            leg.close(price=leg.stop, ts=candle.ts, bar=0, reason='stop')
+            exit_px = broker.fill_stop(leg, candle, sim_slip) if sim_slip is not None else leg.stop
+            _record_costs(leg, candle.ts, config)
+            leg.close(price=exit_px, ts=candle.ts, bar=0, reason='stop')
             continue
         if s_hit:
-            leg.close(price=leg.stop, ts=candle.ts, bar=0, reason='stop')
+            exit_px = broker.fill_stop(leg, candle, sim_slip) if sim_slip is not None else leg.stop
+            _record_costs(leg, candle.ts, config)
+            leg.close(price=exit_px, ts=candle.ts, bar=0, reason='stop')
             continue
         if t_hit:
+            _record_costs(leg, candle.ts, config)
             leg.close(price=leg.target, ts=candle.ts, bar=0, reason='target')
             continue
 
@@ -184,6 +206,7 @@ def _defensive_exits(
     result: SignalResult,
     candle: Candle,
     bar_idx: int,
+    config: InstrumentConfig,
 ) -> None:
     """§11.4 book-wide defensive exits triggered by the current bar's signal.
 
@@ -209,6 +232,7 @@ def _defensive_exits(
     if not result.qualified and result.rejected_at_gate == 2:
         for leg in active:
             if leg.direction == result.direction:
+                _record_costs(leg, candle.ts, config)
                 leg.close(
                     price=candle.close,
                     ts=candle.ts,
@@ -262,4 +286,6 @@ def _maybe_stage_order(
         config_hash=config_hash_val,
         bar_placed=bar_idx,
         signal_ts=candle.ts,
+        atr_state=atr_st.name,
+        atr_value=atr_last,
     ))
