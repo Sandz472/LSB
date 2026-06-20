@@ -23,8 +23,8 @@ from pathlib import Path
 
 
 def _default_path(relative: str) -> Path:
-    """Resolve *relative* against the repo root (4 levels up from this file)."""
-    return Path(__file__).parents[4] / relative
+    """Resolve *relative* against the repo root (3 levels up from this file)."""
+    return Path(__file__).parents[3] / relative
 
 
 def cmd_fetch_audit_load(args: argparse.Namespace) -> int:
