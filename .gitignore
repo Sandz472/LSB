@@ -11,8 +11,8 @@ venv/
 # Environment
 .env
 
-# Data (large; not tracked in Phase A scaffold)
-data/
+# Data (large; not tracked in Phase A scaffold — root-anchored so src/lsb/data/ is not affected)
+/data/
 *.parquet
 *.duckdb
 
