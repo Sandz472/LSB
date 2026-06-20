@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out\graph.html</title>
+<script src="https://unpkg.com/vis-network@9.1.6/standalone/umd/vis-network.min.js"
+        integrity="sha384-Ux6phic9PEHJ38YtrijhkzyJ8yQlH8i/+buBR8s3mAZOJrP1gwyvAcIYl3GWtpX1"
+        crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+  #legend-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 4px 0; }
+  #legend-controls label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; color: #aaa; user-select: none; }
+  #legend-controls label:hover { color: #e0e0e0; }
+  .legend-cb, #select-all-cb { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #3a3a5e; border-radius: 3px; background: #0f0f1a; cursor: pointer; position: relative; flex-shrink: 0; }
+  .legend-cb:checked, #select-all-cb:checked { background: #4E79A7; border-color: #4E79A7; }
+  .legend-cb:checked::after, #select-all-cb:checked::after { content: ''; position: absolute; left: 3.5px; top: 1px; width: 4px; height: 7px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  #select-all-cb:indeterminate { background: #4E79A7; border-color: #4E79A7; }
+  #select-all-cb:indeterminate::after { content: ''; position: absolute; left: 2px; top: 5px; width: 8px; height: 2px; background: #fff; border: none; transform: none; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend-controls">
+      <label><input type="checkbox" id="select-all-cb" checked onchange="toggleAllCommunities(!this.checked)">Select All</label>
+    </div>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">64 nodes &middot; 99 edges &middot; 9 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "build_playbook", "label": "BUILD_PLAYBOOK.md", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 23.6, "font": {"size": 12, "color": "#ffffff"}, "title": "BUILD_PLAYBOOK.md", "community": 0, "community_name": "Governing Specs, Rules & Tooling", "source_file": "", "file_type": "concept", "degree": 5}, {"id": "gate_specification", "label": "GATE_SPECIFICATION.md", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "GATE_SPECIFICATION.md", "community": 4, "community_name": "Gate Specification & Conjunction", "source_file": "", "file_type": "concept", "degree": 11}, {"id": "spec_v2_0", "label": "System Requirements v2.0", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 20.9, "font": {"size": 12, "color": "#ffffff"}, "title": "System Requirements v2.0", "community": 0, "community_name": "Governing Specs, Rules & Tooling", "source_file": "", "file_type": "concept", "degree": 4}, {"id": "blueprint_v2_1", "label": "Master Blueprint v2.1", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "Master Blueprint v2.1", "community": 0, "community_name": "Governing Specs, Rules & Tooling", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "redesign_v3_0", "label": "Redesign v3.0", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "Redesign v3.0", "community": 0, "community_name": "Governing Specs, Rules & Tooling", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "claude_md", "label": "CLAUDE.md (governing)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 20.9, "font": {"size": 12, "color": "#ffffff"}, "title": "CLAUDE.md (governing)", "community": 0, "community_name": "Governing Specs, Rules & Tooling", "source_file": "", "file_type": "concept", "degree": 4}, {"id": "adr_001", "label": "ADR-001 broker bridge", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "ADR-001 broker bridge", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "adr_002", "label": "ADR-002 go/no-go", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "ADR-002 go/no-go", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "rule_1_immutability", "label": "Rule 1 \u2014 Spec Immutability", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Rule 1 \u2014 Spec Immutability", "community": 0, "community_name": "Governing Specs, Rules & Tooling", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "rule_2_physics", "label": "Rule 2 \u2014 Physics / No Loosening", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "Rule 2 \u2014 Physics / No Loosening", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "determinism", "label": "Determinism Law", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Determinism Law", "community": 8, "community_name": "Determinism & Config Hashing", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "phase_a", "label": "Phase A \u2014 Prove (wk 1\u20133)", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 34.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Phase A \u2014 Prove (wk 1\u20133)", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 9}, {"id": "phase_b", "label": "Phase B (wk 4\u201313)", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 20.9, "font": {"size": 12, "color": "#ffffff"}, "title": "Phase B (wk 4\u201313)", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 4}, {"id": "phase_c", "label": "Phase C (wk 13+)", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "Phase C (wk 13+)", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "module_c1_data", "label": "C1 Data", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 29.1, "font": {"size": 12, "color": "#ffffff"}, "title": "C1 Data", "community": 2, "community_name": "Market Data & Instruments", "source_file": "", "file_type": "concept", "degree": 7}, {"id": "module_c2_signal", "label": "C2 Signal Engine", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 26.4, "font": {"size": 12, "color": "#ffffff"}, "title": "C2 Signal Engine", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 6}, {"id": "module_c3_backtest", "label": "C3 Backtest", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 20.9, "font": {"size": 12, "color": "#ffffff"}, "title": "C3 Backtest", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 4}, {"id": "module_c4_walkforward", "label": "C4 Walk-Forward", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 20.9, "font": {"size": 12, "color": "#ffffff"}, "title": "C4 Walk-Forward", "community": 8, "community_name": "Determinism & Config Hashing", "source_file": "", "file_type": "concept", "degree": 4}, {"id": "module_c5_verdict", "label": "C5 Verdict", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 23.6, "font": {"size": 12, "color": "#ffffff"}, "title": "C5 Verdict", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 5}, {"id": "simulated_broker", "label": "SimulatedBroker", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "SimulatedBroker", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "table_config_version", "label": "config_version table", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "config_version table", "community": 8, "community_name": "Determinism & Config Hashing", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "table_candle", "label": "candle table", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "candle table", "community": 8, "community_name": "Determinism & Config Hashing", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "table_signal", "label": "signal table", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "signal table", "community": 8, "community_name": "Determinism & Config Hashing", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "table_wf_run", "label": "wf_run + sim_trade tables", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "wf_run + sim_trade tables", "community": 8, "community_name": "Determinism & Config Hashing", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "migration_001", "label": "001_core.sql", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 20.9, "font": {"size": 12, "color": "#ffffff"}, "title": "001_core.sql", "community": 8, "community_name": "Determinism & Config Hashing", "source_file": "", "file_type": "concept", "degree": 4}, {"id": "config_hash", "label": "config_hash", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "config_hash", "community": 8, "community_name": "Determinism & Config Hashing", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "gate_1_trend", "label": "Gate 1 \u2014 Trend State", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Gate 1 \u2014 Trend State", "community": 4, "community_name": "Gate Specification & Conjunction", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "gate_2_structure", "label": "Gate 2 \u2014 Structure", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 20.9, "font": {"size": 12, "color": "#ffffff"}, "title": "Gate 2 \u2014 Structure", "community": 7, "community_name": "Sweep/EMA Gates & Prior-Build Drift", "source_file": "", "file_type": "concept", "degree": 4}, {"id": "gate_3_sweep", "label": "Gate 3 \u2014 Liquidity Sweep", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Gate 3 \u2014 Liquidity Sweep", "community": 7, "community_name": "Sweep/EMA Gates & Prior-Build Drift", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "gate_4_ema", "label": "Gate 4 \u2014 EMA Interaction", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Gate 4 \u2014 EMA Interaction", "community": 4, "community_name": "Gate Specification & Conjunction", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "gate_5_rejection", "label": "Gate 5 \u2014 Rejection Candle", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Gate 5 \u2014 Rejection Candle", "community": 4, "community_name": "Gate Specification & Conjunction", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "gate_6_session", "label": "Gate 6 \u2014 Session Active", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Gate 6 \u2014 Session Active", "community": 1, "community_name": "Phase Progression & Live Path", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "gate_7_rr", "label": "Gate 7 \u2014 Risk:Reward Minimum", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Gate 7 \u2014 Risk:Reward Minimum", "community": 4, "community_name": "Gate Specification & Conjunction", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "gate_8_global_risk", "label": "Gate 8 \u2014 Global Risk Clear", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Gate 8 \u2014 Global Risk Clear", "community": 11, "community_name": "Global-Risk Gate & Sweep Score", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "sweep_score", "label": "Sweep Probability Score (not a gate)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Sweep Probability Score (not a gate)", "community": 11, "community_name": "Global-Risk Gate & Sweep Score", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "gate_conjunction", "label": "\u00a78.1 Gate Conjunction", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 34.5, "font": {"size": 12, "color": "#ffffff"}, "title": "\u00a78.1 Gate Conjunction", "community": 4, "community_name": "Gate Specification & Conjunction", "source_file": "", "file_type": "concept", "degree": 9}, {"id": "invalidation_rule", "label": "Invalidation Rule (\u00a76.1.1/.2)", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Invalidation Rule (\u00a76.1.1/.2)", "community": 7, "community_name": "Sweep/EMA Gates & Prior-Build Drift", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "block_high", "label": "Block HIGH (sweep target)", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Block HIGH (sweep target)", "community": 7, "community_name": "Sweep/EMA Gates & Prior-Build Drift", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "flat_tolerance", "label": "Flat Tolerance 0.15%", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Flat Tolerance 0.15%", "community": 7, "community_name": "Sweep/EMA Gates & Prior-Build Drift", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "instr_eurusd", "label": "EURUSD", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "EURUSD", "community": 2, "community_name": "Market Data & Instruments", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "instr_gbpusd", "label": "GBPUSD", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "GBPUSD", "community": 2, "community_name": "Market Data & Instruments", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "instr_xauusd", "label": "XAUUSD", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "XAUUSD", "community": 2, "community_name": "Market Data & Instruments", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "instr_btcusd", "label": "BTCUSD", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "BTCUSD", "community": 1, "community_name": "Phase Progression & Live Path", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "src_dukascopy", "label": "Dukascopy", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Dukascopy", "community": 2, "community_name": "Market Data & Instruments", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "src_binance", "label": "Binance", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "Binance", "community": 1, "community_name": "Phase Progression & Live Path", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "gate_ga", "label": "Gate GA", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 29.1, "font": {"size": 12, "color": "#ffffff"}, "title": "Gate GA", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 7}, {"id": "verdict_go", "label": "GO", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "GO", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "verdict_insufficient", "label": "NO-GO / INSUFFICIENT", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "NO-GO / INSUFFICIENT", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "halt_human", "label": "HALT-HUMAN", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "HALT-HUMAN", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "r_decide", "label": "R-DECIDE (owner gate)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 26.4, "font": {"size": 12, "color": "#ffffff"}, "title": "R-DECIDE (owner gate)", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 6}, {"id": "recursion_loop", "label": "Recursive Build-and-Validate Loop", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Recursive Build-and-Validate Loop", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "recursion_state", "label": "RECURSION_STATE.md", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "RECURSION_STATE.md", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "phase_status", "label": "PHASE_STATUS.md", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "PHASE_STATUS.md", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 1}, {"id": "graphify_kb", "label": "graphify knowledge base", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 20.9, "font": {"size": 12, "color": "#ffffff"}, "title": "graphify knowledge base", "community": 0, "community_name": "Governing Specs, Rules & Tooling", "source_file": "", "file_type": "concept", "degree": 4}, {"id": "defect_rejection_geometry", "label": "Spec Defect: \u00a74.3 vs \u00a78.1 rejection geometry", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Spec Defect: \u00a74.3 vs \u00a78.1 rejection geometry", "community": 4, "community_name": "Gate Specification & Conjunction", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "defect_trend_timeframe", "label": "Spec Ambiguity: D1 vs H1 trend timeframe", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Spec Ambiguity: D1 vs H1 trend timeframe", "community": 4, "community_name": "Gate Specification & Conjunction", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "reconciliation_r", "label": "\u00a7R Reconciliation", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "\u00a7R Reconciliation", "community": 5, "community_name": "Signal/Backtest Build & Reconciliation", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "prior_build_drift", "label": "Prior-Build Drift", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 26.4, "font": {"size": 12, "color": "#ffffff"}, "title": "Prior-Build Drift", "community": 7, "community_name": "Sweep/EMA Gates & Prior-Build Drift", "source_file": "", "file_type": "concept", "degree": 6}, {"id": "claude_settings", "label": ".claude/settings.local.json", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": ".claude/settings.local.json", "community": 0, "community_name": "Governing Specs, Rules & Tooling", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "ga1_determinism_gate", "label": "GA-1 Determinism Gate (A8 CI)", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "GA-1 Determinism Gate (A8 CI)", "community": 8, "community_name": "Determinism & Config Hashing", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "defect_min_trade_count", "label": "Spec Defect: \u00a717.1 minimum trade count undefined", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Spec Defect: \u00a717.1 minimum trade count undefined", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "ga_thresholds_171", "label": "\u00a717.1 GA Threshold Bar", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 18.2, "font": {"size": 12, "color": "#ffffff"}, "title": "\u00a717.1 GA Threshold Bar", "community": 3, "community_name": "Failure & Owner Escalation", "source_file": "", "file_type": "concept", "degree": 3}, {"id": "atr_extreme_filter", "label": "ATR EXTREME \u2192 No-Trade Pre-filter (\u00a74.2.2/\u00a79.3)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "ATR EXTREME \u2192 No-Trade Pre-filter (\u00a74.2.2/\u00a79.3)", "community": 11, "community_name": "Global-Risk Gate & Sweep Score", "source_file": "", "file_type": "concept", "degree": 2}, {"id": "risk_tier_93", "label": "Risk Tier (\u00a79.3 position sizing)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 15.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Risk Tier (\u00a79.3 position sizing)", "community": 11, "community_name": "Global-Risk Gate & Sweep Score", "source_file": "", "file_type": "concept", "degree": 2}];
+const RAW_EDGES = [{"from": "build_playbook", "to": "blueprint_v2_1", "label": "governed_by", "title": "governed_by [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "build_playbook", "to": "gate_specification", "label": "references_companion", "title": "references_companion [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "build_playbook", "to": "redesign_v3_0", "label": "governed_by", "title": "governed_by [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "build_playbook", "to": "spec_v2_0", "label": "governed_by", "title": "governed_by [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "graphify_kb", "to": "build_playbook", "label": "seeds", "title": "seeds [0.8]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.8}, {"from": "gate_specification", "to": "gate_1_trend", "label": "defines", "title": "defines [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_specification", "to": "gate_2_structure", "label": "defines", "title": "defines [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_specification", "to": "gate_3_sweep", "label": "defines", "title": "defines [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_specification", "to": "gate_4_ema", "label": "defines", "title": "defines [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_specification", "to": "gate_5_rejection", "label": "defines", "title": "defines [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_specification", "to": "gate_6_session", "label": "defines", "title": "defines [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_specification", "to": "gate_7_rr", "label": "defines", "title": "defines [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_specification", "to": "gate_8_global_risk", "label": "defines", "title": "defines [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_specification", "to": "spec_v2_0", "label": "derives_from", "title": "derives_from [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "graphify_kb", "to": "gate_specification", "label": "seeds", "title": "seeds [0.8]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.8}, {"from": "ga_thresholds_171", "to": "spec_v2_0", "label": "derives_from", "title": "derives_from [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "rule_1_immutability", "to": "spec_v2_0", "label": "protects", "title": "protects [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "claude_md", "to": "claude_settings", "label": "configured_alongside", "title": "configured_alongside [0.7]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.7}, {"from": "claude_md", "to": "determinism", "label": "encodes", "title": "encodes [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "claude_md", "to": "graphify_kb", "label": "requires_query_first", "title": "requires_query_first [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "claude_md", "to": "rule_1_immutability", "label": "encodes", "title": "encodes [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "adr_001", "to": "phase_b", "label": "enables", "title": "enables [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c5_verdict", "to": "adr_002", "label": "records_verdict_in", "title": "records_verdict_in [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "rule_2_physics", "to": "halt_human", "label": "escalates_to", "title": "escalates_to [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "determinism", "to": "ga1_determinism_gate", "label": "verified_by", "title": "verified_by [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "phase_a", "to": "ga1_determinism_gate", "label": "contains", "title": "contains [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "phase_a", "to": "module_c1_data", "label": "contains", "title": "contains [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "phase_a", "to": "module_c2_signal", "label": "contains", "title": "contains [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "phase_a", "to": "module_c3_backtest", "label": "contains", "title": "contains [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "phase_a", "to": "module_c4_walkforward", "label": "contains", "title": "contains [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "phase_a", "to": "module_c5_verdict", "label": "contains", "title": "contains [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "phase_a", "to": "phase_b", "label": "precedes", "title": "precedes [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "phase_status", "to": "phase_a", "label": "locks", "title": "locks [0.8]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.8}, {"from": "recursion_loop", "to": "phase_a", "label": "executes", "title": "executes [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_ga", "to": "phase_b", "label": "unlocks_on_go", "title": "unlocks_on_go [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "phase_b", "to": "phase_c", "label": "precedes", "title": "precedes [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c1_data", "to": "instr_btcusd", "label": "loads", "title": "loads [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c1_data", "to": "instr_eurusd", "label": "loads", "title": "loads [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c1_data", "to": "instr_gbpusd", "label": "loads", "title": "loads [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c1_data", "to": "instr_xauusd", "label": "loads", "title": "loads [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c1_data", "to": "module_c2_signal", "label": "feeds", "title": "feeds [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "module_c1_data", "to": "table_candle", "label": "writes", "title": "writes [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "module_c2_signal", "to": "gate_conjunction", "label": "implements", "title": "implements [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c2_signal", "to": "module_c3_backtest", "label": "feeds", "title": "feeds [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "module_c2_signal", "to": "reconciliation_r", "label": "implements_spec_not_drift", "title": "implements_spec_not_drift [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c2_signal", "to": "table_signal", "label": "writes", "title": "writes [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "module_c3_backtest", "to": "module_c4_walkforward", "label": "feeds", "title": "feeds [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "module_c3_backtest", "to": "simulated_broker", "label": "uses", "title": "uses [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c4_walkforward", "to": "module_c5_verdict", "label": "feeds", "title": "feeds [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "module_c4_walkforward", "to": "table_wf_run", "label": "writes", "title": "writes [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "module_c5_verdict", "to": "ga_thresholds_171", "label": "reads_thresholds_from", "title": "reads_thresholds_from [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "module_c5_verdict", "to": "gate_ga", "label": "produces_verdict_for", "title": "produces_verdict_for [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "config_hash", "to": "table_config_version", "label": "stored_in", "title": "stored_in [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "migration_001", "to": "table_config_version", "label": "creates", "title": "creates [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "migration_001", "to": "table_candle", "label": "creates", "title": "creates [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "migration_001", "to": "table_signal", "label": "creates", "title": "creates [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "config_hash", "to": "table_wf_run", "label": "keys", "title": "keys [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "migration_001", "to": "table_wf_run", "label": "creates", "title": "creates [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "ga1_determinism_gate", "to": "config_hash", "label": "replays", "title": "replays [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_1_trend", "to": "defect_trend_timeframe", "label": "affected_by", "title": "affected_by [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_conjunction", "to": "gate_1_trend", "label": "requires", "title": "requires [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_2_structure", "to": "flat_tolerance", "label": "parameterized_by", "title": "parameterized_by [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_2_structure", "to": "invalidation_rule", "label": "enforces", "title": "enforces [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_conjunction", "to": "gate_2_structure", "label": "requires", "title": "requires [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_3_sweep", "to": "block_high", "label": "targets", "title": "targets [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_conjunction", "to": "gate_3_sweep", "label": "requires", "title": "requires [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_conjunction", "to": "gate_4_ema", "label": "requires", "title": "requires [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "prior_build_drift", "to": "gate_4_ema", "label": "dropped", "title": "dropped [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_5_rejection", "to": "defect_rejection_geometry", "label": "blocked_by", "title": "blocked_by [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_conjunction", "to": "gate_5_rejection", "label": "requires", "title": "requires [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_6_session", "to": "instr_btcusd", "label": "applies_247_to", "title": "applies_247_to [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_conjunction", "to": "gate_6_session", "label": "requires", "title": "requires [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_conjunction", "to": "gate_7_rr", "label": "requires", "title": "requires [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "atr_extreme_filter", "to": "gate_8_global_risk", "label": "forces_no_trade", "title": "forces_no_trade [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_conjunction", "to": "gate_8_global_risk", "label": "requires", "title": "requires [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "prior_build_drift", "to": "sweep_score", "label": "promoted_to_gate", "title": "promoted_to_gate [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "sweep_score", "to": "risk_tier_93", "label": "sets", "title": "sets [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "prior_build_drift", "to": "invalidation_rule", "label": "omitted", "title": "omitted [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "prior_build_drift", "to": "block_high", "label": "replaced_with_mean", "title": "replaced_with_mean [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "prior_build_drift", "to": "flat_tolerance", "label": "loosened", "title": "loosened [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "instr_eurusd", "to": "src_dukascopy", "label": "sourced_from", "title": "sourced_from [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "instr_gbpusd", "to": "instr_eurusd", "label": "correlates_with", "title": "correlates_with [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "instr_gbpusd", "to": "src_dukascopy", "label": "sourced_from", "title": "sourced_from [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "instr_xauusd", "to": "src_dukascopy", "label": "sourced_from", "title": "sourced_from [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "instr_btcusd", "to": "src_binance", "label": "sourced_from", "title": "sourced_from [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_ga", "to": "defect_min_trade_count", "label": "blocked_by", "title": "blocked_by [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_ga", "to": "ga_thresholds_171", "label": "evaluated_against", "title": "evaluated_against [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_ga", "to": "r_decide", "label": "branches_to_on_short", "title": "branches_to_on_short [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "gate_ga", "to": "verdict_go", "label": "may_yield", "title": "may_yield [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "recursion_loop", "to": "gate_ga", "label": "terminates_at", "title": "terminates_at [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "r_decide", "to": "verdict_insufficient", "label": "may_yield", "title": "may_yield [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "r_decide", "to": "halt_human", "label": "writes", "title": "writes [0.95]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.95}, {"from": "r_decide", "to": "defect_min_trade_count", "label": "resolves_via_adr", "title": "resolves_via_adr [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "r_decide", "to": "defect_rejection_geometry", "label": "resolves_via_adr", "title": "resolves_via_adr [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "r_decide", "to": "defect_trend_timeframe", "label": "resolves_via_adr", "title": "resolves_via_adr [0.9]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 0.9}, {"from": "recursion_loop", "to": "recursion_state", "label": "reads_writes", "title": "reads_writes [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "claude_settings", "to": "graphify_kb", "label": "permits", "title": "permits [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "reconciliation_r", "to": "prior_build_drift", "label": "documents", "title": "documents [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}, {"from": "atr_extreme_filter", "to": "risk_tier_93", "label": "zeroes", "title": "zeroes [1.0]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": 1.0}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "Governing Specs, Rules &amp; Tooling", "count": 8}, {"cid": 1, "color": "#F28E2B", "label": "Phase Progression &amp; Live Path", "count": 3}, {"cid": 2, "color": "#E15759", "label": "Market Data &amp; Instruments", "count": 5}, {"cid": 3, "color": "#76B7B2", "label": "Failure &amp; Owner Escalation", "count": 10}, {"cid": 4, "color": "#59A14F", "label": "Gate Specification &amp; Conjunction", "count": 8}, {"cid": 5, "color": "#EDC948", "label": "Signal/Backtest Build &amp; Reconciliation", "count": 11}, {"cid": 6, "color": "#B07AA1", "label": "Verdict &amp; Walk-Forward", "count": 0}, {"cid": 7, "color": "#FF9DA7", "label": "Sweep/EMA Gates &amp; Prior-Build Drift", "count": 6}, {"cid": 8, "color": "#9C755F", "label": "Determinism &amp; Config Hashing", "count": 9}, {"cid": 9, "color": "#BAB0AC", "label": "Structure Gate &amp; Invalidation", "count": 0}, {"cid": 10, "color": "#4E79A7", "label": "Core Postgres Schema", "count": 0}, {"cid": 11, "color": "#F28E2B", "label": "Global-Risk Gate &amp; Sweep Score", "count": 4}];
+
+// HTML-escape helper — prevents XSS when injecting graph data into innerHTML
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${esc(color)}" onclick="focusNode(${JSON.stringify(nid)})">${esc(nb ? nb.label : nid)}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${esc(n.label)}</b></div>
+    <div class="field">Type: ${esc(n._file_type || 'unknown')}</div>
+    <div class="field">Community: ${esc(n._community_name)}</div>
+    <div class="field">Source: ${esc(n._source_file || '-')}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+// Track hovered node — hover detection is more reliable than click params
+let hoveredNodeId = null;
+network.on('hoverNode', params => {
+  hoveredNodeId = params.node;
+  container.style.cursor = 'pointer';
+});
+network.on('blurNode', () => {
+  hoveredNodeId = null;
+  container.style.cursor = 'default';
+});
+container.addEventListener('click', () => {
+  if (hoveredNodeId !== null) {
+    showInfo(hoveredNodeId);
+    network.selectNodes([hoveredNodeId]);
+  }
+});
+network.on('click', params => {
+  if (params.nodes.length > 0) {
+    showInfo(params.nodes[0]);
+  } else if (hoveredNodeId === null) {
+    document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+  }
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+
+const selectAllCb = document.getElementById('select-all-cb');
+
+function updateSelectAllState() {
+  const total = LEGEND.length;
+  const hidden = hiddenCommunities.size;
+  selectAllCb.checked = hidden === 0;
+  selectAllCb.indeterminate = hidden > 0 && hidden < total;
+}
+
+function toggleAllCommunities(hide) {
+  document.querySelectorAll('.legend-item').forEach(item => {
+    hide ? item.classList.add('dimmed') : item.classList.remove('dimmed');
+  });
+  document.querySelectorAll('.legend-cb').forEach(cb => {
+    cb.checked = !hide;
+  });
+  LEGEND.forEach(c => {
+    if (hide) hiddenCommunities.add(c.cid); else hiddenCommunities.delete(c.cid);
+  });
+  const updates = RAW_NODES.map(n => ({ id: n.id, hidden: hide }));
+  nodesDS.update(updates);
+  updateSelectAllState();
+}
+
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.className = 'legend-cb';
+  cb.checked = true;
+  cb.addEventListener('change', (e) => {
+    e.stopPropagation();
+    if (cb.checked) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: !cb.checked }));
+    nodesDS.update(updates);
+    updateSelectAllState();
+  });
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.prepend(cb);
+  item.onclick = (e) => {
+    if (e.target === cb) return;
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [];
+// afterDrawing passes ctx already transformed to network coordinate space.
+// Draw node positions raw — no manual pan/zoom/DPR math needed.
+network.on('afterDrawing', function(ctx) {
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Centroid and expanded hull in network coordinates
+        const cx = positions.reduce((s, p) => s + p.x, 0) / positions.length;
+        const cy = positions.reduce((s, p) => s + p.y, 0) / positions.length;
+        const expanded = positions.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+});
+</script>
+</body>
+</html>

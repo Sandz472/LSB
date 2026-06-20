@@ -1,0 +1,7 @@
+-- migrations/001_core.sql
+-- LSB Phase-A core schema (4 tables: config_version, candle, signal, wf_run+sim_trade).
+--
+-- PLACEHOLDER (session A0). The table DDL is authored in session A1 alongside the
+-- config system, per docs/BUILD_PLAYBOOK.md §5 (A1) and the §1 Phase-A table list.
+-- Intentionally empty of DDL so A0 stays scaffold-only; do not add table bodies here
+-- before A1.
