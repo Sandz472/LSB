@@ -30,6 +30,7 @@ class BlockResult:
     age_h4: int           # approximate age in H4 candles
     density_raw: float    # raw score before normalization
     valid: bool           # False if block doesn't meet min_touches / min_width
+    level: float = 0.0    # resistance/support LEVEL (mean of swing wicks) — the sweep target
 
 
 @dataclass(frozen=True)
@@ -94,10 +95,12 @@ def identify_block(
         upper = structure.resistance_high
         lower = structure.resistance_low
         touches = structure.resistance_touches
+        level = structure.resistance_level
     elif structure.state == StructureState.DESCENDING_TRIANGLE:
         upper = structure.support_high
         lower = structure.support_low
         touches = structure.resistance_touches
+        level = structure.support_level
     else:
         return None
 
@@ -114,13 +117,13 @@ def identify_block(
     if width < min_width:
         return BlockResult(
             upper=upper, lower=lower, touches=touches,
-            age_h4=0, density_raw=0.0, valid=False,
+            age_h4=0, density_raw=0.0, valid=False, level=level or 0.0,
         )
 
     if touches < p.block_min_touches:
         return BlockResult(
             upper=upper, lower=lower, touches=touches,
-            age_h4=0, density_raw=0.0, valid=False,
+            age_h4=0, density_raw=0.0, valid=False, level=level or 0.0,
         )
 
     # Age in H4 candles = distance from pattern start to end of window.
@@ -132,7 +135,7 @@ def identify_block(
 
     return BlockResult(
         upper=upper, lower=lower, touches=touches,
-        age_h4=age_h4, density_raw=density_raw, valid=True,
+        age_h4=age_h4, density_raw=density_raw, valid=True, level=level or 0.0,
     )
 
 
@@ -224,15 +227,20 @@ def detect_sweep(
 ) -> SweepResult:
     """Scan the last `sweep_expiry_candles` H1 bars for a valid sweep event.
 
+    The sweep target is the block *level* — the horizontal resistance/support line
+    (mean of swing wicks) where resting liquidity sits — NOT the extreme wick.
+    The extreme wick (block.upper/lower) is an outlier that price almost never
+    reaches, which made this gate reject 100% of setups (see ADR-006).
+
     Bear sweep (ascending triangle → short setup):
-      - Candle wick extends ABOVE block.upper by ≥ penetration threshold
-      - Candle CLOSES below block.upper (back inside or below block)
-      - No subsequent candle closes above block.upper (false-sweep filter)
+      - Candle wick extends ABOVE block.level by ≥ penetration threshold
+      - Candle CLOSES below block.level (back inside or below the level)
+      - No subsequent candle closes above block.level (false-sweep filter)
 
     Bull sweep (descending triangle → long setup):
-      - Candle wick extends BELOW block.lower by ≥ penetration threshold
-      - Candle CLOSES above block.lower
-      - No subsequent candle closes below block.lower
+      - Candle wick extends BELOW block.level by ≥ penetration threshold
+      - Candle CLOSES above block.level
+      - No subsequent candle closes below block.level
     """
     p = config.signals
     is_crypto = config.asset_class == 'crypto'
@@ -253,8 +261,10 @@ def detect_sweep(
     # Penetration threshold in price units.
     threshold = _penetration_threshold(config)
     if is_crypto:
-        ref_price = (block.upper + block.lower) / 2.0
+        ref_price = block.level if block.level > 0 else (block.upper + block.lower) / 2.0
         threshold = p.sweep_penetration_pips / 100.0 * ref_price
+
+    sweep_level = block.level
 
     n = len(h1_candles)
     if n < 1:
@@ -265,11 +275,11 @@ def detect_sweep(
         candle = h1_candles[sweep_idx]
 
         if direction == 'bearish':
-            penetration = candle.high - block.upper
-            close_inside = candle.close <= block.upper
+            penetration = candle.high - sweep_level
+            close_inside = candle.close <= sweep_level
         else:
-            penetration = block.lower - candle.low
-            close_inside = candle.close >= block.lower
+            penetration = sweep_level - candle.low
+            close_inside = candle.close >= sweep_level
 
         if penetration < threshold:
             continue
@@ -280,10 +290,10 @@ def detect_sweep(
         false_sweep = False
         for post_idx in range(sweep_idx + 1, n):
             post = h1_candles[post_idx]
-            if direction == 'bearish' and post.close > block.upper:
+            if direction == 'bearish' and post.close > sweep_level:
                 false_sweep = True
                 break
-            if direction == 'bullish' and post.close < block.lower:
+            if direction == 'bullish' and post.close < sweep_level:
                 false_sweep = True
                 break
         if false_sweep:

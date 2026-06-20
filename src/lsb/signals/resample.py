@@ -80,3 +80,51 @@ def resample_h1_to_h4(h1_candles: Sequence[Candle]) -> list[Candle]:
                 result.pop()
 
     return result
+
+
+def _day_start(ts: datetime) -> datetime:
+    """Return the UTC midnight start of the day that contains `ts`."""
+    if ts.tzinfo is None:
+        ts = ts.replace(tzinfo=timezone.utc)
+    return ts.replace(hour=0, minute=0, second=0, microsecond=0)
+
+
+def resample_h1_to_daily(h1_candles: Sequence[Candle]) -> list[Candle]:
+    """Aggregate H1 candles into complete daily (UTC midnight) candles.
+
+    OHLC aggregation: O = first, H = max, L = min, C = last.
+    Volume = sum; spread = mean of available spread values (or None).
+    Timestamp of the daily candle = the close of the last H1 bar in the day.
+
+    The trailing incomplete day (if the last H1 is not the final bar of its
+    day) is dropped, so the result always contains complete daily candles.
+    Used for the macro trend filter (Gate 1, ADR-007).
+    """
+    if not h1_candles:
+        return []
+
+    bars: dict[datetime, list[Candle]] = {}
+    for candle in h1_candles:
+        ts = candle.ts
+        if isinstance(ts, str):
+            ts = datetime.fromisoformat(ts)
+        if ts.tzinfo is None:
+            ts = ts.replace(tzinfo=timezone.utc)
+        key = _day_start(ts)
+        bars.setdefault(key, []).append(candle)
+
+    result: list[Candle] = []
+    for day_start in sorted(bars):
+        group = bars[day_start]
+        open_ = group[0].open
+        high = max(c.high for c in group)
+        low = min(c.low for c in group)
+        close = group[-1].close
+        volume = sum(c.volume for c in group)
+        spreads = [c.spread for c in group if c.spread is not None]
+        spread = sum(spreads) / len(spreads) if spreads else None
+        ts_close = group[-1].ts
+        result.append(Candle(ts=ts_close, open=open_, high=high, low=low,
+                             close=close, volume=volume, spread=spread))
+
+    return result

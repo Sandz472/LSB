@@ -26,7 +26,7 @@ from lsb.signals import Candle
 from lsb.signals.engine import SignalResult, evaluate, MIN_H1_WINDOW
 from lsb.signals.indicators import ATRState, ema_series, atr_series
 from lsb.signals.risk import structural_stop, rr_target
-from lsb.signals.trend import current_atr_state
+from lsb.signals.trend import TrendState, current_atr_state, trend_state
 
 from lsb.backtest.broker import Broker, Fill, NaiveBroker, PendingOrder, SimulatedBroker
 from lsb.backtest.book import PositionBook
@@ -45,6 +45,56 @@ from lsb.backtest.position import PosState, Position
 from lsb.backtest.sink import NullSink, Sink
 
 WINDOW_MAXLEN = MIN_H1_WINDOW * 2  # 600 — O(n) deque, always feeds ≥300 to evaluate()
+
+
+def _day_key(ts) -> object:
+    """UTC calendar-date key for daily aggregation (works for datetime/Timestamp)."""
+    if isinstance(ts, str):
+        from datetime import datetime, timezone
+        ts = datetime.fromisoformat(ts)
+    if ts.tzinfo is None:
+        ts = ts.replace(tzinfo=timezone.utc)
+    return ts.date()
+
+
+class _DailyAccumulator:
+    """Incrementally build complete daily (UTC midnight) candles from H1 bars.
+
+    Only complete days are emitted — the current (in-progress) day is held back
+    until the next day rolls over, so the daily trend never sees a bar whose
+    close is in the future relative to the current H1 bar (no look-ahead).
+    """
+
+    def __init__(self, maxlen: int = 150):
+        from collections import deque
+        self.bars: deque[Candle] = deque(maxlen=maxlen)
+        self._cur_day = None
+        self._o = self._h = self._l = self._c = self._v = None
+        self._ts = None
+
+    def push(self, candle: Candle) -> None:
+        day = _day_key(candle.ts)
+        if self._cur_day is not None and day != self._cur_day:
+            self.bars.append(Candle(
+                ts=self._ts, open=self._o, high=self._h,
+                low=self._l, close=self._c, volume=self._v,
+            ))
+        if day != self._cur_day:
+            self._o = candle.open
+            self._h = candle.high
+            self._l = candle.low
+            self._c = candle.close
+            self._v = candle.volume
+            self._cur_day = day
+        else:
+            self._h = max(self._h, candle.high)
+            self._l = min(self._l, candle.low)
+            self._c = candle.close
+            self._v += candle.volume
+        self._ts = candle.ts
+
+    def window(self) -> list[Candle]:
+        return list(self.bars)
 
 
 # ---------------------------------------------------------------------------
@@ -70,16 +120,31 @@ def run_backtest(
     book = PositionBook(config.signals)
     clock = ReplayClock(candles)
     window: deque[Candle] = deque(maxlen=WINDOW_MAXLEN)
+    daily_acc = _DailyAccumulator()
     pending: list[PendingOrder] = []
+
+    # Daily trend warm-up: EMA(89) on daily bars needs ema_long_period+1 days.
+    min_daily = config.signals.ema_long_period + 1
+    p = config.signals
+    cached_daily_last_ts = None
+    daily_trend: TrendState | None = None
 
     for bar_idx in clock:
         candle = candles[bar_idx]
         window.append(candle)
+        daily_acc.push(candle)
 
         if len(window) < MIN_H1_WINDOW:
             continue
 
         h1_win: list[Candle] = list(window)
+
+        # Recompute the macro (daily) trend only when a new day completes.
+        daily_win = daily_acc.window()
+        last_daily_ts = daily_win[-1].ts if daily_win else None
+        if last_daily_ts != cached_daily_last_ts:
+            cached_daily_last_ts = last_daily_ts
+            daily_trend = trend_state(daily_win, p) if len(daily_win) >= min_daily else None
 
         # --- 1. Fill / expire pending orders ---
         pending = _process_pending(pending, candle, bar_idx, config, broker, book)
@@ -88,7 +153,10 @@ def run_backtest(
         _manage_book(book, candle, h1_win, config, broker)
 
         # --- 4. Signal evaluation ---
-        result: SignalResult = evaluate(h1_win, config, config_hash_val)
+        # Gate 1 needs the macro daily trend; skip until daily warm-up completes.
+        if daily_trend is None:
+            continue
+        result: SignalResult = evaluate(h1_win, config, config_hash_val, daily_trend=daily_trend)
         sink.write(result)
 
         # --- 5. Book-wide §11.4 defensive exits ---

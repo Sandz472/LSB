@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Implementation Plan — Session A4: Signal Engine, Gates 1–4</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --border:#30363d; --text:#e6edf3;
+    --muted:#9da7b3; --accent:#2563eb; --accent2:#3fb950; --warn:#f0883e;
+    --danger:#f85149; --code:#0b0f14; --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;padding:48px 24px 96px}
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:36px}
+  h1{font-size:30px;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:15px}
+  h2{font-size:21px;margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+  h2 .tag{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:2px 9px}
+  h3{font-size:16px;margin:22px 0 8px;color:var(--text)}
+  section{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+    padding:18px 22px;margin-bottom:18px}
+  p{margin:8px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#1c2330;color:var(--text);font-weight:600}
+  .choice{color:var(--accent2);font-weight:600}
+  pre{background:var(--code);border:1px solid var(--border);border-radius:8px;
+    padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.5}
+  code{font-family:var(--mono);font-size:.92em}
+  .del{color:var(--danger)} .add{color:var(--accent2)}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:6px 0}
+  ol.steps li{counter-increment:s;position:relative;padding:10px 0 10px 42px;border-bottom:1px solid var(--border)}
+  ol.steps li:last-child{border-bottom:0}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;
+    background:var(--accent);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700}
+  ol.steps .files{display:block;color:var(--muted);font-size:13px;font-family:var(--mono);margin-top:3px}
+  .mock{border:1px dashed var(--border);border-radius:8px;padding:20px;background:#0b0f14;margin:12px 0}
+  .fail th:first-child{width:44%}
+  .warn{color:var(--warn)} .q{color:var(--warn);font-weight:600}
+  ul.q-list li{margin:8px 0}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:1px 8px;border-radius:999px;border:1px solid;margin-left:6px}
+  .pill.g{color:var(--accent2);border-color:var(--accent2)}
+  .pill.r{color:var(--danger);border-color:var(--danger)}
+  .pill.w{color:var(--warn);border-color:var(--warn)}
+  .src{color:var(--muted);font-size:12px}
+  footer{color:var(--muted);font-size:13px;margin-top:40px;border-top:1px solid var(--border);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Session A4 — Signal Engine: Entry Gates 1–4</h1>
+    <div class="sub">Implementation plan · 2026-06-17 · LSB Strategy Bot (Phase A, "Prove")</div>
+  </header>
+
+  <h2><span class="tag">1</span> Overview</h2>
+  <section>
+    <p>Implement the first four of the eight entry gates (module <strong>M7</strong>) as <strong>pure functions over candle windows</strong> — no broker, no side effects, no clock — built test-driven against hand-labeled fixtures. Gates 1–4 sit on top of supporting pure-function modules that must also be built here: <strong>M2</strong> (EMA/ATR/candle classification), <strong>M3</strong> (trend state), <strong>M4</strong> (triangle structure), and <strong>M5</strong> (liquidity blocks + sweep detection + 5-factor sweep score).</p>
+    <p>Every evaluation writes a <code>signal</code> row (JSONB <code>gate_results</code>) with per-gate pass/fail and a human-readable reason, keyed to the producing <code>config_hash</code>. Gates short-circuit: the first failure rejects the setup and records which gate failed and why. Gates 5–8 and the full eight-gate conjunction are deferred to Session A5.</p>
+    <p class="src">Sources of truth: <code>.scratch/LSB_System_Requirements_v2.0.md</code> (immutable spec — §4 M2, §5 M3, §6 M4, §7 M5, §8 M7) and <code>.scratch/blueprint_v2.1.txt</code> §6.1. Gate grouping per <code>LSB_Implementation_Plan_v3.0.md</code> Part 1.</p>
+  </section>
+
+  <h2><span class="tag">2</span> The four gates &amp; their module dependencies</h2>
+  <section>
+    <table>
+      <thead><tr><th>Gate</th><th>Pass condition (spec)</th><th>Depends on</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1 · Trend alignment</strong></td><td>M3 trend state matches trade direction; EMA hierarchy valid &amp; both required slopes directional; not EMA-compressed</td><td>M2 (EMA 21/50/89, ATR, slope), M3</td></tr>
+        <tr><td><strong>2 · Structure present</strong></td><td>M4 reports ASCENDING_TRIANGLE (bear setup) or DESCENDING_TRIANGLE (bull setup) on H4, apex proximity 75–95%, candle count in range</td><td>M4 (on H4 candles)</td></tr>
+        <tr><td><strong>3 · Liquidity sweep confirmed</strong></td><td>M5 active sweep within last 3 H1 candles: wick penetrates block ≥2 pips / 0.02%, close back inside/beyond block, not false-swept, not expired</td><td>M5 blocks (from M4 triangle), M5 sweep</td></tr>
+        <tr><td><strong>4 · Sweep quality</strong></td><td>5-factor Sweep Probability Score (0–100) ≥ instrument-configured <code>sweep_score_min</code></td><td>M5 score (uses M2 EMA/ATR + zone density)</td></tr>
+      </tbody>
+    </table>
+    <h3>5-factor Sweep Probability Score (§7.3)</h3>
+    <table>
+      <thead><tr><th>Factor</th><th>Max</th><th>Measurement</th></tr></thead>
+      <tbody>
+        <tr><td>Liquidity density of zone</td><td>+30</td><td>Normalized zone density: (rejected touches ×10) + (age in candles ×0.5), ×0.5 penalty if &gt;80 H4 candles old</td></tr>
+        <tr><td>Wick extension beyond block</td><td>+20</td><td>0–5 pts per pip / 0.01% extension, capped at 20</td></tr>
+        <tr><td>Candle close quality</td><td>+20</td><td>Close in lower 25% of body (bear) = +20; 25–50% = +10; else +0</td></tr>
+        <tr><td>EMA proximity of sweep candle</td><td>+15</td><td>Touches EMA21 = +15; EMA50 = +10; neither = +0</td></tr>
+        <tr><td>ATR state at sweep</td><td>+15</td><td>COMPRESSED = +15; NORMAL = +8; ELEVATED = +0</td></tr>
+      </tbody>
+    </table>
+    <p class="src">Note: spec §7.3 maps the score to risk tiers (HIGH/MOD/LOW → 1.0/0.5/0.25%). Risk tiers belong to <strong>M8 (Gate 8, Session A5+)</strong> — A4 computes and stores the score only; it does not act on the tier.</p>
+  </section>
+
+  <h2><span class="tag">3</span> Approach &amp; key decisions</h2>
+  <section>
+    <table>
+      <thead><tr><th>Decision</th><th>Options</th><th>Trade-off</th><th>Choice</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>H4 candles for triangle detection (M4) when only H1 is loaded</td>
+          <td>(A) Resample H1→H4 in-engine · (B) Add H4 to fetch/audit/load pipeline · (C) Detect triangle on H1</td>
+          <td>A = no new data, deterministic, but resample boundary/timezone rules must be exact. B = re-runs A2/A3 pipeline, more data, more session scope. C = departs from spec (spec mandates H4).</td>
+          <td class="choice">(A) Resample H1→H4 in a pure function. Keeps A4 self-contained on already-audited data; H4 boundaries pinned to 00/04/08/12/16/20 UTC; documented in determinism notes. Revisit only if resample proves lossy.</td>
+        </tr>
+        <tr>
+          <td>Where gate thresholds live</td>
+          <td>(A) Extend <code>InstrumentConfig</code> with a <code>signals</code> block · (B) Hardcode spec defaults in engine</td>
+          <td>B violates the Part-0 rule that every result references the config_hash that produced it. A bumps schema_version and re-hashes all configs (acceptable, expected).</td>
+          <td class="choice">(A) Add a frozen <code>SignalParams</code> sub-dataclass to <code>InstrumentConfig</code>, defaulted to spec §16 values, per-instrument overridable. Bump <code>schema_version</code> 1→2.</td>
+        </tr>
+        <tr>
+          <td>Engine purity / I/O boundary</td>
+          <td>(A) Pure functions return result objects; a thin separate writer persists <code>signal</code> rows · (B) Engine writes rows directly</td>
+          <td>B couples gate logic to a DB connection, breaks determinism testing and the "no side effects" rule.</td>
+          <td class="choice">(A) Gates and modules are pure (candle window → dataclass result). A separate <code>signals/persist.py</code> maps results to <code>signal</code> rows. Tests hit pure functions; DB round-trip tested separately.</td>
+        </tr>
+        <tr>
+          <td>Indicator storage (EMA/ATR)</td>
+          <td>(A) Compute on the fly from candle window · (B) Persist into <code>candle.ema21/…</code> columns</td>
+          <td>The current <code>candle</code> table (migration 001) has <em>no</em> indicator columns — they were dropped from the v2.1 DDL. Adding them = migration 002 scope creep into A4.</td>
+          <td class="choice">(A) Compute in-engine from the candle window each evaluation. No schema change. Matches "pure function over candle windows."</td>
+        </tr>
+        <tr>
+          <td>Gate direction handling</td>
+          <td>(A) Evaluate both long &amp; short candidacy per candle · (B) Single direction param</td>
+          <td>Spec is symmetric (bear setup = ascending triangle + resistance sweep; bull = mirror). A setup's direction is <em>derived</em> from the structure, not chosen.</td>
+          <td class="choice">(A) Engine derives direction from M4 structure, then runs the directional gate chain. <code>gate_results</code> records the evaluated direction.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2><span class="tag">4</span> Target module layout</h2>
+  <section>
+<pre>src/lsb/signals/
+  __init__.py
+  indicators.py     <span class="src"># M2: ema(), atr(), ema_slope(), classify_candle() — 8 types</span>
+  trend.py          <span class="src"># M3: trend_state() -> BULLISH|BEARISH|NEUTRAL|INVALID (+ EMA-compression rule)</span>
+  resample.py       <span class="src"># H1 -> H4 OHLCV aggregation (pure, UTC-pinned boundaries)</span>
+  structure.py      <span class="src"># M4: detect_triangle() on H4 -> ASCENDING|DESCENDING|FORMING|NONE|INVALIDATED + apex %</span>
+  liquidity.py      <span class="src"># M5: identify_block(), detect_sweep(), sweep_score()</span>
+  gates.py          <span class="src"># Gate1..Gate4 pure predicates -> GateResult(passed, reason, detail)</span>
+  engine.py         <span class="src"># evaluate(window, config) -> SignalResult (short-circuit chain, derives direction)</span>
+  persist.py        <span class="src"># SignalResult -> signal row (JSONB gate_results); insert-or-get on UNIQUE key</span>
+
+config/*.yaml        <span class="src"># + signals: block (schema_version -> 2)</span>
+tests/unit/          <span class="src"># test_indicators, test_trend, test_structure, test_liquidity, test_gates, test_engine</span>
+tests/fixtures/signals/  <span class="src"># hand-labeled candle windows: per gate, 1 pass + ≥2 near-miss</span></pre>
+  </section>
+
+  <h2><span class="tag">5</span> Key code changes</h2>
+  <section>
+    <h3>Config: add a frozen <code>SignalParams</code> block</h3>
+    <p><code>src/lsb/data/config.py</code></p>
+<pre><span class="add">+ @dataclass(frozen=True)</span>
+<span class="add">+ class SignalParams:</span>
+<span class="add">+     ema_short_period: int        # 21</span>
+<span class="add">+     ema_mid_period: int          # 50</span>
+<span class="add">+     ema_long_period: int         # 89</span>
+<span class="add">+     ema_slope_lookback: int      # 3</span>
+<span class="add">+     atr_period: int              # 14 (fixed)</span>
+<span class="add">+     atr_elevated_multiplier: float   # 1.25</span>
+<span class="add">+     atr_extreme_multiplier: float    # 2.0</span>
+<span class="add">+     ema_compression_atr_mult: float  # 0.10  (|EMA21-EMA89| &lt; ATR*mult -> INVALID)</span>
+<span class="add">+     slope_threshold_atr_mult: float  # 0.05</span>
+<span class="add">+     triangle_min_candles: int    # 8   (H4)</span>
+<span class="add">+     triangle_max_candles: int    # 60  (H4)</span>
+<span class="add">+     apex_proximity_min: float    # 0.75</span>
+<span class="add">+     apex_proximity_max: float    # 0.95</span>
+<span class="add">+     block_min_touches: int       # 2</span>
+<span class="add">+     block_min_width_pips: float  # 5 (fx) / 0.05% (index/crypto)</span>
+<span class="add">+     sweep_penetration_pips: float    # 2 / 0.02%</span>
+<span class="add">+     sweep_expiry_candles: int    # 3</span>
+<span class="add">+     sweep_score_min: int         # Gate-4 threshold (NEW per-instrument knob)</span>
+
+  @dataclass(frozen=True)
+  class InstrumentConfig:
+      schema_version: int
+      ...
+      walkforward: WalkForwardWindow
+<span class="add">+     signals: SignalParams</span></pre>
+    <p class="src">All defaults are spec §16 / Appendix-A values. <code>load_config</code> gains <code>signals=SignalParams(**raw["signals"])</code>; <code>canonical_*</code>/<code>config_hash</code> already serialise nested dataclasses via <code>asdict</code>, so no change there. Existing tests in <code>test_config.py</code> stay green (hashes change but determinism property holds).</p>
+
+    <h3>Gate result shape (the JSONB payload)</h3>
+<pre>{
+  "direction": "short",
+  "qualified": false,
+  "gates": [
+    {"n": 1, "name": "trend_alignment",   "passed": true,  "reason": "BEARISH; EMA21&lt;EMA50&lt;EMA89, slopes neg"},
+    {"n": 2, "name": "structure_present", "passed": true,  "reason": "ASCENDING_TRIANGLE H4, apex 0.83"},
+    {"n": 3, "name": "liquidity_sweep",   "passed": true,  "reason": "swept resistance @1.0942, close inside, age 1"},
+    {"n": 4, "name": "sweep_quality",     "passed": false, "reason": "score 47 &lt; sweep_score_min 50",
+                                          "detail": {"score": 47, "factors": {"density":18,"wick":12,"close":10,"ema":0,"atr":7}}}
+  ],
+  "rejected_at_gate": 4
+}</pre>
+  </section>
+
+  <h2><span class="tag">6</span> Step plan</h2>
+  <section>
+    <ol class="steps">
+      <li><strong>Config extension first.</strong> Add <code>SignalParams</code>, bump <code>schema_version</code>→2, add <code>signals:</code> block to all three YAMLs with spec defaults + a <code>sweep_score_min</code>. Update <code>load_config</code>. Confirm <code>test_config.py</code> still green.<span class="files">src/lsb/data/config.py · config/{EURUSD,XAUUSD,BTCUSD}.yaml · tests/unit/test_config.py</span></li>
+      <li><strong>M2 indicators</strong> (TDD against a reference spreadsheet to 8 dp per spec testing non-negotiable #1): <code>ema()</code>, <code>atr()</code>, <code>ema_slope()</code>, ATR-state classifier (COMPRESSED/NORMAL/ELEVATED/EXTREME), 8-way candle classifier.<span class="files">src/lsb/signals/indicators.py · tests/unit/test_indicators.py</span></li>
+      <li><strong>M3 trend state</strong>: hierarchy + slope → BULLISH/BEARISH/NEUTRAL/INVALID, incl. EMA-compression auto-INVALID (|EMA21−EMA89| &lt; ATR×0.10) and slope-neutral disqualification. Boundary tests at every threshold.<span class="files">src/lsb/signals/trend.py · tests/unit/test_trend.py</span></li>
+      <li><strong>H1→H4 resample</strong> (pure, UTC-pinned). Property test: resampled OHLC reconciles with source H1 (H = max, L = min, O = first, C = last, V = sum).<span class="files">src/lsb/signals/resample.py · tests/unit/test_resample.py</span></li>
+      <li><strong>M4 structure</strong>: swing-point mapping, ascending/descending triangle detection on H4, compression validation, apex-proximity %, candle-count gate. Fixtures: known triangle passes; noise + out-of-range apex rejected.<span class="files">src/lsb/signals/structure.py · tests/unit/test_structure.py</span></li>
+      <li><strong>M5 liquidity</strong>: block identification (width, ≥2 touches, density, age penalty), sweep detection (penetration + close-inside + 3-candle expiry + false-sweep filter), and the 5-factor score. Each score factor verified against a hand-computed worked example.<span class="files">src/lsb/signals/liquidity.py · tests/unit/test_liquidity.py</span></li>
+      <li><strong>Gates 1–4</strong> as pure predicates returning <code>GateResult(passed, reason, detail)</code>; direction-symmetric.<span class="files">src/lsb/signals/gates.py · tests/unit/test_gates.py</span></li>
+      <li><strong>Engine</strong>: <code>evaluate(window, config)</code> derives direction from M4, runs gates 1→4 short-circuiting on first failure, assembles <code>SignalResult</code>. <em>Note:</em> "qualified" here means gates 1–4 passed; full 8-gate conjunction lands in A5.<span class="files">src/lsb/signals/engine.py · tests/unit/test_engine.py</span></li>
+      <li><strong>Persist</strong>: map <code>SignalResult</code>→<code>signal</code> row, insert-or-get on <code>(config_hash, instrument, timeframe, ts)</code>. DB round-trip test (Postgres must be running — <code>scripts/start_postgres.ps1</code>).<span class="files">src/lsb/signals/persist.py · tests/unit/test_signal_persist.py · tests/conftest.py</span></li>
+      <li><strong>Hand-labeled fixtures</strong>: per gate, ≥1 pass + ≥2 near-miss, labeled from real loaded candle data (EURUSD/XAUUSD/BTCUSD) <em>before</em> the gate is coded, per spec discipline.<span class="files">tests/fixtures/signals/*.json</span></li>
+      <li><strong>Green CI + commit.</strong> Update <code>docs/PHASE_STATUS.md</code> (A4 done, gates 1–4). Commit. Post-commit hook auto-rebuilds graphify.<span class="files">docs/PHASE_STATUS.md</span></li>
+    </ol>
+  </section>
+
+  <h2><span class="tag">7</span> Failure modes</h2>
+  <section>
+    <table class="fail">
+      <thead><tr><th>What could go wrong</th><th>How the plan handles it</th></tr></thead>
+      <tbody>
+        <tr><td class="warn">EMA seeding ambiguity — recursive EMA needs a warm-up; different seeds → different values → fixture mismatch &amp; nondeterminism.</td><td>Fix the seeding convention explicitly (SMA seed over first <em>period</em> bars), document it, and require a minimum warm-up window before any gate evaluates. Reference-spreadsheet test pins it to 8 dp.</td></tr>
+        <tr><td class="warn">H4 resample drift — wrong session boundary or partial trailing bar shifts every H4 indicator.</td><td>Pin H4 boundaries to fixed UTC hours; drop incomplete trailing H4 bar; reconciliation property test against source H1.</td></tr>
+        <tr><td class="warn">BTCUSD/synthetic pip semantics — "pips" vs "0.02%" differ for crypto/index vs FX; sweep penetration &amp; block width use both.</td><td>Drive penetration/width from <code>pip_size</code> + an <code>asset_class</code> branch (fx → pips, synthetic/crypto → percent). Spec §6.1/§7 says never share params across synthetic and conventional instruments.</td></tr>
+        <tr><td class="warn">Float accumulation order in scoring/indicators → nondeterministic hashes (the Gate GA-1 contract, A8).</td><td>Pure functions, no dict-order-dependent sums, fixed iteration order; determinism is unit-asserted now so A8's CI gate inherits a clean base.</td></tr>
+        <tr><td class="warn">Scope creep — temptation to also wire gates 5–8 or backtest loop.</td><td>Hard stop at gates 1–4 + their modules. Gates 5–8, conjunction, and shuffle property test are explicitly A5. Backtest is A6.</td></tr>
+        <tr><td class="warn">Look-ahead bias — a gate peeking at future candles inside the window.</td><td>Engine receives a window ending at the evaluation candle; modules may only read up to that bar. Add a test that truncating future candles never changes a past evaluation.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2><span class="tag">8</span> Open questions</h2>
+  <section>
+    <ul class="q-list">
+      <li><span class="q">?</span> <strong>H4 source:</strong> confirm resample-from-H1 (plan's choice A) is acceptable, vs. extending the fetch pipeline to pull native H4. Resample keeps A4 self-contained; native H4 is truer to a broker feed but re-opens the A2/A3 data work.</li>
+      <li><span class="q">?</span> <strong><code>sweep_score_min</code> default:</strong> spec §7.3 implies "below 50 = skip or minimum risk." Set Gate-4 threshold default to <strong>50</strong> for all instruments, or per-instrument? (Per-instrument is the v2.1 sensitivity-sweep variable <code>sweep_score_min</code>.)</li>
+      <li><span class="q">?</span> <strong>BTCUSD ~1y history:</strong> already flagged in PHASE_STATUS — does not block A4 (gates are pure, evaluate on whatever window exists), but its short history bites at A9 walk-forward. Out of scope here; noting the linkage.</li>
+      <li><span class="q">?</span> <strong>Model for build:</strong> recommend switching to <strong>Sonnet</strong> for this implementation-heavy session (per token-economy doctrine) — Opus reserved for the gate-logic design calls already captured above.</li>
+      <li><span class="q">?</span> <strong>Loose infra commit:</strong> there are two uncommitted, complete improvements (<code>scripts/start_postgres.ps1</code> detached-start fix, <code>.gitignore</code> +<code>.scratch/</code>). Commit these as a small pre-A4 housekeeping commit so A4 starts from a clean tree?</li>
+    </ul>
+  </section>
+
+  <footer>Generated by the <code>plan-html</code> skill. Edit this file directly as the plan evolves. Companion: <code>LSB_Implementation_Plan_v3.0.md</code> Part 1, Sessions A4–A5.</footer>
+</div>
+</body>
+</html>

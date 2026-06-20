@@ -87,6 +87,7 @@ class TestIdentifyBlock:
         assert block.valid is True
         assert block.upper == pytest.approx(1.2010)
         assert block.lower == pytest.approx(1.1990)
+        assert block.level == pytest.approx(1.2000)
         assert block.touches == 3
 
     def test_block_invalid_if_too_narrow(self):
@@ -210,10 +211,11 @@ class TestDetectSweep:
             candles.append(_candle(n - bars_ago + j, 1.195, 1.199, 1.192, 1.196))
         return candles
 
-    # Block for all sweep tests: upper=1.2000 so that a 0.0006 wick reaches 1.2006,
-    # giving penetration = 0.0006 ≥ threshold of 2 pips = 0.0002.
-    _BLOCK = BlockResult(upper=1.2000, lower=1.1980, touches=3, age_h4=10,
-                         density_raw=60.0, valid=True)
+    # Block for all sweep tests: level=1.2000 (the resistance line) so that a
+    # 0.0006 wick reaches 1.2006, giving penetration = 0.0006 ≥ threshold of
+    # 2 pips = 0.0002. upper/lower retain the full zone for width/density.
+    _BLOCK = BlockResult(upper=1.2010, lower=1.1980, touches=3, age_h4=10,
+                         density_raw=60.0, valid=True, level=1.2000)
 
     def test_valid_bear_sweep_detected(self):
         structure = _ascending_structure(res_level=1.2000, res_high=1.2000, res_low=1.1980)
@@ -225,7 +227,7 @@ class TestDetectSweep:
         assert result.score > 0
 
     def test_near_miss_insufficient_penetration(self):
-        # Wick only 1 pip above block.upper (need 2 pips = 0.0002 minimum)
+        # Wick only 1 pip above block.level (need 2 pips = 0.0002 minimum)
         structure = _ascending_structure(res_level=1.2000, res_high=1.2000, res_low=1.1980)
         h1 = self._h1_window_with_sweep(bars_ago=1, wick_above=0.0001, close=1.1985)
         result = detect_sweep(h1, self._BLOCK, structure, _EURUSD_CONFIG,
@@ -233,7 +235,7 @@ class TestDetectSweep:
         assert result.detected is False
 
     def test_near_miss_close_above_block(self):
-        # Sufficient wick but candle closes ABOVE block.upper → close_inside fails
+        # Sufficient wick but candle closes ABOVE block.level → close_inside fails
         structure = _ascending_structure(res_level=1.2000, res_high=1.2000, res_low=1.1980)
         h1 = self._h1_window_with_sweep(bars_ago=1, wick_above=0.0006, close=1.2020)
         result = detect_sweep(h1, self._BLOCK, structure, _EURUSD_CONFIG,
@@ -254,7 +256,7 @@ class TestDetectSweep:
         candles = [_candle(i, 1.195, 1.199, 1.190, 1.195) for i in range(7)]
         # Sweep candle (will be 2 bars ago in detect_sweep)
         candles.append(_candle(7, 1.196, 1.2006, 1.193, 1.1985))
-        # Bar after sweep: closes ABOVE block.upper → false sweep
+        # Bar after sweep: closes ABOVE block.level → false sweep
         candles.append(_candle(8, 1.1985, 1.2025, 1.197, 1.2020))
         # Current bar
         candles.append(_candle(9, 1.2020, 1.2030, 1.200, 1.2015))

@@ -38,8 +38,12 @@ def eurusd_candles():
     return load_parquet(_HISTORY / "EURUSD_H1.parquet")
 
 
-def _warm_month(candles, year, month, warm_up=350):
-    """Return warm_up bars + all bars for (year, month)."""
+def _warm_month(candles, year, month, warm_up=2400):
+    """Return warm_up bars + all bars for (year, month).
+
+    warm_up defaults to 2400 H1 bars (~100 daily bars) so the daily macro-trend
+    filter (Gate 1, ADR-007) has enough history to seed EMA(89).
+    """
     month_candles = [c for c in candles if c.ts.year == year and c.ts.month == month]
     assert month_candles, f"No candles for {year}-{month:02d}"
     idx_start = next(i for i, c in enumerate(candles) if c.ts == month_candles[0].ts)
@@ -57,15 +61,31 @@ def test_simulated_broker_replay_completes(eurusd_candles, eurusd_config):
 
 
 def test_simulated_broker_signal_coverage(eurusd_candles, eurusd_config):
-    """Every candle past the warm-up window must produce a signal row."""
-    from lsb.signals.engine import MIN_H1_WINDOW
+    """Every candle past the warm-up window must produce a signal row.
+
+    The daily macro-trend filter (ADR-007) delays the first evaluation until
+    ~90 daily bars have elapsed; once evaluation starts, every subsequent bar
+    must produce a signal row — no gaps (a gap would mean a bar was silently
+    dropped by the loop).
+    """
     slice_ = _warm_month(eurusd_candles, 2024, 6)
     h = compute_hash(eurusd_config)
     broker = SimulatedBroker(eurusd_config.broker_costs, eurusd_config.pip_size)
     book, sink = run_backtest(slice_, eurusd_config, h, broker=broker)
-    expected = max(0, len(slice_) - MIN_H1_WINDOW)
-    assert len(sink.results) >= expected, (
-        f"Signal coverage gap: got {len(sink.results)}, expected ≥{expected}"
+
+    results = sink.results
+    assert len(results) > 0, "No signal rows produced"
+
+    # Signal timestamps must form a contiguous suffix of the slice: once the
+    # first signal appears, every later bar must have one too.
+    signal_ts = {r.ts for r in results}
+    slice_ts = [c.ts for c in slice_]
+    first_idx = next(i for i, t in enumerate(slice_ts) if t in signal_ts)
+    missing = [slice_ts[i] for i in range(first_idx, len(slice_ts))
+               if slice_ts[i] not in signal_ts]
+    assert not missing, (
+        f"Signal coverage gap: {len(missing)} bars missing after first signal "
+        f"at index {first_idx}"
     )
 
 

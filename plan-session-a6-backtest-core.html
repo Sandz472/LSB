@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Implementation Plan — Session A6: Backtest Core</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --border:#30363d; --text:#e6edf3;
+    --muted:#9da7b3; --accent:#2563eb; --accent2:#3fb950; --warn:#f0883e;
+    --danger:#f85149; --code:#0b0f14; --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 24px 96px}
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:36px}
+  h1{font-size:30px;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:15px}
+  h2{font-size:21px;margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+  h2 .tag{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:2px 9px}
+  section{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+    padding:18px 22px;margin-bottom:18px}
+  p{margin:8px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#1c2330;color:var(--text);font-weight:600}
+  .choice{color:var(--accent2);font-weight:600}
+  pre{background:var(--code);border:1px solid var(--border);border-radius:8px;
+    padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.5}
+  code{font-family:var(--mono);font-size:.92em}
+  .del{color:var(--danger)} .add{color:var(--accent2)}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:6px 0}
+  ol.steps li{counter-increment:s;position:relative;padding:10px 0 10px 42px;border-bottom:1px solid var(--border)}
+  ol.steps li:last-child{border-bottom:0}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;
+    background:var(--accent);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700}
+  ol.steps .files{display:block;color:var(--muted);font-size:13px;font-family:var(--mono);margin-top:3px}
+  .mock{border:1px dashed var(--border);border-radius:8px;padding:20px;background:#0b0f14;margin:12px 0}
+  .fail th:first-child{width:44%}
+  .warn{color:var(--warn)} .q{color:var(--warn);font-weight:600}
+  ul.q-list li{margin:6px 0}
+  .pill{display:inline-block;font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;margin-left:6px}
+  .pill.in{color:var(--accent2);border:1px solid var(--accent2)}
+  .pill.out{color:var(--danger);border:1px solid var(--danger)}
+  .pill.next{color:var(--warn);border:1px solid var(--warn)}
+  footer{color:var(--muted);font-size:13px;margin-top:40px;border-top:1px solid var(--border);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Session A6 — Event-Driven Backtest Core</h1>
+    <div class="sub">Implementation plan · 2026-06-18 · LSB Strategy Bot (Phase A, Week 2)</div>
+  </header>
+
+  <h2><span class="tag">1</span> Overview</h2>
+  <section>
+    <p>A6 builds the <strong>deterministic replay engine</strong> that drives the (already-complete) signal engine
+    across history. An injectable <code>Clock</code> streams <code>data/history/&lt;INSTR&gt;_H1.parquet</code> candle-by-candle
+    into <code>signals.engine.evaluate()</code>; qualified signals open a position that is then walked through its
+    lifecycle — <code>pending → filled → managed → closed</code> — per the v2.1 trade-management rules
+    (Requirements §10 order execution, §11 breakeven / trail / defensive exits). Every evaluated candle writes a
+    <code>signal</code> row.</p>
+    <p><strong>Scope (strict, per Implementation Plan v3.0):</strong>
+      <span class="pill in">IN: Clock · replay loop · position <em>book</em> · §11 management · pyramiding · signal rows</span>
+      <span class="pill out">OUT: pessimistic fills → A7</span>
+      <span class="pill out">OUT: wf_run / sim_trade / walk-forward → A9</span>
+      <span class="pill out">OUT: equity / stats / verdict → A10</span>
+    </p>
+    <p>The fill is the seam: A6 ships a <code>Broker</code> protocol with a <em>naive optimistic</em> fill so the lifecycle
+    runs end-to-end; A7 drops in <code>SimulatedBroker</code> with the Part 7.1 pessimistic model behind the same protocol —
+    no loop changes.</p>
+    <p style="border-left:3px solid var(--warn);padding-left:12px;color:var(--text)">
+      <strong class="warn">⚠ Pyramiding is net-new strategy logic.</strong> Requirements v2.0 §10–§11 and Blueprint v2.1
+      are written for a <em>single</em> open position — they contain no scale-in / add-on rules. Per the owner's
+      decision (2026-06-18) the bot supports pyramiding from the start, so A6 manages a <strong>position book</strong>
+      (multiple concurrent legs, same instrument). The add-policy below is a proposed default in standard pyramiding
+      form (add only to winners, each leg independently stopped, capped depth) and should be ratified as
+      <strong>ADR-003</strong> — it is not drawn from the existing spec.</p>
+  </section>
+
+  <h2><span class="tag">2</span> Approach &amp; decisions</h2>
+  <section>
+    <table>
+      <thead><tr><th>Decision</th><th>Options</th><th>Trade-off</th><th>Choice</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Data source for replay</td>
+          <td>Stream Parquet vs. query Postgres <code>candle</code></td>
+          <td>Postgres needs a running DB for every backtest; Parquet is the spec's named source and runs offline/in CI</td>
+          <td class="choice">Parquet via pyarrow — spec says "streaming Parquet history"; keeps replay DB-free</td>
+        </tr>
+        <tr>
+          <td>Fill abstraction</td>
+          <td>Inline fill in loop vs. <code>Broker</code> protocol seam</td>
+          <td>Inline is fewer files now but forces a loop rewrite in A7</td>
+          <td class="choice"><code>Broker</code> Protocol + <code>NaiveBroker</code> now; A7 adds <code>SimulatedBroker</code> behind it</td>
+        </tr>
+        <tr>
+          <td>Time abstraction</td>
+          <td>Loop reads <code>datetime.now()</code> vs. injectable <code>Clock</code></td>
+          <td>Real clock is non-deterministic and untestable; injectable clock is the A8 determinism prerequisite</td>
+          <td class="choice">Injectable <code>Clock</code> in replay mode — emits candle timestamps, never wall-clock</td>
+        </tr>
+        <tr>
+          <td>Lookback window per candle</td>
+          <td>Re-slice full history each bar vs. rolling deque of last <code>N</code></td>
+          <td>Re-slicing is O(n²) over a multi-year file; deque is O(n) and matches <code>MIN_H1_WINDOW=300</code></td>
+          <td class="choice">Rolling window (length ≥ <code>MIN_H1_WINDOW</code>, sized to triangle 240+seed); pass the slice into <code>evaluate()</code></td>
+        </tr>
+        <tr>
+          <td>Position management altitude</td>
+          <td>Reuse <code>signals/risk.py</code> + indicators vs. duplicate math in backtest</td>
+          <td>Duplication drifts from the gate logic; reuse keeps one source of truth</td>
+          <td class="choice">Reuse <code>structural_stop</code>, <code>rr_target</code>, <code>ema_series</code>, <code>atr_series</code>; backtest only owns the state machine</td>
+        </tr>
+        <tr>
+          <td><strong>Pyramiding model</strong> (net-new, ADR-003)</td>
+          <td>Single position vs. position <em>book</em> of concurrent legs</td>
+          <td>Spec assumes single position; book adds book-level state but is the owner's explicit requirement</td>
+          <td class="choice">Position <strong>book</strong> = <code>list[Position]</code> per instrument; the loop manages all open legs each H1 close</td>
+        </tr>
+        <tr>
+          <td><strong>Pyramid add-trigger</strong> (net-new)</td>
+          <td>Add on any new signal vs. add only to a winning book</td>
+          <td>"Add to winners" is the only risk-sane default; adding to losers compounds drawdown</td>
+          <td class="choice">Add a leg when a fresh <code>evaluate()</code> qualifies <em>same direction</em> AND the latest open leg is ≥ <code>pyramid_add_at_r</code> (default <strong>1.0R</strong>), up to <code>pyramid_max_legs</code> (default <strong>3</strong>)</td>
+        </tr>
+        <tr>
+          <td><strong>Per-leg risk &amp; stops</strong> (net-new)</td>
+          <td>Shared book-wide stop vs. independent per-leg stop/target</td>
+          <td>Independent legs keep each entry's §9.1/§9.4 math intact and §11 management per-leg</td>
+          <td class="choice">Each leg carries its own structural stop + target from its own entry candle; managed independently. Aggregate equity/sizing math deferred to A10 — A6 tracks each leg at 1 notional R</td>
+        </tr>
+        <tr>
+          <td><code>signal</code> persistence in CI</td>
+          <td>Always write rows vs. optional sink</td>
+          <td>CI has no Postgres; forcing writes breaks offline replay (and A8)</td>
+          <td class="choice">Pluggable sink: <code>NullSink</code> (default, in-memory) + <code>DbSink</code> (wraps existing <code>persist.write_signal_row</code>)</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2><span class="tag">3</span> Key code changes</h2>
+  <section>
+    <p>New package <code>src/lsb/backtest/</code> (currently only an empty <code>__init__.py</code>). The signal engine and
+    <code>signals/risk.py</code> are <strong>untouched</strong> — A6 consumes them.</p>
+
+    <p><code>src/lsb/backtest/clock.py</code> — injectable replay clock</p>
+<pre><span class="add">class ReplayClock:</span>
+<span class="add">    """Emits candle timestamps in ascending order. No wall-clock reads —</span>
+<span class="add">    `now()` returns the timestamp of the bar currently being evaluated."""</span>
+<span class="add">    def __init__(self, candles: Sequence[Candle]) -> None: ...</span>
+<span class="add">    def now(self) -> datetime: ...          # ts of current bar</span>
+<span class="add">    def __iter__(self) -> Iterator[Candle]: # yields bars in order</span></pre>
+
+    <p><code>src/lsb/backtest/broker.py</code> — fill seam (A7 replaces the impl, not the protocol)</p>
+<pre><span class="add">class Broker(Protocol):</span>
+<span class="add">    def try_fill(self, order: PendingOrder, bar: Candle) -> Fill | None: ...</span>
+<span class="add">    def exit_at(self, pos: Position, price: float, ts, reason: str) -> Fill: ...</span>
+<span class="add"></span>
+<span class="add">class NaiveBroker:                 # A6 stand-in — A7 ships SimulatedBroker</span>
+<span class="add">    """Optimistic fill: stop order fills at its trigger price the first bar</span>
+<span class="add">    the bar's range crosses it. No spread, slippage, gaps, or commission."""</span></pre>
+
+    <p><code>src/lsb/backtest/position.py</code> — lifecycle state + §11 transitions</p>
+<pre><span class="add">class PosState(Enum):  PENDING, FILLED, MANAGED, CLOSED</span>
+<span class="add"></span>
+<span class="add">@dataclass</span>
+<span class="add">class Position:</span>
+<span class="add">    direction: str            # 'long' | 'short'</span>
+<span class="add">    entry_trigger: float      # §10.1 buy/sell-stop level</span>
+<span class="add">    stop: float; target: float; entry_price: float | None</span>
+<span class="add">    state: PosState; opened_ts; r_distance: float   # |entry - initial stop|</span>
+<span class="add">    be_armed: bool = False; trailing: bool = False  # §11.2 / §11.3 latches</span></pre>
+
+    <p><code>src/lsb/backtest/manage.py</code> — pure §11 rules, evaluated on each H1 close while open</p>
+<pre><span class="add"># §11.2 breakeven  : +1.0R reached  -> stop = entry ± 1 pip (one-way ratchet)</span>
+<span class="add"># §11.3 trail      : +1.5R reached  -> stop = EMA21 ∓ 5 pips, ratchet only</span>
+<span class="add"># §11.4 defensive  : EMA21 reversal 2 bars / structure invalidation /</span>
+<span class="add">#                    opposing sweep -> full exit; momentum-exhaustion -> 50%</span>
+<span class="add"># §10.3 expiry     : pending &gt; 4 H1 bars, or sweep &gt; 3 bars, or ATR EXTREME -> cancel</span>
+<span class="add">def manage(pos: Position, window, p, pip_size) -> list[Action]: ...</span></pre>
+
+    <p><code>src/lsb/backtest/book.py</code> — pyramiding policy over the open legs (net-new, ADR-003)</p>
+<pre><span class="add">class PositionBook:</span>
+<span class="add">    """All open + pending legs for one instrument. Enforces the add-policy."""</span>
+<span class="add">    legs: list[Position]</span>
+<span class="add">    def may_add(self, signal: SignalResult, p) -> bool:</span>
+<span class="add">        if not p.pyramid_enabled:        return len(self.legs) == 0</span>
+<span class="add">        if len(self.open_legs) >= p.pyramid_max_legs:          return False</span>
+<span class="add">        if self.open_legs and signal.direction != self.direction: return False  # no hedging</span>
+<span class="add">        # add only to a winner: newest open leg must be >= pyramid_add_at_r</span>
+<span class="add">        return not self.open_legs or self.newest.r_now >= p.pyramid_add_at_r</span></pre>
+
+    <p><code>src/lsb/backtest/loop.py</code> — the driver that ties it together</p>
+<pre><span class="add">def run_backtest(candles, config, config_hash, *, broker=NaiveBroker(),</span>
+<span class="add">                 sink=NullSink()) -> BacktestResult:</span>
+<span class="add">    window = deque(maxlen=MIN_H1_WINDOW * 2)</span>
+<span class="add">    book = PositionBook()                       # all concurrent legs</span>
+<span class="add">    for bar in ReplayClock(candles):</span>
+<span class="add">        window.append(bar)</span>
+<span class="add">        # 1. manage EVERY open/pending leg on this close</span>
+<span class="add">        #    (fills, §11 stop moves, stop/target/defensive exits, §10.3 expiry)</span>
+<span class="add">        #    §11.4 book-wide exits (opposing sweep / structure invalid) close ALL legs</span>
+<span class="add">        # 2. evaluate() the closed bar -> SignalResult -> sink.write(result)</span>
+<span class="add">        # 3. if qualified and book.may_add(signal, p): stage a new leg</span>
+<span class="add">    return BacktestResult(signals=..., closed_positions=...)</span></pre>
+    <p class="warn" style="font-size:13px">Ordering: manage/fill the <em>prior</em> bar's legs <strong>before</strong> staging a new leg from the
+    current bar — never fill and manage a leg on the bar that created it (look-ahead guard). Per-leg §11 management
+    is unchanged; pyramiding only adds the book-level <code>may_add</code> gate and book-wide defensive exits.</p>
+
+    <p><code>src/lsb/data/config.py</code> — new <code>SignalParams</code> fields (schema_version <strong>4→5</strong>)</p>
+<pre><span class="add">pyramid_enabled: bool          # True — owner decision 2026-06-18 (ADR-003)</span>
+<span class="add">pyramid_max_legs: int          # 3   — max concurrent legs per instrument</span>
+<span class="add">pyramid_add_at_r: float        # 1.0 — newest leg must reach +NR before adding</span>
+<span class="add">pyramid_same_direction_only: bool  # True — no hedging/opposing legs</span></pre>
+  </section>
+
+  <h2><span class="tag">4</span> Lifecycle state machine <span style="font-size:12px;color:var(--muted)">(the spine of A6)</span></h2>
+  <section>
+    <div class="mock">
+<pre style="border:0;background:transparent;padding:0">   evaluate() qualified
+   + currently flat
+          │
+          ▼
+   ┌───────────┐   buy/sell-stop placed at §10.1 trigger
+   │  PENDING  │   stop+target attached (§9.1 / §9.4, reused from risk.py)
+   └─────┬─────┘
+         │ bar range crosses entry_trigger        ┌─────────────────────────┐
+         │  → Broker.try_fill() → entry_price     │  §10.3 EXPIRY (cancel): │
+         ▼                                        │  • &gt;4 H1 bars unfilled   │
+   ┌───────────┐                                  │  • sweep &gt;3 bars old     │
+   │  FILLED   │── first managed close ──┐        │  • triangle invalidated  │
+   └─────┬─────┘                         │        │  • ATR → EXTREME         │
+         ▼                               ▼        └─────────────────────────┘
+   ┌───────────┐  every H1 close:  ┌───────────┐
+   │  MANAGED  │  §11.2 BE @ +1R   │  CLOSED   │◄─ stop hit | target hit
+   │           │  §11.3 trail@+1.5R│           │   | §11.4 defensive exit
+   │  (ratchet │  §11.4 defensive  └───────────┘
+   │   stops)  │──────────────────────▲
+   └───────────┘                      │
+         └── stop/target crossed ─────┘
+</pre>
+    </div>
+    <p style="font-size:13px;color:var(--muted)">Every transition is driven by an H1 candle close (§11.1). Intra-candle tick logic is explicitly out of Phase A.
+    Fills resolve through the <code>Broker</code> seam, so A7's pessimistic model changes <em>where</em> a fill lands, not the machine.</p>
+    <p style="font-size:13px;color:var(--text)"><strong>Pyramiding (ADR-003):</strong> the machine above describes <em>one leg</em>. The
+    <code>PositionBook</code> holds several legs in their own states concurrently; each is independently managed by §11.
+    A new same-direction qualified signal stages an additional <code>PENDING</code> leg only when <code>book.may_add()</code>
+    passes (winner, under <code>pyramid_max_legs</code>). Book-wide §11.4 events (opposing sweep, structure invalidation)
+    close <em>all</em> legs at once.</p>
+  </section>
+
+  <h2><span class="tag">5</span> Step plan</h2>
+  <section>
+    <ol class="steps">
+      <li>Parquet loader → <code>Sequence[Candle]</code> sorted ascending, schema-checked against the four history files.
+        <span class="files">src/lsb/backtest/data.py · tests/unit/test_backtest_data.py</span></li>
+      <li><code>ReplayClock</code>: iterates candles, <code>now()</code> = current bar ts. No wall-clock.
+        <span class="files">src/lsb/backtest/clock.py · tests/unit/test_clock.py</span></li>
+      <li><code>Broker</code> Protocol + <code>NaiveBroker</code> (optimistic stop-order fill, no costs) + <code>Fill</code>/<code>PendingOrder</code> dataclasses.
+        <span class="files">src/lsb/backtest/broker.py · tests/unit/test_broker.py</span></li>
+      <li>Add <code>pyramid_*</code> fields to <code>SignalParams</code> with defaults; bump <code>schema_version</code> 4→5; update the three <code>config/*.yaml</code>. Write <strong>ADR-003</strong> recording pyramiding as net-new vs v2.0/v2.1.
+        <span class="files">src/lsb/data/config.py · config/*.yaml · docs/decisions/ADR-003-pyramiding.md</span></li>
+      <li><code>Position</code> + <code>PosState</code>; entry/stop/target built by reusing <code>structural_stop</code>/<code>rr_target</code>; expose <code>r_now</code> (current R-multiple) for the add-trigger.
+        <span class="files">src/lsb/backtest/position.py</span></li>
+      <li><code>manage()</code>: §11.2 breakeven, §11.3 EMA21 trail (ratchet + swing fallback), §11.4 defensive exits, §10.3 expiry — pure, per-leg, TDD against worked fixtures.
+        <span class="files">src/lsb/backtest/manage.py · tests/unit/test_manage.py</span></li>
+      <li><code>PositionBook</code> + <code>may_add()</code> pyramiding policy (winner-only, capped depth, same-direction) and book-wide §11.4 exits.
+        <span class="files">src/lsb/backtest/book.py · tests/unit/test_book.py</span></li>
+      <li>Sinks: <code>NullSink</code> (in-memory list) + <code>DbSink</code> wrapping existing <code>signals.persist.write_signal_row</code>.
+        <span class="files">src/lsb/backtest/sink.py</span></li>
+      <li><code>run_backtest()</code> driver: window deque, <code>PositionBook</code>, manage-then-evaluate-then-stage ordering, returns <code>BacktestResult</code>.
+        <span class="files">src/lsb/backtest/loop.py · tests/unit/test_loop.py</span></li>
+      <li>Integration test: replay a sample month → <code>signal</code> row for 100% of evaluable candles; a hand-labeled setup opens→manages→closes; a winning run <strong>adds a 2nd leg</strong> and respects <code>pyramid_max_legs</code>.
+        <span class="files">tests/integration/test_replay_month.py</span></li>
+      <li>CLI entry <code>scripts/run_backtest.py &lt;INSTR&gt; [--from --to] [--db]</code> for manual replay.
+        <span class="files">scripts/run_backtest.py</span></li>
+      <li>Update <code>docs/PHASE_STATUS.md</code> A6 row; commit to <code>main</code> (trunk-based, conventional message).
+        <span class="files">docs/PHASE_STATUS.md</span></li>
+    </ol>
+  </section>
+
+  <h2><span class="tag">6</span> Failure modes</h2>
+  <section>
+    <table class="fail">
+      <thead><tr><th>What could go wrong</th><th>How the plan handles it</th></tr></thead>
+      <tbody>
+        <tr><td class="warn">Look-ahead bias — managing/filling a position on the same bar that produced its signal, or using the closing bar's own high/low to decide its fill</td>
+          <td>Strict ordering in <code>loop.py</code>: manage the prior bar's position first, evaluate the just-closed bar second, stage new orders for <em>subsequent</em> bars. Document the contract; integration test asserts entry ts &gt; signal ts.</td></tr>
+        <tr><td class="warn">Determinism leak (dict ordering, float accumulation, set iteration) — would fail the A8 gate that lands right after</td>
+          <td>Build A6 determinism-clean from the start: ordered structures only, no <code>set</code> iteration in output paths, no wall-clock. A8 then just <em>wires</em> the golden-replay, not re-architects.</td></tr>
+        <tr><td class="warn">Scope creep into A7 — implementing spread/slippage/gap fills "while we're here"</td>
+          <td><code>NaiveBroker</code> is deliberately optimistic and labelled as a stand-in. The <code>Broker</code> protocol is the only contract A7 needs; pessimistic math stays out.</td></tr>
+        <tr><td class="warn">EMA21 trail unavailable early in history (§11.3 fallback) divides by missing data</td>
+          <td>Reuse <code>ema_series</code>; when it returns &lt; needed length, fall back to most-recent swing low/high + 5-pip buffer exactly as §11.3 specifies. Unit-tested both branches.</td></tr>
+        <tr><td class="warn">BTCUSD only has ~1y history — a multi-bar window may underflow <code>MIN_H1_WINDOW</code></td>
+          <td>Loop skips evaluation (and writes no signal) until the window reaches <code>MIN_H1_WINDOW</code>; engine already guards this. The 1y limit bites at A9's 24-month window, not A6.</td></tr>
+        <tr><td class="warn">Crypto/index pip semantics — <code>±1 pip</code> entry trigger and <code>±5 pip</code> trail in §10/§11 assume FX pips</td>
+          <td>All pip offsets go through <code>config.pip_size</code> (already asset-class aware, as in <code>risk.py</code>), never hard-coded.</td></tr>
+        <tr><td class="warn">Position closes exactly on stop and target within the same bar — ambiguous outcome</td>
+          <td>Pessimistic tie-break: assume stop hit first (worst case). Encoded in <code>NaiveBroker</code>/manage and inherited by A7. Documented as a fill convention.</td></tr>
+        <tr><td class="warn">Pyramiding stacks unbounded risk — adding leg after leg compounds drawdown if the trend fakes out</td>
+          <td>Hard cap <code>pyramid_max_legs</code> (default 3) + winner-only gate (<code>pyramid_add_at_r</code>): a leg is only added once the prior leg is already in profit, so a reversal closes new legs near breakeven. Book-wide §11.4 exit flattens all legs on opposing sweep / structure break.</td></tr>
+        <tr><td class="warn">Pyramiding is absent from the spec — silently inventing strategy rules would violate the "never re-type the spec" discipline</td>
+          <td>All pyramiding params live in config with documented defaults and are recorded in <strong>ADR-003</strong> as net-new owner decisions, explicitly <em>not</em> from v2.0/v2.1. Walk-forward (A9) will measure the edge with pyramiding on; the verdict (A10) judges it.</td></tr>
+        <tr><td class="warn">Per-leg vs aggregate R confusion — pyramiding tempts an equity/sizing model that belongs to A10</td>
+          <td>A6 tracks each leg at 1 notional R independently (matches the deferred-P&amp;L decision). No account equity, no aggregate sizing in A6; the book only counts legs and reads each leg's <code>r_now</code>.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2><span class="tag">7</span> Open questions</h2>
+  <section>
+    <ul class="q-list">
+      <li><span style="color:var(--accent2);font-weight:700">✓</span> <strong>Pyramiding — RESOLVED (owner, 2026-06-18):</strong> implemented from the get-go as a position book. Default policy: add same-direction legs only, winner-only (≥ <code>pyramid_add_at_r</code> = 1.0R), capped at <code>pyramid_max_legs</code> = 3. Recorded as <strong>ADR-003</strong>. Tune the three defaults at build time if desired.</li>
+      <li><span style="color:var(--accent2);font-weight:700">✓</span> <strong>Defensive partial exits — RESOLVED:</strong> record the partial-exit <em>event</em> on the leg, track R-multiple on the notional unit, defer fractional P&amp;L to the A10 equity layer.</li>
+      <li><span class="q">?</span> <strong>Build model.</strong> Per token-economy doctrine I'd suggest switching to <strong>Sonnet</strong> for the A6 implementation (mechanical state machine + TDD), keeping Opus for planning/debugging. You said you'll switch for the build — <code>/model sonnet</code> when ready.</li>
+    </ul>
+  </section>
+
+  <footer>Generated by the <code>plan-html</code> skill. Edit this file directly as the plan evolves. Source of truth: Implementation Plan v3.0 §A6–A7 · Requirements v2.0 §10–§11 · Blueprint v2.1 §6.1.</footer>
+</div>
+</body>
+</html>

@@ -55,11 +55,19 @@ def evaluate(
     h1_window: Sequence[Candle],
     config: InstrumentConfig,
     config_hash_val: str,
+    daily_trend: TrendState | None = None,
 ) -> SignalResult:
     """Evaluate all eight M7 gates for the last candle in h1_window.
 
     h1_window must be sorted ascending by timestamp, with the candle under
     evaluation at index -1. The window must be at least MIN_H1_WINDOW candles.
+
+    daily_trend, when provided, overrides the H1 trend for Gate 1 — the macro
+    (daily) trend is the correct filter for a reversal strategy, since the H1
+    EMAs are captured by the triangle's counter-trend sloped leg (ADR-007).
+    When None, Gate 1 falls back to the H1 trend (backward-compatible path used
+    by unit tests). H1 EMAs/ATR are always taken from h1_window (sweep quality,
+    Gate 6) regardless of the trend source.
     """
     p = config.signals
     ts = h1_window[-1].ts if h1_window else None
@@ -80,8 +88,8 @@ def evaluate(
         g = GateResult(1, 'trend_alignment', False, f'insufficient window ({len(h1_window)} < {MIN_H1_WINDOW})')
         return _reject(1, [g])
 
-    # M3: trend state
-    t_state = trend_state(h1_window, p)
+    # M3: trend state — daily (macro) when provided, else H1 (backward compat).
+    t_state = daily_trend if daily_trend is not None else trend_state(h1_window, p)
     ema21, ema50, _ = current_emas(h1_window, p)
     atr_st = current_atr_state(h1_window, p)
 
@@ -134,10 +142,10 @@ def evaluate(
     body = abs(h1_window[-1].close - h1_window[-1].open)
     if direction == 'short':
         dir_wick = h1_window[-1].high - max(h1_window[-1].open, h1_window[-1].close)
-        closes_beyond = h1_window[-1].close < block.upper
+        closes_beyond = h1_window[-1].close < block.level
     else:
         dir_wick = min(h1_window[-1].open, h1_window[-1].close) - h1_window[-1].low
-        closes_beyond = h1_window[-1].close > block.lower
+        closes_beyond = h1_window[-1].close > block.level
     wick_ratio = dir_wick / body if body > 0 else 0.0
 
     g5 = gate_5_candle_confirmation(confirm_type, closes_beyond, wick_ratio, direction, p)

@@ -1,0 +1,1555 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "phase_a_sessions_to_gate_ga",
+        "label": "Phase A Sessions (A0-A11) Forming the Path to Gate GA",
+        "nodes": [
+          "implementation_plan_v3_0_session_a0_scaffold",
+          "implementation_plan_v3_0_session_a1_config_schema",
+          "implementation_plan_v3_0_session_a2_data_pipeline_1",
+          "implementation_plan_v3_0_session_a3_data_pipeline_n",
+          "implementation_plan_v3_0_session_a4_a5_signal_engine",
+          "implementation_plan_v3_0_session_a6_a7_backtest_engine",
+          "implementation_plan_v3_0_session_a8_determinism_gate",
+          "implementation_plan_v3_0_session_a9_walkforward_harness",
+          "implementation_plan_v3_0_session_a10_verdict_report",
+          "implementation_plan_v3_0_session_a11_full_run_gate_ga",
+          "implementation_plan_v3_0_gate_ga"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "LSB_Implementation_Plan_v3.0.md"
+      },
+      {
+        "id": "phase_a_five_core_modules",
+        "label": "Five Core Modules Surviving Phase A (C1-C5)",
+        "nodes": [
+          "implementation_plan_v3_0_c1_data_pipeline",
+          "implementation_plan_v3_0_c2_signal_engine",
+          "implementation_plan_v3_0_c3_backtest_engine",
+          "implementation_plan_v3_0_c4_walkforward_harness",
+          "implementation_plan_v3_0_c5_verdict_report"
+        ],
+        "relation": "form",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "LSB_v3.0_Spec_and_Playbook.pdf"
+      },
+      {
+        "id": "track2_hardening_sessions",
+        "label": "Track 2 Hardening Sessions (B5-B10) Running Parallel to Forward Test",
+        "nodes": [
+          "implementation_plan_v3_0_session_b5_live_tables",
+          "implementation_plan_v3_0_session_b6_risk_portfolio",
+          "implementation_plan_v3_0_session_b7_monitoring_alerting",
+          "implementation_plan_v3_0_session_b8_docker",
+          "implementation_plan_v3_0_session_b9_vps_shadow",
+          "implementation_plan_v3_0_session_b10_interrogations",
+          "implementation_plan_v3_0_track2_hardening"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "LSB_Implementation_Plan_v3.0.md"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "PHASE_STATUS.md",
+      "file_type": "document",
+      "source_file": "docs/PHASE_STATUS.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_phase_status",
+      "community": 1,
+      "norm_label": "phase_status.md"
+    },
+    {
+      "label": "LSB Phase Status",
+      "file_type": "document",
+      "source_file": "docs/PHASE_STATUS.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_phase_status_lsb_phase_status",
+      "community": 1,
+      "norm_label": "lsb phase status"
+    },
+    {
+      "label": "Phase A schema",
+      "file_type": "document",
+      "source_file": "docs/PHASE_STATUS.md",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "docs_phase_status_phase_a_schema",
+      "community": 1,
+      "norm_label": "phase a schema"
+    },
+    {
+      "label": "Out of scope for Phase A",
+      "file_type": "document",
+      "source_file": "docs/PHASE_STATUS.md",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "docs_phase_status_out_of_scope_for_phase_a",
+      "community": 1,
+      "norm_label": "out of scope for phase a"
+    },
+    {
+      "label": "Environment decisions",
+      "file_type": "document",
+      "source_file": "docs/PHASE_STATUS.md",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "docs_phase_status_environment_decisions",
+      "community": 1,
+      "norm_label": "environment decisions"
+    },
+    {
+      "label": "apply_migrations.py",
+      "file_type": "code",
+      "source_file": "scripts/apply_migrations.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_apply_migrations",
+      "community": 3,
+      "norm_label": "apply_migrations.py"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "scripts/apply_migrations.py",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "scripts_apply_migrations_main",
+      "community": 3,
+      "norm_label": "main()"
+    },
+    {
+      "label": "Apply any migrations/*.sql files not yet recorded in schema_migrations.  Usage:",
+      "file_type": "rationale",
+      "source_file": "scripts/apply_migrations.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_apply_migrations_rationale_1",
+      "community": 3,
+      "norm_label": "apply any migrations/*.sql files not yet recorded in schema_migrations.  usage:"
+    },
+    {
+      "label": "start_postgres.ps1",
+      "file_type": "code",
+      "source_file": "scripts/start_postgres.ps1",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_start_postgres",
+      "community": 13,
+      "norm_label": "start_postgres.ps1"
+    },
+    {
+      "label": "config.py",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "data_config",
+      "community": 12,
+      "norm_label": "config.py"
+    },
+    {
+      "label": "BrokerCosts",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "data_config_brokercosts",
+      "community": 4,
+      "norm_label": "brokercosts"
+    },
+    {
+      "label": "WalkForwardWindow",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "data_config_walkforwardwindow",
+      "community": 4,
+      "norm_label": "walkforwardwindow"
+    },
+    {
+      "label": "InstrumentConfig",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "data_config_instrumentconfig",
+      "community": 12,
+      "norm_label": "instrumentconfig"
+    },
+    {
+      "label": "load_config()",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "data_config_load_config",
+      "community": 4,
+      "norm_label": "load_config()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "src_lsb_data_config_py_path",
+      "community": 4,
+      "norm_label": "path"
+    },
+    {
+      "label": "canonical_dict()",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "data_config_canonical_dict",
+      "community": 12,
+      "norm_label": "canonical_dict()"
+    },
+    {
+      "label": "canonical_json()",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "data_config_canonical_json",
+      "community": 12,
+      "norm_label": "canonical_json()"
+    },
+    {
+      "label": "canonical_yaml()",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "data_config_canonical_yaml",
+      "community": 12,
+      "norm_label": "canonical_yaml()"
+    },
+    {
+      "label": "config_hash()",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "data_config_config_hash",
+      "community": 4,
+      "norm_label": "config_hash()"
+    },
+    {
+      "label": "get_or_create_config_version()",
+      "file_type": "code",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L78",
+      "_origin": "ast",
+      "id": "data_config_get_or_create_config_version",
+      "community": 12,
+      "norm_label": "get_or_create_config_version()"
+    },
+    {
+      "label": "Instrument config: YAML -> frozen dataclass -> canonical form -> config_hash.  I",
+      "file_type": "rationale",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "data_config_rationale_1",
+      "community": 12,
+      "norm_label": "instrument config: yaml -> frozen dataclass -> canonical form -> config_hash.  i"
+    },
+    {
+      "label": "Insert-or-get this config's row in config_version. Returns config_hash.",
+      "file_type": "rationale",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "data_config_rationale_79",
+      "community": 12,
+      "norm_label": "insert-or-get this config's row in config_version. returns config_hash."
+    },
+    {
+      "label": "db.py",
+      "file_type": "code",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "data_db",
+      "community": 3,
+      "norm_label": "db.py"
+    },
+    {
+      "label": "get_connection()",
+      "file_type": "code",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "data_db_get_connection",
+      "community": 3,
+      "norm_label": "get_connection()"
+    },
+    {
+      "label": "connection",
+      "file_type": "code",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "connection",
+      "community": 3,
+      "norm_label": "connection"
+    },
+    {
+      "label": "_applied_migrations()",
+      "file_type": "code",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "data_db_applied_migrations",
+      "community": 3,
+      "norm_label": "_applied_migrations()"
+    },
+    {
+      "label": "apply_migrations()",
+      "file_type": "code",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "data_db_apply_migrations",
+      "community": 3,
+      "norm_label": "apply_migrations()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "src_lsb_data_db_py_path",
+      "community": 3,
+      "norm_label": "path"
+    },
+    {
+      "label": "Database connection helper and migration runner.  Connection parameters come fro",
+      "file_type": "rationale",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "data_db_rationale_1",
+      "community": 3,
+      "norm_label": "database connection helper and migration runner.  connection parameters come fro"
+    },
+    {
+      "label": "Apply any migrations/*.sql files not yet recorded in schema_migrations.      Ret",
+      "file_type": "rationale",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "data_db_rationale_37",
+      "community": 3,
+      "norm_label": "apply any migrations/*.sql files not yet recorded in schema_migrations.      ret"
+    },
+    {
+      "label": "conftest.py",
+      "file_type": "code",
+      "source_file": "tests/conftest.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_conftest",
+      "community": 3,
+      "norm_label": "conftest.py"
+    },
+    {
+      "label": "db_conn()",
+      "file_type": "code",
+      "source_file": "tests/conftest.py",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "tests_conftest_db_conn",
+      "community": 3,
+      "norm_label": "db_conn()"
+    },
+    {
+      "label": "test_config.py",
+      "file_type": "code",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "unit_test_config",
+      "community": 4,
+      "norm_label": "test_config.py"
+    },
+    {
+      "label": "test_identical_configs_hash_identically()",
+      "file_type": "code",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "unit_test_config_test_identical_configs_hash_identically",
+      "community": 4,
+      "norm_label": "test_identical_configs_hash_identically()"
+    },
+    {
+      "label": "test_different_configs_hash_differently()",
+      "file_type": "code",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "unit_test_config_test_different_configs_hash_differently",
+      "community": 4,
+      "norm_label": "test_different_configs_hash_differently()"
+    },
+    {
+      "label": "test_config_hash_is_sha256_hex()",
+      "file_type": "code",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "unit_test_config_test_config_hash_is_sha256_hex",
+      "community": 4,
+      "norm_label": "test_config_hash_is_sha256_hex()"
+    },
+    {
+      "label": "test_insert_or_get_is_idempotent()",
+      "file_type": "code",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "unit_test_config_test_insert_or_get_is_idempotent",
+      "community": 4,
+      "norm_label": "test_insert_or_get_is_idempotent()"
+    },
+    {
+      "label": "LSB_Implementation_Plan_v3.0.md",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "lsb_implementation_plan_v3.0.md",
+      "id": "lsb_implementation_plan_v3_0"
+    },
+    {
+      "label": "LSB Implementation Plan v3.0 \u2014 Full Playbook",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "lsb implementation plan v3.0 \u2014 full playbook",
+      "id": "lsb_implementation_plan_v3_0_lsb_implementation_plan_v3_0_full_playbook"
+    },
+    {
+      "label": "Part 0 \u2014 Operating Doctrine",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L9",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "part 0 \u2014 operating doctrine",
+      "id": "lsb_implementation_plan_v3_0_part_0_operating_doctrine"
+    },
+    {
+      "label": "Part 1 \u2014 Phase A: \"Prove\" (Weeks 1\u20133, Sessions A0\u2013A11)",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L25",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "part 1 \u2014 phase a: \"prove\" (weeks 1\u20133, sessions a0\u2013a11)",
+      "id": "lsb_implementation_plan_v3_0_part_1_phase_a_prove_weeks_1_3_sessions_a0_a11"
+    },
+    {
+      "label": "Phase A schema (migration `001_core.sql` \u2014 4 tables)",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L29",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "phase a schema (migration `001_core.sql` \u2014 4 tables)",
+      "id": "lsb_implementation_plan_v3_0_phase_a_schema_migration_001_core_sql_4_tables"
+    },
+    {
+      "label": "Sessions",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L35",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "sessions",
+      "id": "lsb_implementation_plan_v3_0_sessions"
+    },
+    {
+      "label": "Part 2 \u2014 Phase B: Forward Test + Parallel Hardening (Weeks 4\u201311, conditional on GO)",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L83",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "part 2 \u2014 phase b: forward test + parallel hardening (weeks 4\u201311, conditional on go)",
+      "id": "lsb_implementation_plan_v3_0_part_2_phase_b_forward_test_parallel_hardening_weeks_4_11_conditional_on_go"
+    },
+    {
+      "label": "Track 1 \u2014 Forward Test (Sessions B1\u2013B4, then 8 weeks of market time)",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L87",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "track 1 \u2014 forward test (sessions b1\u2013b4, then 8 weeks of market time)",
+      "id": "lsb_implementation_plan_v3_0_track_1_forward_test_sessions_b1_b4_then_8_weeks_of_market_time"
+    },
+    {
+      "label": "Track 2 \u2014 Hardening (Sessions B5\u2013B10, Weeks 5\u201311, parallel)",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L106",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "track 2 \u2014 hardening (sessions b5\u2013b10, weeks 5\u201311, parallel)",
+      "id": "lsb_implementation_plan_v3_0_track_2_hardening_sessions_b5_b10_weeks_5_11_parallel"
+    },
+    {
+      "label": "Gate GB \u2014 Forward-test verdict (Week 13)",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L117",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "gate gb \u2014 forward-test verdict (week 13)",
+      "id": "lsb_implementation_plan_v3_0_gate_gb_forward_test_verdict_week_13"
+    },
+    {
+      "label": "Part 3 \u2014 Phase C: \"Scale\" (Week 13+, conditional on GB GO)",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L125",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "part 3 \u2014 phase c: \"scale\" (week 13+, conditional on gb go)",
+      "id": "lsb_implementation_plan_v3_0_part_3_phase_c_scale_week_13_conditional_on_gb_go"
+    },
+    {
+      "label": "Part 4 \u2014 Calendar",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L135",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "part 4 \u2014 calendar",
+      "id": "lsb_implementation_plan_v3_0_part_4_calendar"
+    },
+    {
+      "label": "Part 5 \u2014 Risk Register Deltas",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L153",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "part 5 \u2014 risk register deltas",
+      "id": "lsb_implementation_plan_v3_0_part_5_risk_register_deltas"
+    },
+    {
+      "label": "Part 6 \u2014 Definition of Done, per phase",
+      "file_type": "document",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L165",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "part 6 \u2014 definition of done, per phase",
+      "id": "lsb_implementation_plan_v3_0_part_6_definition_of_done_per_phase"
+    },
+    {
+      "label": "ADR-001-broker-bridge.md",
+      "file_type": "document",
+      "source_file": "docs/decisions/ADR-001-broker-bridge.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "adr-001-broker-bridge.md",
+      "id": "decisions_adr_001_broker_bridge"
+    },
+    {
+      "label": "ADR-001: Broker Bridge \u2014 Native-Windows MT5 with EA-Socket Fallback",
+      "file_type": "document",
+      "source_file": "docs/decisions/ADR-001-broker-bridge.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "adr-001: broker bridge \u2014 native-windows mt5 with ea-socket fallback",
+      "id": "decisions_adr_001_broker_bridge_adr_001_broker_bridge_native_windows_mt5_with_ea_socket_fallback"
+    },
+    {
+      "label": "Decision",
+      "file_type": "document",
+      "source_file": "docs/decisions/ADR-001-broker-bridge.md",
+      "source_location": "L8",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "decision",
+      "id": "decisions_adr_001_broker_bridge_decision"
+    },
+    {
+      "label": "Consequences",
+      "file_type": "document",
+      "source_file": "docs/decisions/ADR-001-broker-bridge.md",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "consequences",
+      "id": "decisions_adr_001_broker_bridge_consequences"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/lsb/backtest/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "__init__.py",
+      "id": "backtest_init"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/lsb/data/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "__init__.py",
+      "id": "data_init"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/lsb/report/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "__init__.py",
+      "id": "report_init"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/lsb/signals/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "__init__.py",
+      "id": "signals_init"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/lsb/walkforward/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 11,
+      "norm_label": "__init__.py",
+      "id": "walkforward_init"
+    },
+    {
+      "label": "settings.local.json",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "settings.local.json",
+      "id": "claude_settings_local"
+    },
+    {
+      "label": "permissions",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "permissions",
+      "id": "claude_settings_local_permissions"
+    },
+    {
+      "label": "allow",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "allow",
+      "id": "claude_settings_local_permissions_allow"
+    },
+    {
+      "label": "Claude Settings Local Permissions",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 8,
+      "norm_label": "claude settings local permissions",
+      "id": "lsb_strategy_bot_settings_local"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/PHASE_STATUS.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_phase_status",
+      "target": "docs_phase_status_lsb_phase_status"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/PHASE_STATUS.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_phase_status_lsb_phase_status",
+      "target": "docs_phase_status_environment_decisions"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/PHASE_STATUS.md",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_phase_status_lsb_phase_status",
+      "target": "docs_phase_status_out_of_scope_for_phase_a"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/PHASE_STATUS.md",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_phase_status_lsb_phase_status",
+      "target": "docs_phase_status_phase_a_schema"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply_migrations.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "scripts_apply_migrations",
+      "target": "scripts_apply_migrations_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply_migrations.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scripts_apply_migrations_rationale_1",
+      "target": "scripts_apply_migrations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "scripts/apply_migrations.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "scripts_apply_migrations_main",
+      "target": "data_db_apply_migrations"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "scripts/apply_migrations.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "scripts_apply_migrations_main",
+      "target": "data_db_get_connection"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "data_config",
+      "target": "data_config_brokercosts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "data_config",
+      "target": "data_config_canonical_dict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "data_config",
+      "target": "data_config_canonical_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "data_config",
+      "target": "data_config_canonical_yaml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "data_config",
+      "target": "data_config_config_hash",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "data_config",
+      "target": "data_config_get_or_create_config_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "data_config",
+      "target": "data_config_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "data_config",
+      "target": "data_config_load_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "data_config",
+      "target": "data_config_walkforwardwindow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "data_config_rationale_1",
+      "target": "data_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "data_config_load_config",
+      "target": "data_config_brokercosts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "data_config_load_config",
+      "target": "data_config_walkforwardwindow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "data_config_canonical_dict",
+      "target": "data_config_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "data_config_canonical_json",
+      "target": "data_config_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "data_config_canonical_yaml",
+      "target": "data_config_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "data_config_config_hash",
+      "target": "data_config_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "data_config_get_or_create_config_version",
+      "target": "data_config_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "data_config_load_config",
+      "target": "data_config_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "data_config_load_config",
+      "target": "src_lsb_data_config_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "unit_test_config_test_config_hash_is_sha256_hex",
+      "target": "data_config_load_config"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "unit_test_config_test_different_configs_hash_differently",
+      "target": "data_config_load_config"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "unit_test_config_test_identical_configs_hash_identically",
+      "target": "data_config_load_config"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "unit_test_config_test_insert_or_get_is_idempotent",
+      "target": "data_config_load_config"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "data_config_canonical_json",
+      "target": "data_config_canonical_dict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "data_config_canonical_yaml",
+      "target": "data_config_canonical_dict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "data_config_config_hash",
+      "target": "data_config_canonical_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "data_config_get_or_create_config_version",
+      "target": "data_config_canonical_yaml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "unit_test_config_test_insert_or_get_is_idempotent",
+      "target": "data_config_canonical_yaml"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "data_config_get_or_create_config_version",
+      "target": "data_config_config_hash",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "unit_test_config_test_config_hash_is_sha256_hex",
+      "target": "data_config_config_hash"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "unit_test_config_test_different_configs_hash_differently",
+      "target": "data_config_config_hash"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "unit_test_config_test_identical_configs_hash_identically",
+      "target": "data_config_config_hash"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "unit_test_config_test_insert_or_get_is_idempotent",
+      "target": "data_config_config_hash"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/config.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "data_config_rationale_79",
+      "target": "data_config_get_or_create_config_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "unit_test_config_test_insert_or_get_is_idempotent",
+      "target": "data_config_get_or_create_config_version"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "data_db",
+      "target": "data_db_applied_migrations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "data_db",
+      "target": "data_db_apply_migrations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "data_db",
+      "target": "data_db_get_connection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "data_db_rationale_1",
+      "target": "data_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "data_db_get_connection",
+      "target": "connection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/conftest.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "tests_conftest_db_conn",
+      "target": "data_db_get_connection"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "data_db_apply_migrations",
+      "target": "data_db_applied_migrations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "data_db_apply_migrations",
+      "target": "src_lsb_data_db_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/data/db.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "data_db_rationale_37",
+      "target": "data_db_apply_migrations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/conftest.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "tests_conftest_db_conn",
+      "target": "data_db_apply_migrations"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/conftest.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "tests_conftest",
+      "target": "tests_conftest_db_conn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "unit_test_config",
+      "target": "unit_test_config_test_config_hash_is_sha256_hex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "unit_test_config",
+      "target": "unit_test_config_test_different_configs_hash_differently",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "unit_test_config",
+      "target": "unit_test_config_test_identical_configs_hash_identically",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "unit_test_config",
+      "target": "unit_test_config_test_insert_or_get_is_idempotent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0",
+      "target": "lsb_implementation_plan_v3_0_lsb_implementation_plan_v3_0_full_playbook"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_lsb_implementation_plan_v3_0_full_playbook",
+      "target": "lsb_implementation_plan_v3_0_part_0_operating_doctrine"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_lsb_implementation_plan_v3_0_full_playbook",
+      "target": "lsb_implementation_plan_v3_0_part_1_phase_a_prove_weeks_1_3_sessions_a0_a11"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L83",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_lsb_implementation_plan_v3_0_full_playbook",
+      "target": "lsb_implementation_plan_v3_0_part_2_phase_b_forward_test_parallel_hardening_weeks_4_11_conditional_on_go"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L125",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_lsb_implementation_plan_v3_0_full_playbook",
+      "target": "lsb_implementation_plan_v3_0_part_3_phase_c_scale_week_13_conditional_on_gb_go"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L135",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_lsb_implementation_plan_v3_0_full_playbook",
+      "target": "lsb_implementation_plan_v3_0_part_4_calendar"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L153",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_lsb_implementation_plan_v3_0_full_playbook",
+      "target": "lsb_implementation_plan_v3_0_part_5_risk_register_deltas"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L165",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_lsb_implementation_plan_v3_0_full_playbook",
+      "target": "lsb_implementation_plan_v3_0_part_6_definition_of_done_per_phase"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L29",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_part_1_phase_a_prove_weeks_1_3_sessions_a0_a11",
+      "target": "lsb_implementation_plan_v3_0_phase_a_schema_migration_001_core_sql_4_tables"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L35",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_part_1_phase_a_prove_weeks_1_3_sessions_a0_a11",
+      "target": "lsb_implementation_plan_v3_0_sessions"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L117",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_part_2_phase_b_forward_test_parallel_hardening_weeks_4_11_conditional_on_go",
+      "target": "lsb_implementation_plan_v3_0_gate_gb_forward_test_verdict_week_13"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L87",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_part_2_phase_b_forward_test_parallel_hardening_weeks_4_11_conditional_on_go",
+      "target": "lsb_implementation_plan_v3_0_track_1_forward_test_sessions_b1_b4_then_8_weeks_of_market_time"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "LSB_Implementation_Plan_v3.0.md",
+      "source_location": "L106",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lsb_implementation_plan_v3_0_part_2_phase_b_forward_test_parallel_hardening_weeks_4_11_conditional_on_go",
+      "target": "lsb_implementation_plan_v3_0_track_2_hardening_sessions_b5_b10_weeks_5_11_parallel"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/decisions/ADR-001-broker-bridge.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "decisions_adr_001_broker_bridge",
+      "target": "decisions_adr_001_broker_bridge_adr_001_broker_bridge_native_windows_mt5_with_ea_socket_fallback"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/decisions/ADR-001-broker-bridge.md",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "decisions_adr_001_broker_bridge_adr_001_broker_bridge_native_windows_mt5_with_ea_socket_fallback",
+      "target": "decisions_adr_001_broker_bridge_consequences"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/decisions/ADR-001-broker-bridge.md",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "decisions_adr_001_broker_bridge_adr_001_broker_bridge_native_windows_mt5_with_ea_socket_fallback",
+      "target": "decisions_adr_001_broker_bridge_decision"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "claude_settings_local",
+      "target": "claude_settings_local_permissions"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "claude_settings_local_permissions",
+      "target": "claude_settings_local_permissions_allow"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "phase_a_sessions_to_gate_ga",
+      "label": "Phase A Sessions (A0-A11) Forming the Path to Gate GA",
+      "nodes": [
+        "implementation_plan_v3_0_session_a0_scaffold",
+        "implementation_plan_v3_0_session_a1_config_schema",
+        "implementation_plan_v3_0_session_a2_data_pipeline_1",
+        "implementation_plan_v3_0_session_a3_data_pipeline_n",
+        "implementation_plan_v3_0_session_a4_a5_signal_engine",
+        "implementation_plan_v3_0_session_a6_a7_backtest_engine",
+        "implementation_plan_v3_0_session_a8_determinism_gate",
+        "implementation_plan_v3_0_session_a9_walkforward_harness",
+        "implementation_plan_v3_0_session_a10_verdict_report",
+        "implementation_plan_v3_0_session_a11_full_run_gate_ga",
+        "implementation_plan_v3_0_gate_ga"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "LSB_Implementation_Plan_v3.0.md"
+    },
+    {
+      "id": "phase_a_five_core_modules",
+      "label": "Five Core Modules Surviving Phase A (C1-C5)",
+      "nodes": [
+        "implementation_plan_v3_0_c1_data_pipeline",
+        "implementation_plan_v3_0_c2_signal_engine",
+        "implementation_plan_v3_0_c3_backtest_engine",
+        "implementation_plan_v3_0_c4_walkforward_harness",
+        "implementation_plan_v3_0_c5_verdict_report"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "LSB_v3.0_Spec_and_Playbook.pdf"
+    },
+    {
+      "id": "track2_hardening_sessions",
+      "label": "Track 2 Hardening Sessions (B5-B10) Running Parallel to Forward Test",
+      "nodes": [
+        "implementation_plan_v3_0_session_b5_live_tables",
+        "implementation_plan_v3_0_session_b6_risk_portfolio",
+        "implementation_plan_v3_0_session_b7_monitoring_alerting",
+        "implementation_plan_v3_0_session_b8_docker",
+        "implementation_plan_v3_0_session_b9_vps_shadow",
+        "implementation_plan_v3_0_session_b10_interrogations",
+        "implementation_plan_v3_0_track2_hardening"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "LSB_Implementation_Plan_v3.0.md"
+    }
+  ],
+  "built_at_commit": "314d3c7d1d6589f5e8f2f3697d736ea1fc4796d6"
+}

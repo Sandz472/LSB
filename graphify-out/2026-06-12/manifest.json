@@ -1,0 +1,62 @@
+{
+  ".claude/settings.local.json": {
+    "mtime": 1781277159.026116,
+    "ast_hash": "0cc28b3f7c84c37d9a138b73026d2ce9",
+    "semantic_hash": "0cc28b3f7c84c37d9a138b73026d2ce9"
+  },
+  "LSB_Implementation_Plan_v3.0.md": {
+    "mtime": 1781276235.5516596,
+    "ast_hash": "195de06c849498e0e700cfc1937e2a23",
+    "semantic_hash": "195de06c849498e0e700cfc1937e2a23"
+  },
+  "LSB_v3.0_Spec_and_Playbook.pdf": {
+    "mtime": 1781276210.942093,
+    "ast_hash": "f82fcdbdadbd21ac94b8786d2a254f63",
+    "semantic_hash": "f82fcdbdadbd21ac94b8786d2a254f63"
+  },
+  "src/lsb/__init__.py": {
+    "mtime": 1781277611.2884812,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/lsb/backtest/__init__.py": {
+    "mtime": 1781277612.930925,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/lsb/data/__init__.py": {
+    "mtime": 1781277611.484851,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/lsb/report/__init__.py": {
+    "mtime": 1781277614.0341885,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/lsb/signals/__init__.py": {
+    "mtime": 1781277612.203396,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/lsb/walkforward/__init__.py": {
+    "mtime": 1781277613.6070595,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1781277652.6003287,
+    "ast_hash": "2425127c8b8358dd6c6eab8bd9be2b31",
+    "semantic_hash": ""
+  },
+  "docs/PHASE_STATUS.md": {
+    "mtime": 1781277631.648382,
+    "ast_hash": "b55e8b2b85dae0eb1b49c5430410b3f2",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-001-broker-bridge.md": {
+    "mtime": 1781277642.4646046,
+    "ast_hash": "547c2193901899815df42d9ae233757c",
+    "semantic_hash": ""
+  }
+}

@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "docs/PHASE_STATUS.md": {
-    "mtime": 1781867683.28886,
-    "ast_hash": "c42d42fab0f797bc5bd447a1acffae91",
+    "mtime": 1781791805.2108138,
+    "ast_hash": "244f09a9550e99f753c76f9bd1ad9651",
     "semantic_hash": ""
   },
   "docs/decisions/ADR-001-broker-bridge.md": {
@@ -280,8 +280,8 @@
     "semantic_hash": ""
   },
   "scripts/run_backtest.py": {
-    "mtime": 1781867420.7533414,
-    "ast_hash": "3e44359dcccab2213f3d82b0784bf22f",
+    "mtime": 1781789827.0599463,
+    "ast_hash": "184a7fb2af522aa60ca22d0d142b86f6",
     "semantic_hash": ""
   },
   "src/lsb/backtest/book.py": {
@@ -290,8 +290,8 @@
     "semantic_hash": ""
   },
   "src/lsb/backtest/broker.py": {
-    "mtime": 1781867344.8408897,
-    "ast_hash": "dc968ec0608a0e908b5bef6ae13ff2ec",
+    "mtime": 1781789284.9202485,
+    "ast_hash": "9bbec6bf1627a5ca8992664498dbff29",
     "semantic_hash": ""
   },
   "src/lsb/backtest/clock.py": {
@@ -305,8 +305,8 @@
     "semantic_hash": ""
   },
   "src/lsb/backtest/loop.py": {
-    "mtime": 1781867410.9409432,
-    "ast_hash": "b1fc35c55197d1283f09d1d3ab6bab0c",
+    "mtime": 1781789402.436505,
+    "ast_hash": "8887f0e82ff15d0187bc9c353e53e827",
     "semantic_hash": ""
   },
   "src/lsb/backtest/manage.py": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "src/lsb/backtest/position.py": {
-    "mtime": 1781867352.678675,
-    "ast_hash": "76d58d9b97640ad82f4c5ab30f07c0a3",
+    "mtime": 1781789298.8503582,
+    "ast_hash": "9dd7fe52e37c01cda2e940f7885d3125",
     "semantic_hash": ""
   },
   "src/lsb/backtest/sink.py": {
@@ -382,21 +382,6 @@
   "docs/decisions/ADR-005-flat-leg-volatility-calibration.md": {
     "mtime": 1781805548.5433867,
     "ast_hash": "381f6a048517c0af71dc8ef03a021fbe",
-    "semantic_hash": ""
-  },
-  "tests/integration/test_simulated_broker_replay.py": {
-    "mtime": 1781867515.4851196,
-    "ast_hash": "b7e870f9cc486d7d5b4f25b319f4f92f",
-    "semantic_hash": ""
-  },
-  "tests/unit/test_simulated_broker.py": {
-    "mtime": 1781867484.7117753,
-    "ast_hash": "eba9424844e9acd0b1a3cfad71ced119",
-    "semantic_hash": ""
-  },
-  "plan-session-a7-simulated-broker.html": {
-    "mtime": 1781867309.1249092,
-    "ast_hash": "dc4979c3a4d873c830288a2202a98518",
     "semantic_hash": ""
   }
 }

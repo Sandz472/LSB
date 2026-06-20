@@ -48,12 +48,14 @@ def eurusd_candles():
 def test_replay_eurusd_completes(eurusd_candles, eurusd_config):
     # Use a recent month from the available history
     month_candles = _slice_month(eurusd_candles, 2024, 6)
-    # Need surrounding context; grab 300 warm-up bars before the month
+    # Need surrounding context; grab warm-up bars before the month. The daily
+    # macro-trend filter (Gate 1, ADR-007) needs ~90 daily bars (~2160 H1) of
+    # warm-up, so pull enough history for the daily EMA(89) to seed.
     month_start = month_candles[0].ts if month_candles else None
     assert month_start is not None, "No June 2024 candles in EURUSD history"
 
     idx_start = next(i for i, c in enumerate(eurusd_candles) if c.ts == month_start)
-    warm_up = max(0, idx_start - 350)
+    warm_up = max(0, idx_start - 2400)
     slice_ = eurusd_candles[warm_up: idx_start + len(month_candles)]
 
     h = compute_hash(eurusd_config)
@@ -65,7 +67,7 @@ def test_replay_eurusd_completes(eurusd_candles, eurusd_config):
 def test_positions_valid_state(eurusd_candles, eurusd_config):
     month_candles = _slice_month(eurusd_candles, 2024, 6)
     idx_start = next(i for i, c in enumerate(eurusd_candles) if c.ts == month_candles[0].ts)
-    warm_up = max(0, idx_start - 350)
+    warm_up = max(0, idx_start - 2400)
     slice_ = eurusd_candles[warm_up: idx_start + len(month_candles)]
 
     h = compute_hash(eurusd_config)
