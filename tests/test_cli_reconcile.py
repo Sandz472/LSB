@@ -88,7 +88,7 @@ def test_counts_reconcile_source_equals_audited(tmp_path):
 
 def test_counts_reconcile_audited_equals_loaded(tmp_path):
     """Loader receives the same row count that audit saw (no rows dropped)."""
-    from tests.test_load import FakeExecutor
+    from conftest import FakeExecutor
 
     rows = _make_rows("GBPUSD")
     cache_root = _make_fixture_cache(tmp_path, "GBPUSD", rows)
@@ -122,7 +122,7 @@ def test_full_pipeline_no_error(tmp_path):
     report = audit_history(series.rows, "EURUSD", "fx")
     write_audit(report, tmp_path / "audit")
 
-    from tests.test_load import FakeExecutor
+    from conftest import FakeExecutor
     ex = FakeExecutor()
     n_h1 = load_candles(ex, "hash_test", "EURUSD", "H1", series.rows)
     n_h4 = load_candles(ex, "hash_test", "EURUSD", "H4", h4)

@@ -8,27 +8,7 @@ from decimal import Decimal
 import pytest
 
 from lsb.data.load import load_candles
-
-
-# ---------------------------------------------------------------------------
-# Fake executor (in-memory sink)
-# ---------------------------------------------------------------------------
-
-class FakeExecutor:
-    def __init__(self):
-        self.rows: list[tuple] = []
-
-    def execute(self, sql: str, params: tuple) -> None:
-        self.rows.append(params)
-
-    def executemany(self, sql: str, params_seq: list[tuple]) -> None:
-        # Simulate ON CONFLICT DO NOTHING: only insert if (hash,inst,tf,ts) is new
-        existing = {(r[0], r[1], r[2], r[3]) for r in self.rows}
-        for p in params_seq:
-            key = (p[0], p[1], p[2], p[3])
-            if key not in existing:
-                self.rows.append(p)
-                existing.add(key)
+from conftest import FakeExecutor
 
 
 def _ts(iso: str) -> datetime:
