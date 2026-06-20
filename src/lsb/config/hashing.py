@@ -18,7 +18,10 @@ from decimal import Decimal
 
 def _canonical_value(v: object) -> object:
     if isinstance(v, Decimal):
-        return str(v)
+        # normalize() collapses trailing zeros: Decimal("2.0").normalize() == Decimal("2")
+        # so Decimal("2") and Decimal("2.0") produce the same string "2" regardless
+        # of whether the YAML source was written as 2 or 2.0.
+        return str(v.normalize())
     return v  # str, int, bool, None — all stable in JSON
 
 

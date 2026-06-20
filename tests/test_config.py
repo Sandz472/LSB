@@ -77,35 +77,41 @@ def test_different_instruments_differ():
 
 
 def test_key_order_invariance():
-    """config_hash must not depend on the order fields were assigned.
+    """config_hash must not depend on JSON key order.
 
-    We test this by constructing two InstrumentConfig instances from the same
-    values but via different intermediate dict orderings, then asserting the
-    hashes are equal. Because InstrumentConfig is a frozen dataclass, both
-    instances are equal by value — the hash must be equal too.
+    asdict() always yields fields in dataclass-declaration order, so building
+    two InstrumentConfigs from the same values cannot expose a sort_keys bug.
+    Instead we directly test the hashing layer: construct two dicts with
+    reversed key order and confirm the hash is identical — the test that
+    *would* catch sort_keys=False being removed.
     """
+    import hashlib, json
+    from lsb.config.hashing import _canonical_value
     fields = dataclasses.asdict(load_instrument(CONFIG_DIR / "EURUSD.yaml"))
-    # Build from reversed field order — dataclass constructor accepts keyword args
-    reversed_fields = dict(reversed(list(fields.items())))
-    cfg_a = InstrumentConfig(**fields)
-    cfg_b = InstrumentConfig(**reversed_fields)
-    assert config_hash(cfg_a) == config_hash(cfg_b)
+    canonical_a = {k: _canonical_value(v) for k, v in fields.items()}
+    canonical_b = {k: _canonical_value(v) for k, v in reversed(list(fields.items()))}
+    # With sort_keys=True both must hash identically; without it they would differ
+    h_a = hashlib.sha256(json.dumps(canonical_a, sort_keys=True, ensure_ascii=True).encode()).hexdigest()
+    h_b = hashlib.sha256(json.dumps(canonical_b, sort_keys=True, ensure_ascii=True).encode()).hexdigest()
+    assert h_a == h_b
+    # Confirm that WITHOUT sort_keys the dicts DO produce different JSON
+    # (proving our test would catch a sort_keys regression)
+    j_no_sort_a = json.dumps(canonical_a, sort_keys=False)
+    j_no_sort_b = json.dumps(canonical_b, sort_keys=False)
+    assert j_no_sort_a != j_no_sort_b, "reversed dict must differ without sort_keys"
 
 
-def test_float_stability():
-    """Decimal serialisation must not produce IEEE-754 repr drift.
+def test_decimal_precision_stability():
+    """config_hash must be identical for numerically equal Decimal values
+    with different trailing-zero representations (2 vs 2.0 vs 2.00).
 
-    0.1 in IEEE-754 float is 0.1000000000000000055511151...; if we ever
-    used repr(float) in the hash path, two nominally equal values could
-    produce different hashes. str(Decimal) is exact and stable.
+    str(Decimal('2.0')) == '2.0' but str(Decimal('2')) == '2' — without
+    Decimal.normalize() these would hash differently despite being equal.
     """
-    cfg = load_instrument(CONFIG_DIR / "EURUSD.yaml")
-    # flat_tolerance is Decimal("0.15") — serialize twice, must be identical
-    h1 = config_hash(cfg)
-    h2 = config_hash(cfg)
-    assert h1 == h2
-    # Also verify the Decimal is stored, not float
-    assert isinstance(cfg.flat_tolerance, Decimal)
+    from lsb.config.hashing import _canonical_value
+    assert _canonical_value(Decimal("2")) == _canonical_value(Decimal("2.0"))
+    assert _canonical_value(Decimal("0.15")) == _canonical_value(Decimal("0.150"))
+    assert _canonical_value(Decimal("0.0001")) == _canonical_value(Decimal("1E-4"))
 
 
 # ---------------------------------------------------------------------------

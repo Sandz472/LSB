@@ -60,7 +60,9 @@ CREATE TABLE IF NOT EXISTS signal (
     risk_tier     TEXT,   -- '1.0pct' | '0.5pct' | '0.25pct' | 'skip'
     verdict       TEXT,   -- 'QUALIFIED' | 'REJECTED' | 'INVALIDATED'
     FOREIGN KEY (config_hash, instrument)
-        REFERENCES config_version (config_hash, instrument)
+        REFERENCES config_version (config_hash, instrument),
+    -- Idempotent re-runs (A8 determinism check) must not accumulate duplicates
+    UNIQUE (config_hash, instrument, ts)
 );
 
 -- ---------------------------------------------------------------------------
@@ -78,7 +80,8 @@ CREATE TABLE IF NOT EXISTS wf_run (
     test_end      DATE        NOT NULL,
     FOREIGN KEY (config_hash, instrument)
         REFERENCES config_version (config_hash, instrument),
-    CONSTRAINT no_overlap CHECK (train_end < test_start)
+    CONSTRAINT no_overlap CHECK (train_end < test_start),
+    UNIQUE (config_hash, instrument, train_start, test_start)
 );
 
 -- ---------------------------------------------------------------------------
@@ -90,7 +93,7 @@ CREATE TABLE IF NOT EXISTS wf_run (
 CREATE TABLE IF NOT EXISTS sim_trade (
     id            BIGSERIAL   PRIMARY KEY,
     wf_run_id     BIGINT      NOT NULL REFERENCES wf_run (id),
-    signal_id     BIGINT      REFERENCES signal (id),
+    signal_id     BIGINT      NOT NULL REFERENCES signal (id),
     entry_ts      TIMESTAMPTZ NOT NULL,
     exit_ts       TIMESTAMPTZ,
     entry_price   NUMERIC     NOT NULL,
