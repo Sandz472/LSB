@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import csv
 import io
+import sys
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -103,6 +104,7 @@ def fetch_history(
     start: date,
     end: date,
     cache_root: Path | None = None,
+    progress: bool = False,
 ) -> CachedSeries:
     """Fetch H1 OHLCV for *instrument* over [start, end].
 
@@ -111,19 +113,35 @@ def fetch_history(
     cache_root to avoid any network calls.
 
     *source* must be "dukascopy" or "binance" (read from InstrumentConfig.data_source).
+
+    When *progress* is true, a flushed per-month line is written to stderr so a
+    long bulk fetch is observable in real time.  This output is purely
+    diagnostic — it is not part of any decision path.
     """
     root = Path(cache_root) if cache_root is not None else _CACHE_ROOT
     all_rows: list[dict] = []
 
-    for year, month in _months_between(start, end):
+    months = _months_between(start, end)
+    for idx, (year, month) in enumerate(months, start=1):
         cache_path = _month_cache_path(instrument, year, month, root)
 
         if cache_path.exists():
             rows = _csv_to_rows(cache_path.read_text(encoding="utf-8"))
+            origin = "cache"
         else:
+            if progress:
+                print(f"[fetch ] {instrument} {year}-{month:02d} "
+                      f"({idx}/{len(months)}) downloading…",
+                      file=sys.stderr, flush=True)
             rows = _fetch_live(instrument, source, year, month)
             cache_path.parent.mkdir(parents=True, exist_ok=True)
             cache_path.write_text(_rows_to_csv(rows), encoding="utf-8")
+            origin = "live"
+
+        if progress:
+            print(f"[fetch ] {instrument} {year}-{month:02d} "
+                  f"({idx}/{len(months)}) {len(rows):>4} bars [{origin}]",
+                  file=sys.stderr, flush=True)
 
         all_rows.extend(rows)
 

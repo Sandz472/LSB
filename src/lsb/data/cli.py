@@ -46,7 +46,8 @@ def cmd_fetch_audit_load(args: argparse.Namespace) -> int:
     start = date(end.year - args.years, end.month, end.day)
 
     # ------ fetch -------------------------------------------------------
-    series = fetch_history(cfg.instrument, cfg.data_source, start, end, cache_root)
+    series = fetch_history(cfg.instrument, cfg.data_source, start, end, cache_root,
+                           progress=True)
     source_count = len(series.rows)
     print(f"[fetch ] {cfg.instrument}  {cfg.data_source}  H1  "
           f"{start} → {end}  {source_count} bars")
