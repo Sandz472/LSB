@@ -38,6 +38,6 @@ class SpecConfig:
     min_coverage_years: int           # >= 3
     min_coverage_instruments: int     # >= 3
     # Owner-decision slots — None until pinned via ADR (HALT-HUMAN items)
-    min_trade_count: int | None       # §17.1 gap; pin before A11
-    rejection_geometry: str | None    # §4.3 vs §8.1 conflict; resolve before A5
-    trend_timeframe: str | None       # D1 vs H1 ambiguity; resolve before A4
+    min_trade_count: int | None       # §17.1 gap; pin before A11 — STILL OPEN
+    rejection_geometry: str | None    # ADR-004: "section_8_1_mirror" (bull = lower-wick)
+    trend_timeframe: str | None       # ADR-003: "D1" (Gate 1 macro trend on Daily)

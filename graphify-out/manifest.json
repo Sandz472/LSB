@@ -1,17 +1,252 @@
 {
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\files\\BUILD_PLAYBOOK.md": {
-    "mtime": 1781941925.3855164,
+  ".claude/settings.local.json": {
+    "mtime": 1781991775.388727,
+    "ast_hash": "62e397758f248c9a3a8642329e3416c1",
+    "semantic_hash": ""
+  },
+  "migrations/001_core.sql": {
+    "mtime": 1781948976.416171,
+    "ast_hash": "13741dd04a4790f0cdcc5ce270c4fa4d",
+    "semantic_hash": ""
+  },
+  "pyproject.toml": {
+    "mtime": 1781948976.4200177,
+    "ast_hash": "ff34f9ff040beef5dd57410d93c717cc",
+    "semantic_hash": ""
+  },
+  "src/lsb/__init__.py": {
+    "mtime": 1781947551.6320982,
+    "ast_hash": "a6e4fe39ad5303f69a9609e678f99484",
+    "semantic_hash": ""
+  },
+  "src/lsb/config/__init__.py": {
+    "mtime": 1781948976.422193,
+    "ast_hash": "e8a04231a27a037a4730ebf11624c059",
+    "semantic_hash": ""
+  },
+  "src/lsb/config/hashing.py": {
+    "mtime": 1781948976.422193,
+    "ast_hash": "7b428ce68714655d55f74da2441d11b3",
+    "semantic_hash": ""
+  },
+  "src/lsb/config/loader.py": {
+    "mtime": 1781991711.6118336,
+    "ast_hash": "4211096124256ff661dd63109027439e",
+    "semantic_hash": ""
+  },
+  "src/lsb/config/models.py": {
+    "mtime": 1781991718.1320317,
+    "ast_hash": "688efb16f711a70c227470c14101f781",
+    "semantic_hash": ""
+  },
+  "tests/test_config.py": {
+    "mtime": 1781991750.77257,
+    "ast_hash": "603de698c9ae691bab46c830ef49a038",
+    "semantic_hash": ""
+  },
+  "tests/test_smoke.py": {
+    "mtime": 1781947551.6320982,
+    "ast_hash": "c3102672282305aa2b9c0d3e04dee1a3",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1781947551.6045918,
+    "ast_hash": "0c5f7a666178c0884dca7567b568e4a8",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1781947551.6045918,
+    "ast_hash": "7507ebd7f82edccac877b9e3d5592fa9",
+    "semantic_hash": ""
+  },
+  "PHASE_STATUS.md": {
+    "mtime": 1781947551.6045918,
+    "ast_hash": "a20564e661d1c5ef5789cd1a902ef557",
+    "semantic_hash": ""
+  },
+  "config/BTCUSD.yaml": {
+    "mtime": 1781948976.4082417,
+    "ast_hash": "2d686e175a94980d0fe3da49ae3b5915",
+    "semantic_hash": ""
+  },
+  "config/EURUSD.yaml": {
+    "mtime": 1781948976.4082417,
+    "ast_hash": "13945663b37105ae10325bccec803743",
+    "semantic_hash": ""
+  },
+  "config/GBPUSD.yaml": {
+    "mtime": 1781948976.4102552,
+    "ast_hash": "f80a26d1f24079aa485b497c7dbd1d8a",
+    "semantic_hash": ""
+  },
+  "config/XAUUSD.yaml": {
+    "mtime": 1781948976.4119945,
+    "ast_hash": "e86aedb88f5244102a425c6a2595eabb",
+    "semantic_hash": ""
+  },
+  "config/spec.yaml": {
+    "mtime": 1781991654.6309886,
+    "ast_hash": "0ddb8ef31f218729dda7ac5d4d0fe784",
+    "semantic_hash": ""
+  },
+  "docs/BUILD_PLAYBOOK.md": {
+    "mtime": 1781947551.6100655,
+    "ast_hash": "703e9e557f0875c46f17068c4d72d014",
+    "semantic_hash": ""
+  },
+  "docs/GATE_SPECIFICATION.md": {
+    "mtime": 1781991739.892818,
+    "ast_hash": "2d87c2128924b2ec5ad109a48c2fba7c",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-001-broker-bridge.md": {
+    "mtime": 1781947551.6111333,
+    "ast_hash": "4ee3f9a14baa97517f4d1bc573b8da3a",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-002-phase-a-schema.md": {
+    "mtime": 1781948976.416171,
+    "ast_hash": "70e260a8a41c54c49d7c7ec058e51b73",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-003-trend-timeframe.md": {
+    "mtime": 1781991627.057202,
+    "ast_hash": "07f6b089e5c425766d428c9779159fc8",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-004-rejection-geometry.md": {
+    "mtime": 1781991645.0997386,
+    "ast_hash": "7519810b291c84c84ee263514e1ccfa5",
+    "semantic_hash": ""
+  },
+  "plan-a1-config-schema.html": {
+    "mtime": 1781948976.4181802,
+    "ast_hash": "d648621f54a4eb40f8847103e0019d2e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\.claude\\settings.local.json": {
+    "mtime": 1781991902.7409706,
+    "ast_hash": "8b140b9fda66c1e9da9433836710b0fa",
+    "semantic_hash": "8b140b9fda66c1e9da9433836710b0fa"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\migrations\\001_core.sql": {
+    "mtime": 1781948976.416171,
+    "ast_hash": "13741dd04a4790f0cdcc5ce270c4fa4d",
+    "semantic_hash": "13741dd04a4790f0cdcc5ce270c4fa4d"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\pyproject.toml": {
+    "mtime": 1781948976.4200177,
+    "ast_hash": "ff34f9ff040beef5dd57410d93c717cc",
+    "semantic_hash": "ff34f9ff040beef5dd57410d93c717cc"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\__init__.py": {
+    "mtime": 1781947551.6320982,
+    "ast_hash": "a6e4fe39ad5303f69a9609e678f99484",
+    "semantic_hash": "a6e4fe39ad5303f69a9609e678f99484"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\config\\__init__.py": {
+    "mtime": 1781948976.422193,
+    "ast_hash": "e8a04231a27a037a4730ebf11624c059",
+    "semantic_hash": "e8a04231a27a037a4730ebf11624c059"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\config\\hashing.py": {
+    "mtime": 1781948976.422193,
+    "ast_hash": "7b428ce68714655d55f74da2441d11b3",
+    "semantic_hash": "7b428ce68714655d55f74da2441d11b3"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\config\\loader.py": {
+    "mtime": 1781991711.6118336,
+    "ast_hash": "4211096124256ff661dd63109027439e",
+    "semantic_hash": "4211096124256ff661dd63109027439e"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\config\\models.py": {
+    "mtime": 1781991718.1320317,
+    "ast_hash": "688efb16f711a70c227470c14101f781",
+    "semantic_hash": "688efb16f711a70c227470c14101f781"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\tests\\test_config.py": {
+    "mtime": 1781991750.77257,
+    "ast_hash": "603de698c9ae691bab46c830ef49a038",
+    "semantic_hash": "603de698c9ae691bab46c830ef49a038"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\tests\\test_smoke.py": {
+    "mtime": 1781947551.6320982,
+    "ast_hash": "c3102672282305aa2b9c0d3e04dee1a3",
+    "semantic_hash": "c3102672282305aa2b9c0d3e04dee1a3"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\.github\\workflows\\ci.yml": {
+    "mtime": 1781947551.6045918,
+    "ast_hash": "0c5f7a666178c0884dca7567b568e4a8",
+    "semantic_hash": "0c5f7a666178c0884dca7567b568e4a8"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\CLAUDE.md": {
+    "mtime": 1781947551.6045918,
+    "ast_hash": "7507ebd7f82edccac877b9e3d5592fa9",
+    "semantic_hash": "7507ebd7f82edccac877b9e3d5592fa9"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\PHASE_STATUS.md": {
+    "mtime": 1781947551.6045918,
+    "ast_hash": "a20564e661d1c5ef5789cd1a902ef557",
+    "semantic_hash": "a20564e661d1c5ef5789cd1a902ef557"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\BTCUSD.yaml": {
+    "mtime": 1781948976.4082417,
+    "ast_hash": "2d686e175a94980d0fe3da49ae3b5915",
+    "semantic_hash": "2d686e175a94980d0fe3da49ae3b5915"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\EURUSD.yaml": {
+    "mtime": 1781948976.4082417,
+    "ast_hash": "13945663b37105ae10325bccec803743",
+    "semantic_hash": "13945663b37105ae10325bccec803743"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\GBPUSD.yaml": {
+    "mtime": 1781948976.4102552,
+    "ast_hash": "f80a26d1f24079aa485b497c7dbd1d8a",
+    "semantic_hash": "f80a26d1f24079aa485b497c7dbd1d8a"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\XAUUSD.yaml": {
+    "mtime": 1781948976.4119945,
+    "ast_hash": "e86aedb88f5244102a425c6a2595eabb",
+    "semantic_hash": "e86aedb88f5244102a425c6a2595eabb"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\spec.yaml": {
+    "mtime": 1781991654.6309886,
+    "ast_hash": "0ddb8ef31f218729dda7ac5d4d0fe784",
+    "semantic_hash": "0ddb8ef31f218729dda7ac5d4d0fe784"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\BUILD_PLAYBOOK.md": {
+    "mtime": 1781947551.6100655,
     "ast_hash": "703e9e557f0875c46f17068c4d72d014",
     "semantic_hash": "703e9e557f0875c46f17068c4d72d014"
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\files\\GATE_SPECIFICATION.md": {
-    "mtime": 1781941925.3949442,
-    "ast_hash": "1abac999358d098a45043aa76885d7ff",
-    "semantic_hash": "1abac999358d098a45043aa76885d7ff"
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\GATE_SPECIFICATION.md": {
+    "mtime": 1781991739.892818,
+    "ast_hash": "2d87c2128924b2ec5ad109a48c2fba7c",
+    "semantic_hash": "2d87c2128924b2ec5ad109a48c2fba7c"
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\.claude\\settings.local.json": {
-    "mtime": 1781941286.6915965,
-    "ast_hash": "360fb42eb1891717355b14092993f5a4",
-    "semantic_hash": "360fb42eb1891717355b14092993f5a4"
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\decisions\\ADR-001-broker-bridge.md": {
+    "mtime": 1781947551.6111333,
+    "ast_hash": "4ee3f9a14baa97517f4d1bc573b8da3a",
+    "semantic_hash": "4ee3f9a14baa97517f4d1bc573b8da3a"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\decisions\\ADR-002-phase-a-schema.md": {
+    "mtime": 1781948976.416171,
+    "ast_hash": "70e260a8a41c54c49d7c7ec058e51b73",
+    "semantic_hash": "70e260a8a41c54c49d7c7ec058e51b73"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\decisions\\ADR-003-trend-timeframe.md": {
+    "mtime": 1781991627.057202,
+    "ast_hash": "07f6b089e5c425766d428c9779159fc8",
+    "semantic_hash": "07f6b089e5c425766d428c9779159fc8"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\decisions\\ADR-004-rejection-geometry.md": {
+    "mtime": 1781991645.0997386,
+    "ast_hash": "7519810b291c84c84ee263514e1ccfa5",
+    "semantic_hash": "7519810b291c84c84ee263514e1ccfa5"
+  },
+  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\plan-a1-config-schema.html": {
+    "mtime": 1781948976.4181802,
+    "ast_hash": "d648621f54a4eb40f8847103e0019d2e",
+    "semantic_hash": "d648621f54a4eb40f8847103e0019d2e"
   }
 }

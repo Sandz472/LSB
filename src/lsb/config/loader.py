@@ -16,6 +16,8 @@ _VALID_CLASSES = {"fx_major", "commodity", "crypto"}
 _VALID_SESSIONS = {"fx", "24_7"}
 _VALID_UNITS = {"pips", "pct"}
 _VALID_SOURCES = {"dukascopy", "binance"}
+_VALID_TREND_TF = {"D1", "H1"}                                  # ADR-003
+_VALID_REJECTION_GEOM = {"section_8_1_mirror", "section_4_3_literal"}  # ADR-004
 
 
 def _d(raw: object, field: str) -> Decimal:
@@ -84,6 +86,15 @@ def load_spec(path: str | Path) -> SpecConfig:
     path = Path(path)
     raw: dict = yaml.safe_load(path.read_text(encoding="utf-8"))
 
+    # Owner-decision slots: None means "unset" (allowed); a present value must be
+    # a recognised choice so a typo cannot silently change a decision-path enum.
+    trend_timeframe = raw.get("trend_timeframe")              # ADR-003
+    if trend_timeframe is not None and trend_timeframe not in _VALID_TREND_TF:
+        raise ValueError(f"trend_timeframe must be one of {_VALID_TREND_TF}")
+    rejection_geometry = raw.get("rejection_geometry")        # ADR-004
+    if rejection_geometry is not None and rejection_geometry not in _VALID_REJECTION_GEOM:
+        raise ValueError(f"rejection_geometry must be one of {_VALID_REJECTION_GEOM}")
+
     return SpecConfig(
         min_expectancy_r=_d(_require(raw, "min_expectancy_r"), "min_expectancy_r"),
         max_drawdown_pct=_d(_require(raw, "max_drawdown_pct"), "max_drawdown_pct"),
@@ -91,7 +102,7 @@ def load_spec(path: str | Path) -> SpecConfig:
         min_sharpe=_d(_require(raw, "min_sharpe"), "min_sharpe"),
         min_coverage_years=int(_require(raw, "min_coverage_years")),
         min_coverage_instruments=int(_require(raw, "min_coverage_instruments")),
-        min_trade_count=raw.get("min_trade_count"),           # None until owner pins
-        rejection_geometry=raw.get("rejection_geometry"),     # None until §4.3 resolved
-        trend_timeframe=raw.get("trend_timeframe"),           # None until D1/H1 resolved
+        min_trade_count=raw.get("min_trade_count"),           # None until owner pins (before A11)
+        rejection_geometry=rejection_geometry,                # ADR-004: "section_8_1_mirror"
+        trend_timeframe=trend_timeframe,                      # ADR-003: "D1"
     )
