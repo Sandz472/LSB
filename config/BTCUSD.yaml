@@ -1,0 +1,19 @@
+# BTCUSD per-instrument configuration
+# Source of truth: docs/GATE_SPECIFICATION.md "Per-instrument configuration"
+# Note: sessions = 24_7 per §3.3 (spec; prior build incorrectly applied FX bands)
+
+instrument: BTCUSD
+instrument_class: crypto
+pip_size: "0.01"
+max_spread: "0.05"
+max_spread_unit: pct
+sessions: "24_7"
+flat_tolerance: "0.15"
+sweep_penetration: "0.02"
+sweep_pen_unit: pct
+block_min_width: "0.05"
+block_width_unit: pct
+stop_buffer: "0.02"
+stop_buffer_elev: "0.04"
+stop_buffer_unit: pct
+data_source: binance

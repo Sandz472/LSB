@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Implementation Plan — A1: Config System + Core Schema</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --border:#30363d; --text:#e6edf3;
+    --muted:#9da7b3; --accent:#2563eb; --accent2:#3fb950; --warn:#f0883e;
+    --danger:#f85149; --code:#0b0f14; --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;padding:48px 24px 96px}
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:36px}
+  h1{font-size:30px;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:15px}
+  h2{font-size:21px;margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+  h2 .tag{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:2px 9px}
+  section{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+    padding:18px 22px;margin-bottom:18px}
+  p{margin:8px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#1c2330;color:var(--text);font-weight:600}
+  .choice{color:var(--accent2);font-weight:600}
+  pre{background:var(--code);border:1px solid var(--border);border-radius:8px;
+    padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.5}
+  code{font-family:var(--mono);font-size:.92em}
+  .del{color:var(--danger)} .add{color:var(--accent2)}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:6px 0}
+  ol.steps li{counter-increment:s;position:relative;padding:10px 0 10px 42px;border-bottom:1px solid var(--border)}
+  ol.steps li:last-child{border-bottom:0}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;
+    background:var(--accent);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700}
+  ol.steps .files{display:block;color:var(--muted);font-size:13px;font-family:var(--mono);margin-top:3px}
+  .fail th:first-child{width:44%}
+  .warn{color:var(--warn)} .q{color:var(--warn);font-weight:600}
+  ul.q-list li{margin:6px 0}
+  .tree{font-family:var(--mono);font-size:13px;line-height:1.8;background:var(--code);
+    border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+  .tree .new{color:var(--accent2)}
+  .badge{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:middle}
+  .badge-warn{background:#3d2600;color:var(--warn);border:1px solid var(--warn)}
+  .badge-ok{background:#0d2b1a;color:var(--accent2);border:1px solid var(--accent2)}
+  footer{color:var(--muted);font-size:13px;margin-top:40px;border-top:1px solid var(--border);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>A1 — Config System + Core Schema</h1>
+    <div class="sub">Implementation plan · 2026-06-20 · LSB / Phase A, session A1 · Issue <a href="https://github.com/Sandz472/LSB/issues/3" style="color:var(--accent)">#3</a></div>
+  </header>
+
+  <!-- 1. OVERVIEW -->
+  <h2><span class="tag">1</span> Overview</h2>
+  <section>
+    <p>Build the LSB config system — YAML per-instrument files parsed into immutable frozen dataclasses,
+    then hashed to a deterministic <code>config_hash</code> (sha256 of canonical JSON) that keys every
+    downstream database row. Simultaneously author <code>migrations/001_core.sql</code> with the four
+    Phase-A tables (<code>config_version</code>, <code>candle</code>, <code>signal</code>,
+    <code>wf_run</code> + <code>sim_trade</code>), designed from first principles and recorded as ADR-002.</p>
+    <p>No gate logic, data fetch, or backtest code is introduced. The sole deliverable is a stable,
+    deterministic config identity system that everything from A2 onward can anchor to.</p>
+  </section>
+
+  <!-- 2. FILE TREE -->
+  <h2><span class="tag">2</span> File tree (new files highlighted)</h2>
+  <section>
+    <div class="tree">
+LSB/<br>
+├── config/<br>
+│   ├── <span class="new">EURUSD.yaml</span><br>
+│   ├── <span class="new">GBPUSD.yaml</span><br>
+│   ├── <span class="new">XAUUSD.yaml</span><br>
+│   └── <span class="new">BTCUSD.yaml</span><br>
+├── docs/decisions/<br>
+│   └── <span class="new">ADR-002-phase-a-schema.md</span><br>
+├── migrations/<br>
+│   └── 001_core.sql  <span style="color:var(--warn)">← fill DDL body (was placeholder)</span><br>
+├── src/lsb/<br>
+│   ├── __init__.py<br>
+│   └── <span class="new">config/</span><br>
+│       ├── <span class="new">__init__.py</span><br>
+│       ├── <span class="new">models.py</span>   ← frozen dataclasses<br>
+│       ├── <span class="new">loader.py</span>   ← YAML → dataclass<br>
+│       └── <span class="new">hashing.py</span>  ← canonical JSON → sha256<br>
+└── tests/<br>
+    ├── test_smoke.py<br>
+    └── <span class="new">test_config.py</span>
+    </div>
+  </section>
+
+  <!-- 3. DATACLASSES -->
+  <h2><span class="tag">3</span> Dataclass design (<code>src/lsb/config/models.py</code>)</h2>
+  <section>
+    <p><strong>InstrumentConfig</strong> — per-instrument, <code>frozen=True, slots=True</code></p>
+<pre>@dataclass(frozen=True, slots=True)
+class InstrumentConfig:
+    instrument:        str        # "EURUSD" | "GBPUSD" | "XAUUSD" | "BTCUSD"
+    instrument_class:  str        # "fx_major" | "commodity" | "crypto"
+    pip_size:          Decimal    # stored as Decimal to avoid float repr ambiguity
+    max_spread_pips:   Decimal    # in pip units for FX/gold; % for crypto stored as Decimal
+    max_spread_unit:   str        # "pips" | "pct"
+    sessions:          str        # "fx" | "24_7"
+    flat_tolerance:    Decimal    # 0.15 (pct, spec §6.1.1 baseline)
+    sweep_penetration: Decimal    # pips or pct depending on unit
+    sweep_pen_unit:    str        # "pips" | "pct"
+    block_min_width:   Decimal    # pips or pct
+    block_width_unit:  str        # "pips" | "pct"
+    stop_buffer:       Decimal    # normal ATR state
+    stop_buffer_elev:  Decimal    # elevated ATR state
+    stop_buffer_unit:  str        # "pips" | "pct"
+    data_source:       str        # "dukascopy" | "binance"</pre>
+
+    <p><strong>SpecConfig</strong> — §17.1 GA thresholds, <code>frozen=True, slots=True</code></p>
+<pre>@dataclass(frozen=True, slots=True)
+class SpecConfig:
+    # §17.1 OOS thresholds (read by verdict code — never re-typed)
+    min_expectancy_r:      Decimal          # 0.3
+    max_drawdown_pct:      Decimal          # 15.0
+    min_win_rate_pct:      Decimal          # 40.0
+    min_sharpe:            Decimal          # 1.0
+    min_coverage_years:    int              # 3
+    min_coverage_instruments: int           # 3
+    # Owner-decision slots — intentionally unset until owner ADR
+    min_trade_count:       int | None       # None until pinned (§7 gap)
+    rejection_geometry:    str | None       # None until §4.3/§8.1 conflict resolved
+    trend_timeframe:       str | None       # None until D1-vs-H1 ambiguity resolved</pre>
+
+    <p style="color:var(--warn);font-size:13px">⚠ <code>Decimal</code> is used throughout the hash path — never bare <code>float</code>. This guarantees no IEEE-754 repr drift between processes.</p>
+  </section>
+
+  <!-- 4. HASHING -->
+  <h2><span class="tag">4</span> Hashing design (<code>src/lsb/config/hashing.py</code>)</h2>
+  <section>
+    <p>Determinism invariant: <em>same field values → same hash, regardless of Python version patch, process, or dict insertion order.</em></p>
+<pre>import hashlib, json
+from decimal import Decimal
+from dataclasses import asdict
+
+def _canonical_value(v):
+    if isinstance(v, Decimal):
+        return str(v)          # "0.15", "0.0001" — stable, no float noise
+    if v is None:
+        return None
+    return v                   # str, int — already stable
+
+def config_hash(cfg) -> str:
+    raw = {k: _canonical_value(v) for k, v in asdict(cfg).items()}
+    canonical = json.dumps(raw, sort_keys=True, ensure_ascii=True)
+    return hashlib.sha256(canonical.encode()).hexdigest()</pre>
+
+    <table>
+      <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td><code>float</code> repr variance</td><td>All numeric fields stored as <code>Decimal</code>; serialised via <code>str()</code></td></tr>
+        <tr><td>dict ordering</td><td><code>sort_keys=True</code> in <code>json.dumps</code></td></tr>
+        <tr><td>None handling</td><td>Explicit <code>None → null</code> in JSON; consistent across versions</td></tr>
+        <tr><td>Unicode drift</td><td><code>ensure_ascii=True</code> forces consistent escaping</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 5. YAML CONFIG FILES -->
+  <h2><span class="tag">5</span> Per-instrument YAML values</h2>
+  <section>
+    <table>
+      <thead><tr><th>Field</th><th>EURUSD</th><th>GBPUSD</th><th>XAUUSD</th><th>BTCUSD</th></tr></thead>
+      <tbody>
+        <tr><td>instrument_class</td><td>fx_major</td><td>fx_major</td><td>commodity</td><td>crypto</td></tr>
+        <tr><td>pip_size</td><td>0.0001</td><td>0.0001</td><td><em>tbd config</em></td><td>0.01</td></tr>
+        <tr><td>max_spread / unit</td><td>1.5 / pips</td><td>1.5 / pips</td><td><em>tbd config</em> / pips</td><td>0.05 / pct</td></tr>
+        <tr><td>sessions</td><td>fx</td><td>fx</td><td>fx</td><td>24_7</td></tr>
+        <tr><td>flat_tolerance</td><td>0.15</td><td>0.15</td><td>0.15</td><td>0.15</td></tr>
+        <tr><td>sweep_pen / unit</td><td>2 / pips</td><td>2 / pips</td><td>2 / pips</td><td>0.02 / pct</td></tr>
+        <tr><td>block_min_width / unit</td><td>5 / pips</td><td>5 / pips</td><td>5 / pips</td><td>0.05 / pct</td></tr>
+        <tr><td>stop_buffer / elev / unit</td><td>2 / 4 / pips</td><td>2 / 4 / pips</td><td>2 / 4 / pips</td><td>0.02 / 0.04 / pct</td></tr>
+        <tr><td>data_source</td><td>dukascopy</td><td>dukascopy</td><td>dukascopy</td><td>binance</td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--warn);font-size:13px">⚠ XAUUSD <code>pip_size</code> and <code>max_spread</code> are listed as "per config" in the gate spec (no concrete value given). Placeholders used; owner to fill before A2 data fetch.</p>
+  </section>
+
+  <!-- 6. SQL DDL -->
+  <h2><span class="tag">6</span> SQL schema (<code>migrations/001_core.sql</code>)</h2>
+  <section>
+<pre>-- Phase-A core schema. Design rationale: ADR-002.
+
+CREATE TABLE config_version (
+    config_hash   TEXT        PRIMARY KEY,
+    instrument    TEXT        NOT NULL,
+    yaml_snapshot TEXT        NOT NULL,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE candle (
+    id            BIGSERIAL   PRIMARY KEY,
+    config_hash   TEXT        NOT NULL REFERENCES config_version(config_hash),
+    instrument    TEXT        NOT NULL,
+    timeframe     TEXT        NOT NULL,  -- 'H1', 'H4', 'D1'
+    ts            TIMESTAMPTZ NOT NULL,
+    open          NUMERIC     NOT NULL,
+    high          NUMERIC     NOT NULL,
+    low           NUMERIC     NOT NULL,
+    close         NUMERIC     NOT NULL,
+    volume        NUMERIC,
+    UNIQUE (config_hash, instrument, timeframe, ts)
+);
+
+CREATE TABLE signal (
+    id            BIGSERIAL   PRIMARY KEY,
+    config_hash   TEXT        NOT NULL REFERENCES config_version(config_hash),
+    instrument    TEXT        NOT NULL,
+    ts            TIMESTAMPTZ NOT NULL,
+    -- §8.1 gates (NULL = not evaluated; FALSE = fail; TRUE = pass)
+    gate1         BOOL,  -- Trend State Confirmed
+    gate2         BOOL,  -- Structure Confirmed
+    gate3         BOOL,  -- Liquidity Sweep Detected
+    gate4         BOOL,  -- EMA Interaction Confirmed
+    gate5         BOOL,  -- Rejection Candle Confirmed
+    gate6         BOOL,  -- Session Active
+    gate7         BOOL,  -- Risk:Reward Minimum
+    gate8         BOOL,  -- Global Risk State Clear
+    all_gates     BOOL,  -- conjunction of gates 1-8
+    sweep_score   NUMERIC,    -- 0-100 risk-tier score (not a gate; §7.3)
+    risk_tier     TEXT,        -- '1.0pct' | '0.5pct' | '0.25pct' | 'skip'
+    verdict       TEXT         -- 'QUALIFIED' | 'REJECTED' | 'INVALIDATED'
+);
+
+CREATE TABLE wf_run (
+    id            BIGSERIAL   PRIMARY KEY,
+    config_hash   TEXT        NOT NULL REFERENCES config_version(config_hash),
+    instrument    TEXT        NOT NULL,
+    train_start   DATE        NOT NULL,
+    train_end     DATE        NOT NULL,
+    test_start    DATE        NOT NULL,
+    test_end      DATE        NOT NULL,
+    CONSTRAINT no_overlap CHECK (train_end &lt; test_start)
+);
+
+CREATE TABLE sim_trade (
+    id            BIGSERIAL   PRIMARY KEY,
+    wf_run_id     BIGINT      NOT NULL REFERENCES wf_run(id),
+    signal_id     BIGINT      REFERENCES signal(id),
+    entry_ts      TIMESTAMPTZ NOT NULL,
+    exit_ts       TIMESTAMPTZ,
+    entry_price   NUMERIC     NOT NULL,
+    exit_price    NUMERIC,
+    stop_price    NUMERIC     NOT NULL,
+    target_price  NUMERIC     NOT NULL,
+    r_multiple    NUMERIC,     -- positive = profit; negative = loss
+    outcome       TEXT         -- 'WIN' | 'LOSS' | 'SCRATCH' | 'OPEN'
+);</pre>
+  </section>
+
+  <!-- 7. TEST MATRIX -->
+  <h2><span class="tag">7</span> Test matrix (<code>tests/test_config.py</code>)</h2>
+  <section>
+    <table>
+      <thead><tr><th>Test</th><th>What it verifies</th><th>Pass condition</th></tr></thead>
+      <tbody>
+        <tr><td><code>test_all_instruments_load</code></td><td>All 4 YAMLs parse without error</td><td>No exception; returns <code>InstrumentConfig</code></td></tr>
+        <tr><td><code>test_frozen</code></td><td>Dataclass is immutable</td><td>Mutation raises <code>FrozenInstanceError</code></td></tr>
+        <tr><td><code>test_determinism</code></td><td>Same file → same hash, twice</td><td><code>hash1 == hash2</code></td></tr>
+        <tr><td><code>test_key_order_invariance</code></td><td>Hash is independent of dict key order</td><td>Manually construct two dicts with reversed key order; hashes equal</td></tr>
+        <tr><td><code>test_float_stability</code></td><td><code>Decimal</code> path has no float noise</td><td>Hash of config with <code>Decimal("0.1")</code> equals hash of reloaded config (no <code>0.100000000000001</code> drift)</td></tr>
+        <tr><td><code>test_round_trip</code></td><td>Load → serialise → reload → equal</td><td><code>cfg1 == cfg2</code> (dataclass equality)</td></tr>
+        <tr><td><code>test_different_configs_differ</code></td><td>Two distinct instruments → distinct hashes</td><td><code>hash(EURUSD) != hash(BTCUSD)</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 8. STEP PLAN -->
+  <h2><span class="tag">8</span> Step plan</h2>
+  <section>
+    <ol class="steps">
+      <li>Branch <code>feat/3-a1-config-schema</code> off <code>main</code>
+        <span class="files">git checkout -b feat/3-a1-config-schema</span></li>
+      <li>Write frozen dataclasses (<code>InstrumentConfig</code>, <code>SpecConfig</code>)
+        <span class="files">src/lsb/config/__init__.py, src/lsb/config/models.py</span></li>
+      <li>Write canonical hashing (<code>config_hash</code>) with Decimal serialiser
+        <span class="files">src/lsb/config/hashing.py</span></li>
+      <li>Write YAML loader with field validation
+        <span class="files">src/lsb/config/loader.py</span></li>
+      <li>Write 4 per-instrument YAML files (concrete values from gate spec table)
+        <span class="files">config/EURUSD.yaml, GBPUSD.yaml, XAUUSD.yaml, BTCUSD.yaml</span></li>
+      <li>Fill <code>001_core.sql</code> DDL body (replace placeholder)
+        <span class="files">migrations/001_core.sql</span></li>
+      <li>Write <code>ADR-002-phase-a-schema.md</code> recording schema rationale
+        <span class="files">docs/decisions/ADR-002-phase-a-schema.md</span></li>
+      <li>Write all 7 tests; run <code>pytest -q</code> green locally
+        <span class="files">tests/test_config.py</span></li>
+      <li>Commit, push branch, open draft PR <code>Closes #3</code>
+        <span class="files">git push -u origin feat/3-a1-config-schema</span></li>
+      <li>Run <code>code-review</code>, address findings, confirm CI green
+        <span class="files">gh pr checks</span></li>
+    </ol>
+  </section>
+
+  <!-- 9. FAILURE MODES -->
+  <h2><span class="tag">9</span> Failure modes</h2>
+  <section>
+    <table class="fail">
+      <thead><tr><th>What could go wrong</th><th>How the plan handles it</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="warn">Float repr drift breaks hash determinism across Python versions</td>
+          <td>All numeric fields are <code>Decimal</code>; serialised with <code>str()</code> not <code>repr()</code>. <code>test_float_stability</code> verifies no <code>0.1000...1</code> drift.</td>
+        </tr>
+        <tr>
+          <td class="warn">XAUUSD pip_size / max_spread left as placeholders</td>
+          <td>YAML file uses sentinel strings (<code>"tbd"</code>); loader raises <code>ValueError</code> on load until owner fills values. A2 data fetch cannot start for XAUUSD until resolved.</td>
+        </tr>
+        <tr>
+          <td class="warn">v2.0 Requirements doc later contradicts our Phase-A schema columns</td>
+          <td>ADR-002 explicitly records the schema as a first-principles design. When the doc arrives, a <code>002_delta.sql</code> migration is authored; no schema change is silent.</td>
+        </tr>
+        <tr>
+          <td class="warn">Owner-decision slots (<code>min_trade_count</code> etc.) accidentally hardcoded by a later session</td>
+          <td>Fields are typed <code>int | None</code> / <code>str | None</code>; <code>SpecConfig</code> defaults to <code>None</code>. Any code reading them must handle <code>None</code>; verdict code that ignores the <code>None</code> check will raise at test time.</td>
+        </tr>
+        <tr>
+          <td class="warn"><code>wf_run</code> overlapping train/test windows</td>
+          <td><code>CHECK (train_end &lt; test_start)</code> enforced at DB level.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 10. OPEN QUESTIONS -->
+  <h2><span class="tag">10</span> Open questions</h2>
+  <section>
+    <ul class="q-list">
+      <li><span class="q">?</span> <strong>XAUUSD pip_size / max_spread</strong> — gate spec says "per config" with no value. Placeholder in YAML until owner provides. Blocks A2 data fetch for XAUUSD only.</li>
+      <li><span class="q">?</span> <strong>min_trade_count</strong> — §17.1 omits this; playbook §7 calls it a gap. Schema slot is <code>NULL</code> in <code>SpecConfig</code>. Must be pinned before A11 verdict.</li>
+      <li><span class="q">?</span> <strong>Should <code>SpecConfig</code> also live in a YAML file</strong> (loaded like instrument configs) or be hardcoded as a Python constant? YAML keeps thresholds out of code and reviewable — recommend YAML, but deferring to owner.</li>
+    </ul>
+  </section>
+
+  <footer>Generated by the <code>plan-html</code> skill · LSB A1 · 2026-06-20 · Edit this file directly as the plan evolves.</footer>
+</div>
+</body>
+</html>

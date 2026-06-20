@@ -1,0 +1,22 @@
+# XAUUSD per-instrument configuration
+# Source of truth: docs/GATE_SPECIFICATION.md "Per-instrument configuration"
+#
+# OWNER ACTION REQUIRED: pip_size and max_spread are listed as "per config"
+# in the gate spec with no concrete value. Set these before the A2 data fetch.
+# The loader will raise ValueError if these remain as-is.
+
+instrument: XAUUSD
+instrument_class: commodity
+pip_size: tbd               # OWNER: supply value before A2
+max_spread: tbd             # OWNER: supply value before A2
+max_spread_unit: pips
+sessions: fx
+flat_tolerance: "0.15"
+sweep_penetration: "2"
+sweep_pen_unit: pips
+block_min_width: "5"
+block_width_unit: pips
+stop_buffer: "2"
+stop_buffer_elev: "4"
+stop_buffer_unit: pips
+data_source: dukascopy
