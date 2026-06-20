@@ -3,9 +3,9 @@
 # These values are read by verdict code — never re-typed in Python source.
 #
 # OWNER-DECISION SLOTS (leave absent / null until resolved via ADR):
-#   min_trade_count     — §17.1 omits a floor; pin before A11 (playbook §7)
-#   rejection_geometry  — §4.3 vs §8.1 conflict; resolve before A5
-#   trend_timeframe     — D1 (§3.2) vs H1 (§4.1) ambiguity; resolve before A4
+#   min_trade_count     — §17.1 omits a floor; pin before A11 (playbook §7) — STILL OPEN
+#   rejection_geometry  — §4.3 vs §8.1 conflict — RESOLVED (ADR-004)
+#   trend_timeframe     — D1 (§3.2) vs H1 (§4.1) ambiguity — RESOLVED (ADR-003)
 
 # §17.1 OOS pass thresholds
 min_expectancy_r: "0.3"          # > 0.3R per trade
@@ -15,7 +15,7 @@ min_sharpe: "1.0"                # > 1.0
 min_coverage_years: 3
 min_coverage_instruments: 3
 
-# Owner-decision slots — omitted = None in SpecConfig
-# min_trade_count: null
-# rejection_geometry: null
-# trend_timeframe: null
+# Owner-decision slots
+# min_trade_count: still open — omitted = None in SpecConfig; pin before A11
+trend_timeframe: "D1"                  # ADR-003: Gate 1 macro trend on Daily (§3.2)
+rejection_geometry: "section_8_1_mirror"  # ADR-004: bull rejection = lower-wick hammer (§8.1)

@@ -1,0 +1,93 @@
+#!/bin/sh
+# >>> graphify-autolabel >>>
+# graphify pre-commit hook — guarantee that whenever a knowledge graph is
+# committed, all its communities are correctly labelled (no "Community N"
+# placeholders, and labels match the current community membership).
+#
+# No API key: relabelling runs through the local `claude` CLI (your Claude Code
+# subscription) via `/graphify --cluster-only`, which re-clusters the EXISTING
+# graph.json and re-labels it. It does NOT run `graphify update` — that CLI
+# re-extracts source and pollutes doc corpora, so structural rebuilds stay an
+# explicit `/graphify --update` step you run in your assistant.
+#
+# Trigger: the community-membership signature changed since the last labelling,
+# OR any community is missing a plain-language label. Most commits are no-ops.
+#
+# Bypass once with:  SKIP_GRAPHIFY=1 git commit ...
+# Never blocks a commit: every step is best-effort.
+
+graphify_autolabel() {
+    [ -n "$SKIP_GRAPHIFY" ] && return 0
+
+    _root="$(git rev-parse --show-toplevel 2>/dev/null)" || return 0
+    cd "$_root" || return 0
+    [ -f graphify-out/graph.json ] || return 0   # no graph here yet
+
+    # Resolve the Python that has graphify (strip any UTF-8 BOM PowerShell adds).
+    _py=""
+    [ -f graphify-out/.graphify_python ] && _py="$(sed '1s/^\xEF\xBB\xBF//' graphify-out/.graphify_python 2>/dev/null | head -1)"
+    [ -n "$_py" ] && [ -x "$_py" ] || return 0
+
+    # Renumber-proof signature of community membership (sets of node ids).
+    _sig() {
+"$_py" - <<'PYEOF' 2>/dev/null
+import json, hashlib
+from pathlib import Path
+from collections import defaultdict
+try:
+    g = json.loads(Path('graphify-out/graph.json').read_text(encoding='utf-8'))
+    byc = defaultdict(list)
+    for n in g['nodes']:
+        byc[n.get('community')].append(n['id'])
+    groups = sorted(tuple(sorted(v)) for v in byc.values())
+    print(hashlib.sha256(json.dumps(groups, ensure_ascii=False).encode()).hexdigest()[:16])
+except Exception:
+    print('')
+PYEOF
+    }
+
+    # Are any communities unlabelled / still "Community N"?
+    _placeholders() {
+"$_py" - <<'PYEOF' 2>/dev/null || echo 1
+import json
+from pathlib import Path
+try:
+    g = json.loads(Path('graphify-out/graph.json').read_text(encoding='utf-8'))
+    try:
+        labels = json.loads(Path('graphify-out/.graphify_labels.json').read_text(encoding='utf-8'))
+    except Exception:
+        labels = {}
+    cids = {str(n.get('community')) for n in g['nodes'] if n.get('community') is not None}
+    missing = [c for c in cids if c not in labels or str(labels.get(c, '')).startswith('Community ')]
+    print('1' if missing else '0')
+except Exception:
+    print('1')
+PYEOF
+    }
+
+    _cur="$(_sig)"
+    _old=""
+    [ -f graphify-out/.graphify_label_sig ] && _old="$(cat graphify-out/.graphify_label_sig 2>/dev/null | tr -d '[:space:]')"
+    _need="$(_placeholders)"
+
+    if [ "$_cur" != "$_old" ] || [ "$_need" = "1" ]; then
+        if command -v claude >/dev/null 2>&1; then
+            echo "graphify: communities changed / unlabelled — relabelling via Claude Code (no API key)..."
+            claude -p "/graphify --cluster-only" >/dev/null 2>&1 || true
+            _sig > graphify-out/.graphify_label_sig 2>/dev/null || true
+        else
+            echo "graphify: communities need labelling but the 'claude' CLI was not found."
+            echo "          Run:  claude -p \"/graphify --cluster-only\"   then re-commit."
+        fi
+    fi
+
+    git add graphify-out/graph.json \
+            graphify-out/GRAPH_REPORT.md \
+            graphify-out/graph.html \
+            graphify-out/.graphify_labels.json \
+            graphify-out/.graphify_label_sig \
+            graphify-out/manifest.json >/dev/null 2>&1 || true
+    return 0
+}
+graphify_autolabel
+# <<< graphify-autolabel <<<

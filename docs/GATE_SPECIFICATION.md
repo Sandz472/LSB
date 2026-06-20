@@ -21,11 +21,11 @@ slope(EMA50) NEGATIVE. NEUTRAL and INVALID are hard blockers (§5.1).
 INVALID when EMA compression `|EMA21−EMA89| < ATR×0.10` (§5.2) or an EMA21/EMA50
 cross within the last 3 candles. Slope threshold = ATR×0.05 over 3 candles (§4.1.2).
 
-**Timeframe:** §3.2 places macro trend on **Daily (D1)**. (§4.1 computes the EMAs
-on H1 for the indicator engine — the D1-vs-H1 wording is a spec ambiguity; the
-prior build resolved Gate 1 to **Daily**, consistent with §3.2 "Macro Context:
-Daily." Confirm with the owner; it is the single highest-leverage strategy
-question.)
+**Timeframe:** Gate 1 macro trend is evaluated on **Daily (D1)** — owner-resolved
+in **ADR-003** (`spec.trend_timeframe = "D1"`), faithful to §3.2 "Macro Context:
+Daily." §4.1 computes the EMAs on H1 for the indicator engine; those H1 EMAs are
+consumed by Gate 4 (EMA-Interaction), not Gate 1. The D1-vs-H1 wording was a spec
+ambiguity, now closed.
 
 Bull mirror: BULLISH.
 
@@ -88,12 +88,14 @@ AND close bearish. `ENGULFING_BEAR` = body engulfs prior body AND close < prior
 open. (The upper-wick ≥2×body requirement in §8.1 applies even to the engulfing
 case — engulfing alone does not exempt it.)
 
-> **⚠ Spec-internal inconsistency (owner amendment required).** The bull mirror in
-> §8.1 ("lower wick ≥ 2× body") and the glossary ("rejection by wick direction")
-> say a **bull** rejection is a **lower-wick** candle — but §4.3 defines
-> `REJECTION_BULL` by an **upper** wick. These cannot both hold; long-side Gate 5
-> is unsatisfiable until §4.3 and §8.1 are reconciled. This is a spec defect to
-> resolve by proposal, not a silent code change.
+> **Spec-internal inconsistency — RESOLVED (ADR-004).** The bull mirror in §8.1
+> ("lower wick ≥ 2× body") and the glossary ("rejection by wick direction") say a
+> **bull** rejection is a **lower-wick** candle, while §4.3 defined
+> `REJECTION_BULL` by an **upper** wick. Owner ruling: the **§8.1 mirror governs** —
+> `REJECTION_BULL` = lower wick ≥ 2×body AND upper wick ≤ 0.3×body AND close bullish
+> (exact mirror of `REJECTION_BEAR`); §4.3's upper-wick definition is the defect,
+> amended by ADR-004 (`spec.rejection_geometry = "section_8_1_mirror"`). The short
+> side is unchanged.
 
 ---
 
@@ -167,9 +169,9 @@ baseline is 0.15%.
 
 | Item | Spec says | Prior build | Verdict |
 |---|---|---|---|
-| Gate 1 timeframe (ADR-007) | Macro = Daily (§3.2) | Daily | **Faithful** |
+| Gate 1 timeframe (ADR-007→**ADR-003**) | Macro = Daily (§3.2) | Daily | **Faithful** — owner-confirmed D1 (ADR-003) |
 | Rising lows (ADR-004) | ≥2 higher lows ≥0.20% (§6.1.1) | noise-tolerant climb, 2 points | **Faithful** (confirm "2 lows" = 2 events vs 2 points) |
-| Rejection geometry (ADR-009) | §4.3 = upper wick + close colour | code matches §4.3 | **ADR-009 retracted**; real issue = §4.3 vs §8.1 spec conflict (owner amendment) |
+| Rejection geometry (ADR-009→**ADR-004**) | §8.1 mirror: bull = lower wick | code matched §4.3 (upper) | **Resolved (ADR-004)** — §8.1 mirror governs; §4.3 bull def is the defect |
 | Gate set | §8.1 = {Trend, Structure, Sweep, **EMA-Interaction**, Rejection, Session, **R:R**, **Global-Risk**} | {…, **Sweep-score**, …, **Volatility**, …}; EMA-interaction gate **missing** | **Divergent** — restore §8.1 gate set |
 | Sweep score | risk-tier selector (§7.3) | hard gate 4 (≥50) | **Divergent** |
 | Flat tolerance (ADR-005) | **0.15%** (§6.1.1) | 0.5% / 1.0% / 2.0% | **Divergent** (3–13× loose) — baseline must be 0.15%; looser only as a pre-registered sweep variable |

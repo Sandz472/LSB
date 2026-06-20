@@ -38,9 +38,29 @@ def test_spec_loads():
     spec = load_spec(CONFIG_DIR / "spec.yaml")
     assert isinstance(spec, SpecConfig)
     assert spec.min_expectancy_r == Decimal("0.3")
-    assert spec.min_trade_count is None       # owner-decision slot: unset
-    assert spec.rejection_geometry is None
-    assert spec.trend_timeframe is None
+    assert spec.min_trade_count is None       # still-open owner-decision slot
+    assert spec.trend_timeframe == "D1"               # ADR-003
+    assert spec.rejection_geometry == "section_8_1_mirror"  # ADR-004
+
+
+def test_owner_decision_slots_validated(tmp_path):
+    """A present-but-unrecognised owner-decision value is rejected, not accepted
+    silently — a typo must not change a decision-path enum."""
+    base = (CONFIG_DIR / "spec.yaml").read_text(encoding="utf-8")
+
+    bad_tf = base.replace('trend_timeframe: "D1"', 'trend_timeframe: "M15"')
+    p1 = tmp_path / "bad_tf.yaml"
+    p1.write_text(bad_tf, encoding="utf-8")
+    with pytest.raises(ValueError, match="trend_timeframe"):
+        load_spec(p1)
+
+    bad_rg = base.replace(
+        'rejection_geometry: "section_8_1_mirror"', 'rejection_geometry: "upper_wick"'
+    )
+    p2 = tmp_path / "bad_rg.yaml"
+    p2.write_text(bad_rg, encoding="utf-8")
+    with pytest.raises(ValueError, match="rejection_geometry"):
+        load_spec(p2)
 
 
 # ---------------------------------------------------------------------------

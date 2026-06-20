@@ -11,10 +11,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 0,
+      "community": 6,
       "norm_label": "build_playbook.md",
-      "id": "build_playbook",
-      "community_name": "Governing Specs, Rules & Tooling"
+      "community_name": "Governing Specs, Rules & Tooling",
+      "id": "build_playbook"
     },
     {
       "label": "GATE_SPECIFICATION.md",
@@ -24,10 +24,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 4,
+      "community": 1,
       "norm_label": "gate_specification.md",
-      "id": "gate_specification",
-      "community_name": "Gate Specification & Conjunction"
+      "community_name": "Gate Specification & Conjunction",
+      "id": "gate_specification"
     },
     {
       "label": "System Requirements v2.0",
@@ -37,10 +37,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 0,
+      "community": 6,
       "norm_label": "system requirements v2.0",
-      "id": "spec_v2_0",
-      "community_name": "Governing Specs, Rules & Tooling"
+      "community_name": "Governing Specs, Rules & Tooling",
+      "id": "spec_v2_0"
     },
     {
       "label": "Master Blueprint v2.1",
@@ -50,10 +50,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 0,
+      "community": 6,
       "norm_label": "master blueprint v2.1",
-      "id": "blueprint_v2_1",
-      "community_name": "Governing Specs, Rules & Tooling"
+      "community_name": "Governing Specs, Rules & Tooling",
+      "id": "blueprint_v2_1"
     },
     {
       "label": "Redesign v3.0",
@@ -63,10 +63,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 0,
+      "community": 6,
       "norm_label": "redesign v3.0",
-      "id": "redesign_v3_0",
-      "community_name": "Governing Specs, Rules & Tooling"
+      "community_name": "Governing Specs, Rules & Tooling",
+      "id": "redesign_v3_0"
     },
     {
       "label": "CLAUDE.md (governing)",
@@ -76,10 +76,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 0,
+      "community": 6,
       "norm_label": "claude.md (governing)",
-      "id": "claude_md",
-      "community_name": "Governing Specs, Rules & Tooling"
+      "community_name": "Governing Specs, Rules & Tooling",
+      "id": "claude_md"
     },
     {
       "label": "ADR-001 broker bridge",
@@ -89,10 +89,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 4,
       "norm_label": "adr-001 broker bridge",
-      "id": "adr_001",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "adr_001"
     },
     {
       "label": "ADR-002 go/no-go",
@@ -102,10 +102,10 @@
       "confidence": 0.9,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "adr-002 go/no-go",
-      "id": "adr_002",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "adr_002"
     },
     {
       "label": "Rule 1 \u2014 Spec Immutability",
@@ -115,10 +115,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 0,
+      "community": 6,
       "norm_label": "rule 1 \u2014 spec immutability",
-      "id": "rule_1_immutability",
-      "community_name": "Governing Specs, Rules & Tooling"
+      "community_name": "Governing Specs, Rules & Tooling",
+      "id": "rule_1_immutability"
     },
     {
       "label": "Rule 2 \u2014 Physics / No Loosening",
@@ -128,10 +128,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "rule 2 \u2014 physics / no loosening",
-      "id": "rule_2_physics",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "rule_2_physics"
     },
     {
       "label": "Determinism Law",
@@ -141,10 +141,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 8,
+      "community": 2,
       "norm_label": "determinism law",
-      "id": "determinism",
-      "community_name": "Determinism & Config Hashing"
+      "community_name": "Determinism & Config Hashing",
+      "id": "determinism"
     },
     {
       "label": "Phase A \u2014 Prove (wk 1\u20133)",
@@ -154,10 +154,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 2,
       "norm_label": "phase a \u2014 prove (wk 1\u20133)",
-      "id": "phase_a",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "phase_a"
     },
     {
       "label": "Phase B (wk 4\u201313)",
@@ -167,10 +167,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 4,
       "norm_label": "phase b (wk 4\u201313)",
-      "id": "phase_b",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "phase_b"
     },
     {
       "label": "Phase C (wk 13+)",
@@ -180,10 +180,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 4,
       "norm_label": "phase c (wk 13+)",
-      "id": "phase_c",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "phase_c"
     },
     {
       "label": "C1 Data",
@@ -195,8 +195,8 @@
       "file_type": "concept",
       "community": 2,
       "norm_label": "c1 data",
-      "id": "module_c1_data",
-      "community_name": "Market Data & Instruments"
+      "community_name": "Market Data & Instruments",
+      "id": "module_c1_data"
     },
     {
       "label": "C2 Signal Engine",
@@ -206,10 +206,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 2,
       "norm_label": "c2 signal engine",
-      "id": "module_c2_signal",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "module_c2_signal"
     },
     {
       "label": "C3 Backtest",
@@ -219,10 +219,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 2,
       "norm_label": "c3 backtest",
-      "id": "module_c3_backtest",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "module_c3_backtest"
     },
     {
       "label": "C4 Walk-Forward",
@@ -232,10 +232,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 8,
+      "community": 2,
       "norm_label": "c4 walk-forward",
-      "id": "module_c4_walkforward",
-      "community_name": "Determinism & Config Hashing"
+      "community_name": "Determinism & Config Hashing",
+      "id": "module_c4_walkforward"
     },
     {
       "label": "C5 Verdict",
@@ -245,10 +245,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "c5 verdict",
-      "id": "module_c5_verdict",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "module_c5_verdict"
     },
     {
       "label": "SimulatedBroker",
@@ -258,10 +258,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 2,
       "norm_label": "simulatedbroker",
-      "id": "simulated_broker",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "simulated_broker"
     },
     {
       "label": "config_version table",
@@ -271,10 +271,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 8,
+      "community": 2,
       "norm_label": "config_version table",
-      "id": "table_config_version",
-      "community_name": "Determinism & Config Hashing"
+      "community_name": "Determinism & Config Hashing",
+      "id": "table_config_version"
     },
     {
       "label": "candle table",
@@ -284,10 +284,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 8,
+      "community": 2,
       "norm_label": "candle table",
-      "id": "table_candle",
-      "community_name": "Determinism & Config Hashing"
+      "community_name": "Determinism & Config Hashing",
+      "id": "table_candle"
     },
     {
       "label": "signal table",
@@ -297,10 +297,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 8,
+      "community": 2,
       "norm_label": "signal table",
-      "id": "table_signal",
-      "community_name": "Determinism & Config Hashing"
+      "community_name": "Determinism & Config Hashing",
+      "id": "table_signal"
     },
     {
       "label": "wf_run + sim_trade tables",
@@ -310,10 +310,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 8,
+      "community": 2,
       "norm_label": "wf_run + sim_trade tables",
-      "id": "table_wf_run",
-      "community_name": "Determinism & Config Hashing"
+      "community_name": "Determinism & Config Hashing",
+      "id": "table_wf_run"
     },
     {
       "label": "001_core.sql",
@@ -323,10 +323,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 8,
+      "community": 2,
       "norm_label": "001_core.sql",
-      "id": "migration_001",
-      "community_name": "Determinism & Config Hashing"
+      "community_name": "Determinism & Config Hashing",
+      "id": "migration_001"
     },
     {
       "label": "config_hash",
@@ -336,10 +336,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 8,
+      "community": 2,
       "norm_label": "config_hash",
-      "id": "config_hash",
-      "community_name": "Determinism & Config Hashing"
+      "community_name": "Determinism & Config Hashing",
+      "id": "config_hash"
     },
     {
       "label": "Gate 1 \u2014 Trend State",
@@ -349,10 +349,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 4,
+      "community": 1,
       "norm_label": "gate 1 \u2014 trend state",
-      "id": "gate_1_trend",
-      "community_name": "Gate Specification & Conjunction"
+      "community_name": "Gate Specification & Conjunction",
+      "id": "gate_1_trend"
     },
     {
       "label": "Gate 2 \u2014 Structure",
@@ -362,10 +362,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 7,
+      "community": 1,
       "norm_label": "gate 2 \u2014 structure",
-      "id": "gate_2_structure",
-      "community_name": "Sweep/EMA Gates & Prior-Build Drift"
+      "community_name": "Sweep/EMA Gates & Prior-Build Drift",
+      "id": "gate_2_structure"
     },
     {
       "label": "Gate 3 \u2014 Liquidity Sweep",
@@ -375,10 +375,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 7,
+      "community": 1,
       "norm_label": "gate 3 \u2014 liquidity sweep",
-      "id": "gate_3_sweep",
-      "community_name": "Sweep/EMA Gates & Prior-Build Drift"
+      "community_name": "Sweep/EMA Gates & Prior-Build Drift",
+      "id": "gate_3_sweep"
     },
     {
       "label": "Gate 4 \u2014 EMA Interaction",
@@ -388,10 +388,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 4,
+      "community": 1,
       "norm_label": "gate 4 \u2014 ema interaction",
-      "id": "gate_4_ema",
-      "community_name": "Gate Specification & Conjunction"
+      "community_name": "Gate Specification & Conjunction",
+      "id": "gate_4_ema"
     },
     {
       "label": "Gate 5 \u2014 Rejection Candle",
@@ -401,10 +401,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 4,
+      "community": 1,
       "norm_label": "gate 5 \u2014 rejection candle",
-      "id": "gate_5_rejection",
-      "community_name": "Gate Specification & Conjunction"
+      "community_name": "Gate Specification & Conjunction",
+      "id": "gate_5_rejection"
     },
     {
       "label": "Gate 6 \u2014 Session Active",
@@ -416,8 +416,8 @@
       "file_type": "concept",
       "community": 1,
       "norm_label": "gate 6 \u2014 session active",
-      "id": "gate_6_session",
-      "community_name": "Phase Progression & Live Path"
+      "community_name": "Phase Progression & Live Path",
+      "id": "gate_6_session"
     },
     {
       "label": "Gate 7 \u2014 Risk:Reward Minimum",
@@ -427,10 +427,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 4,
+      "community": 1,
       "norm_label": "gate 7 \u2014 risk:reward minimum",
-      "id": "gate_7_rr",
-      "community_name": "Gate Specification & Conjunction"
+      "community_name": "Gate Specification & Conjunction",
+      "id": "gate_7_rr"
     },
     {
       "label": "Gate 8 \u2014 Global Risk Clear",
@@ -440,10 +440,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 11,
+      "community": 1,
       "norm_label": "gate 8 \u2014 global risk clear",
-      "id": "gate_8_global_risk",
-      "community_name": "Global-Risk Gate & Sweep Score"
+      "community_name": "Global-Risk Gate & Sweep Score",
+      "id": "gate_8_global_risk"
     },
     {
       "label": "Sweep Probability Score (not a gate)",
@@ -453,10 +453,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 11,
+      "community": 1,
       "norm_label": "sweep probability score (not a gate)",
-      "id": "sweep_score",
-      "community_name": "Global-Risk Gate & Sweep Score"
+      "community_name": "Global-Risk Gate & Sweep Score",
+      "id": "sweep_score"
     },
     {
       "label": "\u00a78.1 Gate Conjunction",
@@ -466,10 +466,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 4,
+      "community": 1,
       "norm_label": "\u00a78.1 gate conjunction",
-      "id": "gate_conjunction",
-      "community_name": "Gate Specification & Conjunction"
+      "community_name": "Gate Specification & Conjunction",
+      "id": "gate_conjunction"
     },
     {
       "label": "Invalidation Rule (\u00a76.1.1/.2)",
@@ -479,10 +479,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 7,
+      "community": 1,
       "norm_label": "invalidation rule (\u00a76.1.1/.2)",
-      "id": "invalidation_rule",
-      "community_name": "Sweep/EMA Gates & Prior-Build Drift"
+      "community_name": "Sweep/EMA Gates & Prior-Build Drift",
+      "id": "invalidation_rule"
     },
     {
       "label": "Block HIGH (sweep target)",
@@ -492,10 +492,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 7,
+      "community": 1,
       "norm_label": "block high (sweep target)",
-      "id": "block_high",
-      "community_name": "Sweep/EMA Gates & Prior-Build Drift"
+      "community_name": "Sweep/EMA Gates & Prior-Build Drift",
+      "id": "block_high"
     },
     {
       "label": "Flat Tolerance 0.15%",
@@ -505,10 +505,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 7,
+      "community": 1,
       "norm_label": "flat tolerance 0.15%",
-      "id": "flat_tolerance",
-      "community_name": "Sweep/EMA Gates & Prior-Build Drift"
+      "community_name": "Sweep/EMA Gates & Prior-Build Drift",
+      "id": "flat_tolerance"
     },
     {
       "label": "EURUSD",
@@ -520,8 +520,8 @@
       "file_type": "concept",
       "community": 2,
       "norm_label": "eurusd",
-      "id": "instr_eurusd",
-      "community_name": "Market Data & Instruments"
+      "community_name": "Market Data & Instruments",
+      "id": "instr_eurusd"
     },
     {
       "label": "GBPUSD",
@@ -533,8 +533,8 @@
       "file_type": "concept",
       "community": 2,
       "norm_label": "gbpusd",
-      "id": "instr_gbpusd",
-      "community_name": "Market Data & Instruments"
+      "community_name": "Market Data & Instruments",
+      "id": "instr_gbpusd"
     },
     {
       "label": "XAUUSD",
@@ -546,8 +546,8 @@
       "file_type": "concept",
       "community": 2,
       "norm_label": "xauusd",
-      "id": "instr_xauusd",
-      "community_name": "Market Data & Instruments"
+      "community_name": "Market Data & Instruments",
+      "id": "instr_xauusd"
     },
     {
       "label": "BTCUSD",
@@ -559,8 +559,8 @@
       "file_type": "concept",
       "community": 1,
       "norm_label": "btcusd",
-      "id": "instr_btcusd",
-      "community_name": "Phase Progression & Live Path"
+      "community_name": "Phase Progression & Live Path",
+      "id": "instr_btcusd"
     },
     {
       "label": "Dukascopy",
@@ -572,8 +572,8 @@
       "file_type": "concept",
       "community": 2,
       "norm_label": "dukascopy",
-      "id": "src_dukascopy",
-      "community_name": "Market Data & Instruments"
+      "community_name": "Market Data & Instruments",
+      "id": "src_dukascopy"
     },
     {
       "label": "Binance",
@@ -585,8 +585,8 @@
       "file_type": "concept",
       "community": 1,
       "norm_label": "binance",
-      "id": "src_binance",
-      "community_name": "Phase Progression & Live Path"
+      "community_name": "Phase Progression & Live Path",
+      "id": "src_binance"
     },
     {
       "label": "Gate GA",
@@ -596,10 +596,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "gate ga",
-      "id": "gate_ga",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "gate_ga"
     },
     {
       "label": "GO",
@@ -609,10 +609,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "go",
-      "id": "verdict_go",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "verdict_go"
     },
     {
       "label": "NO-GO / INSUFFICIENT",
@@ -622,10 +622,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "no-go / insufficient",
-      "id": "verdict_insufficient",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "verdict_insufficient"
     },
     {
       "label": "HALT-HUMAN",
@@ -635,10 +635,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "halt-human",
-      "id": "halt_human",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "halt_human"
     },
     {
       "label": "R-DECIDE (owner gate)",
@@ -648,10 +648,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "r-decide (owner gate)",
-      "id": "r_decide",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "r_decide"
     },
     {
       "label": "Recursive Build-and-Validate Loop",
@@ -661,10 +661,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 4,
       "norm_label": "recursive build-and-validate loop",
-      "id": "recursion_loop",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "recursion_loop"
     },
     {
       "label": "RECURSION_STATE.md",
@@ -674,23 +674,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 4,
       "norm_label": "recursion_state.md",
-      "id": "recursion_state",
-      "community_name": "Signal/Backtest Build & Reconciliation"
-    },
-    {
-      "label": "PHASE_STATUS.md",
-      "type": "Artifact",
-      "summary": "Human-write-only phase lock; Claude Code may not cross a locked phase.",
-      "source_location": "files/BUILD_PLAYBOOK.md:57",
-      "confidence": 1.0,
-      "provenance": "EXTRACTED",
-      "file_type": "concept",
-      "community": 5,
-      "norm_label": "phase_status.md",
-      "id": "phase_status",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "recursion_state"
     },
     {
       "label": "graphify knowledge base",
@@ -700,10 +687,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 0,
+      "community": 6,
       "norm_label": "graphify knowledge base",
-      "id": "graphify_kb",
-      "community_name": "Governing Specs, Rules & Tooling"
+      "community_name": "Governing Specs, Rules & Tooling",
+      "id": "graphify_kb"
     },
     {
       "label": "Spec Defect: \u00a74.3 vs \u00a78.1 rejection geometry",
@@ -713,10 +700,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 4,
+      "community": 1,
       "norm_label": "spec defect: \u00a74.3 vs \u00a78.1 rejection geometry",
-      "id": "defect_rejection_geometry",
-      "community_name": "Gate Specification & Conjunction"
+      "community_name": "Gate Specification & Conjunction",
+      "id": "defect_rejection_geometry"
     },
     {
       "label": "Spec Ambiguity: D1 vs H1 trend timeframe",
@@ -726,10 +713,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 4,
+      "community": 1,
       "norm_label": "spec ambiguity: d1 vs h1 trend timeframe",
-      "id": "defect_trend_timeframe",
-      "community_name": "Gate Specification & Conjunction"
+      "community_name": "Gate Specification & Conjunction",
+      "id": "defect_trend_timeframe"
     },
     {
       "label": "\u00a7R Reconciliation",
@@ -739,10 +726,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 5,
+      "community": 1,
       "norm_label": "\u00a7r reconciliation",
-      "id": "reconciliation_r",
-      "community_name": "Signal/Backtest Build & Reconciliation"
+      "community_name": "Signal/Backtest Build & Reconciliation",
+      "id": "reconciliation_r"
     },
     {
       "label": "Prior-Build Drift",
@@ -752,10 +739,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 7,
+      "community": 1,
       "norm_label": "prior-build drift",
-      "id": "prior_build_drift",
-      "community_name": "Sweep/EMA Gates & Prior-Build Drift"
+      "community_name": "Sweep/EMA Gates & Prior-Build Drift",
+      "id": "prior_build_drift"
     },
     {
       "label": ".claude/settings.local.json",
@@ -765,23 +752,23 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 0,
+      "community": 6,
       "norm_label": ".claude/settings.local.json",
-      "id": "claude_settings",
-      "community_name": "Governing Specs, Rules & Tooling"
+      "community_name": "Governing Specs, Rules & Tooling",
+      "id": "claude_settings"
     },
     {
       "label": "GA-1 Determinism Gate (A8 CI)",
       "type": "CI-Check",
-      "community": 8,
+      "community": 2,
       "summary": "Phase-A A8 CI gate: replay the run twice and assert byte-identical config_hash; injected nondeterminism is caught. Enforces the Determinism Law.",
       "source_location": "files/BUILD_PLAYBOOK.md:134",
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "id": "ga1_determinism_gate",
       "community_name": "Determinism & Config Hashing",
-      "norm_label": "ga-1 determinism gate (a8 ci)"
+      "norm_label": "ga-1 determinism gate (a8 ci)",
+      "id": "ga1_determinism_gate"
     },
     {
       "label": "Spec Defect: \u00a717.1 minimum trade count undefined",
@@ -791,10 +778,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "spec defect: \u00a717.1 minimum trade count undefined",
-      "id": "defect_min_trade_count",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "defect_min_trade_count"
     },
     {
       "label": "\u00a717.1 GA Threshold Bar",
@@ -804,10 +791,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 3,
+      "community": 4,
       "norm_label": "\u00a717.1 ga threshold bar",
-      "id": "ga_thresholds_171",
-      "community_name": "Failure & Owner Escalation"
+      "community_name": "Failure & Owner Escalation",
+      "id": "ga_thresholds_171"
     },
     {
       "label": "ATR EXTREME \u2192 No-Trade Pre-filter (\u00a74.2.2/\u00a79.3)",
@@ -817,10 +804,10 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 11,
+      "community": 1,
       "norm_label": "atr extreme \u2192 no-trade pre-filter (\u00a74.2.2/\u00a79.3)",
-      "id": "atr_extreme_filter",
-      "community_name": "Global-Risk Gate & Sweep Score"
+      "community_name": "Global-Risk Gate & Sweep Score",
+      "id": "atr_extreme_filter"
     },
     {
       "label": "Risk Tier (\u00a79.3 position sizing)",
@@ -830,10 +817,760 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "file_type": "concept",
-      "community": 11,
+      "community": 1,
       "norm_label": "risk tier (\u00a79.3 position sizing)",
-      "id": "risk_tier_93",
-      "community_name": "Global-Risk Gate & Sweep Score"
+      "community_name": "Global-Risk Gate & Sweep Score",
+      "id": "risk_tier_93"
+    },
+    {
+      "label": "lsb",
+      "file_type": "code",
+      "type": "package",
+      "ecosystem": "python",
+      "source_file": "pyproject.toml",
+      "source_location": "L1",
+      "version": "0.0.0",
+      "_origin": "ast",
+      "id": "pkg_lsb",
+      "community": 11,
+      "norm_label": "lsb"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/lsb/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "lsb_init",
+      "community": 9,
+      "norm_label": "__init__.py"
+    },
+    {
+      "label": "LSB \u2014 spec-faithful trading-strategy validation system (Phase A scaffold).  Stra",
+      "file_type": "rationale",
+      "source_file": "src/lsb/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "lsb_init_rationale_1",
+      "community": 9,
+      "norm_label": "lsb \u2014 spec-faithful trading-strategy validation system (phase a scaffold).  stra"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "config_init",
+      "community": 3,
+      "norm_label": "__init__.py"
+    },
+    {
+      "label": "LSB config subsystem \u2014 public re-exports.",
+      "file_type": "rationale",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "config_init_rationale_1",
+      "community": 3,
+      "norm_label": "lsb config subsystem \u2014 public re-exports."
+    },
+    {
+      "label": "hashing.py",
+      "file_type": "code",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "config_hashing",
+      "community": 0,
+      "norm_label": "hashing.py"
+    },
+    {
+      "label": "_canonical_value()",
+      "file_type": "code",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "config_hashing_canonical_value",
+      "community": 0,
+      "norm_label": "_canonical_value()"
+    },
+    {
+      "label": "config_hash()",
+      "file_type": "code",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "config_hashing_config_hash",
+      "community": 0,
+      "norm_label": "config_hash()"
+    },
+    {
+      "label": "Deterministic sha256 config_hash.  Invariant: same field values \u2192 same hex diges",
+      "file_type": "rationale",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "config_hashing_rationale_1",
+      "community": 0,
+      "norm_label": "deterministic sha256 config_hash.  invariant: same field values \u2192 same hex diges"
+    },
+    {
+      "label": "Return the sha256 hex digest of the canonical JSON of *cfg*.",
+      "file_type": "rationale",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "config_hashing_rationale_29",
+      "community": 0,
+      "norm_label": "return the sha256 hex digest of the canonical json of *cfg*."
+    },
+    {
+      "label": "loader.py",
+      "file_type": "code",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "config_loader",
+      "community": 3,
+      "norm_label": "loader.py"
+    },
+    {
+      "label": "_d()",
+      "file_type": "code",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "config_loader_d",
+      "community": 3,
+      "norm_label": "_d()"
+    },
+    {
+      "label": "Decimal",
+      "file_type": "code",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "decimal",
+      "community": 0,
+      "norm_label": "decimal"
+    },
+    {
+      "label": "_require()",
+      "file_type": "code",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "config_loader_require",
+      "community": 3,
+      "norm_label": "_require()"
+    },
+    {
+      "label": "load_instrument()",
+      "file_type": "code",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "config_loader_load_instrument",
+      "community": 3,
+      "norm_label": "load_instrument()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "path",
+      "community": 3,
+      "norm_label": "path"
+    },
+    {
+      "label": "InstrumentConfig",
+      "file_type": "code",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "instrumentconfig",
+      "community": 3,
+      "norm_label": "instrumentconfig"
+    },
+    {
+      "label": "load_spec()",
+      "file_type": "code",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L84",
+      "_origin": "ast",
+      "id": "config_loader_load_spec",
+      "community": 3,
+      "norm_label": "load_spec()"
+    },
+    {
+      "label": "SpecConfig",
+      "file_type": "code",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L84",
+      "_origin": "ast",
+      "id": "specconfig",
+      "community": 3,
+      "norm_label": "specconfig"
+    },
+    {
+      "label": "YAML \u2192 frozen dataclass loaders.  All numeric values are coerced to Decimal on l",
+      "file_type": "rationale",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "config_loader_rationale_1",
+      "community": 3,
+      "norm_label": "yaml \u2192 frozen dataclass loaders.  all numeric values are coerced to decimal on l"
+    },
+    {
+      "label": "Parse *raw* as Decimal; raise ValueError with a helpful message on failure.",
+      "file_type": "rationale",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "config_loader_rationale_24",
+      "community": 3,
+      "norm_label": "parse *raw* as decimal; raise valueerror with a helpful message on failure."
+    },
+    {
+      "label": "Load and validate a per-instrument YAML file.",
+      "file_type": "rationale",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "config_loader_rationale_43",
+      "community": 3,
+      "norm_label": "load and validate a per-instrument yaml file."
+    },
+    {
+      "label": "Load and validate the spec/GA-threshold YAML file.",
+      "file_type": "rationale",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L85",
+      "_origin": "ast",
+      "id": "config_loader_rationale_85",
+      "community": 3,
+      "norm_label": "load and validate the spec/ga-threshold yaml file."
+    },
+    {
+      "label": "models.py",
+      "file_type": "code",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "config_models",
+      "community": 3,
+      "norm_label": "models.py"
+    },
+    {
+      "label": "InstrumentConfig",
+      "file_type": "code",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "config_models_instrumentconfig",
+      "community": 3,
+      "norm_label": "instrumentconfig"
+    },
+    {
+      "label": "SpecConfig",
+      "file_type": "code",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "config_models_specconfig",
+      "community": 3,
+      "norm_label": "specconfig"
+    },
+    {
+      "label": "Frozen dataclasses for LSB configuration.  All numeric fields use Decimal \u2014 neve",
+      "file_type": "rationale",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "config_models_rationale_1",
+      "community": 3,
+      "norm_label": "frozen dataclasses for lsb configuration.  all numeric fields use decimal \u2014 neve"
+    },
+    {
+      "label": "test_config.py",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_config",
+      "community": 0,
+      "norm_label": "test_config.py"
+    },
+    {
+      "label": "test_all_loadable_instruments_load()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "tests_test_config_test_all_loadable_instruments_load",
+      "community": 0,
+      "norm_label": "test_all_loadable_instruments_load()"
+    },
+    {
+      "label": "test_xauusd_raises_on_tbd()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "tests_test_config_test_xauusd_raises_on_tbd",
+      "community": 0,
+      "norm_label": "test_xauusd_raises_on_tbd()"
+    },
+    {
+      "label": "test_spec_loads()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "tests_test_config_test_spec_loads",
+      "community": 0,
+      "norm_label": "test_spec_loads()"
+    },
+    {
+      "label": "test_owner_decision_slots_validated()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "tests_test_config_test_owner_decision_slots_validated",
+      "community": 0,
+      "norm_label": "test_owner_decision_slots_validated()"
+    },
+    {
+      "label": "test_instrument_config_frozen()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "tests_test_config_test_instrument_config_frozen",
+      "community": 0,
+      "norm_label": "test_instrument_config_frozen()"
+    },
+    {
+      "label": "test_spec_config_frozen()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "tests_test_config_test_spec_config_frozen",
+      "community": 0,
+      "norm_label": "test_spec_config_frozen()"
+    },
+    {
+      "label": "test_determinism()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L86",
+      "_origin": "ast",
+      "id": "tests_test_config_test_determinism",
+      "community": 0,
+      "norm_label": "test_determinism()"
+    },
+    {
+      "label": "test_different_instruments_differ()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L93",
+      "_origin": "ast",
+      "id": "tests_test_config_test_different_instruments_differ",
+      "community": 0,
+      "norm_label": "test_different_instruments_differ()"
+    },
+    {
+      "label": "test_key_order_invariance()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L99",
+      "_origin": "ast",
+      "id": "tests_test_config_test_key_order_invariance",
+      "community": 0,
+      "norm_label": "test_key_order_invariance()"
+    },
+    {
+      "label": "test_decimal_precision_stability()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L124",
+      "_origin": "ast",
+      "id": "tests_test_config_test_decimal_precision_stability",
+      "community": 0,
+      "norm_label": "test_decimal_precision_stability()"
+    },
+    {
+      "label": "test_round_trip()",
+      "file_type": "code",
+      "source_file": "tests/test_config.py",
+      "source_location": "L141",
+      "_origin": "ast",
+      "id": "tests_test_config_test_round_trip",
+      "community": 0,
+      "norm_label": "test_round_trip()"
+    },
+    {
+      "label": "A1 config system tests.  Covers: load, determinism, key-order invariance, float",
+      "file_type": "rationale",
+      "source_file": "tests/test_config.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_config_rationale_1",
+      "community": 0,
+      "norm_label": "a1 config system tests.  covers: load, determinism, key-order invariance, float"
+    },
+    {
+      "label": "EURUSD, GBPUSD, BTCUSD parse without error.",
+      "file_type": "rationale",
+      "source_file": "tests/test_config.py",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "tests_test_config_rationale_25",
+      "community": 0,
+      "norm_label": "eurusd, gbpusd, btcusd parse without error."
+    },
+    {
+      "label": "XAUUSD loader raises ValueError until owner fills tbd fields.",
+      "file_type": "rationale",
+      "source_file": "tests/test_config.py",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "tests_test_config_rationale_32",
+      "community": 0,
+      "norm_label": "xauusd loader raises valueerror until owner fills tbd fields."
+    },
+    {
+      "label": "A present-but-unrecognised owner-decision value is rejected, not accepted     si",
+      "file_type": "rationale",
+      "source_file": "tests/test_config.py",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "tests_test_config_rationale_47",
+      "community": 0,
+      "norm_label": "a present-but-unrecognised owner-decision value is rejected, not accepted     si"
+    },
+    {
+      "label": "Loading the same file twice produces identical hashes.",
+      "file_type": "rationale",
+      "source_file": "tests/test_config.py",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "tests_test_config_rationale_87",
+      "community": 0,
+      "norm_label": "loading the same file twice produces identical hashes."
+    },
+    {
+      "label": "config_hash must not depend on JSON key order.      asdict() always yields field",
+      "file_type": "rationale",
+      "source_file": "tests/test_config.py",
+      "source_location": "L100",
+      "_origin": "ast",
+      "id": "tests_test_config_rationale_100",
+      "community": 0,
+      "norm_label": "config_hash must not depend on json key order.      asdict() always yields field"
+    },
+    {
+      "label": "config_hash must be identical for numerically equal Decimal values     with diff",
+      "file_type": "rationale",
+      "source_file": "tests/test_config.py",
+      "source_location": "L125",
+      "_origin": "ast",
+      "id": "tests_test_config_rationale_125",
+      "community": 0,
+      "norm_label": "config_hash must be identical for numerically equal decimal values     with diff"
+    },
+    {
+      "label": "Load \u2192 inspect fields \u2192 rebuild dataclass from same fields \u2192 equal.",
+      "file_type": "rationale",
+      "source_file": "tests/test_config.py",
+      "source_location": "L142",
+      "_origin": "ast",
+      "id": "tests_test_config_rationale_142",
+      "community": 0,
+      "norm_label": "load \u2192 inspect fields \u2192 rebuild dataclass from same fields \u2192 equal."
+    },
+    {
+      "label": "test_smoke.py",
+      "file_type": "code",
+      "source_file": "tests/test_smoke.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_smoke",
+      "community": 8,
+      "norm_label": "test_smoke.py"
+    },
+    {
+      "label": "test_package_imports()",
+      "file_type": "code",
+      "source_file": "tests/test_smoke.py",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "tests_test_smoke_test_package_imports",
+      "community": 8,
+      "norm_label": "test_package_imports()"
+    },
+    {
+      "label": "A0 smoke test: the package imports and exposes a version.  Keeps `pytest -q` gre",
+      "file_type": "rationale",
+      "source_file": "tests/test_smoke.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_smoke_rationale_1",
+      "community": 8,
+      "norm_label": "a0 smoke test: the package imports and exposes a version.  keeps `pytest -q` gre"
+    },
+    {
+      "label": "LSB Governing Instructions",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claudemd_governing_instructions",
+      "community": 5,
+      "norm_label": "lsb governing instructions"
+    },
+    {
+      "label": "LSB Phase Status",
+      "file_type": "document",
+      "source_file": "PHASE_STATUS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "phase_status_phase_status",
+      "community": 5,
+      "norm_label": "lsb phase status"
+    },
+    {
+      "label": "Implementation Plan \u2014 A1: Config System + Core Schema",
+      "file_type": "document",
+      "source_file": "plan-a1-config-schema.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "plan_a1_config_schema_implementation_plan",
+      "community": 7,
+      "norm_label": "implementation plan \u2014 a1: config system + core schema"
+    },
+    {
+      "label": "CI Workflow",
+      "file_type": "code",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "ci_workflow",
+      "community": 10,
+      "norm_label": "ci workflow"
+    },
+    {
+      "label": "BTCUSD Configuration",
+      "file_type": "code",
+      "source_file": "config/BTCUSD.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "btcusd_yaml",
+      "community": 5,
+      "norm_label": "btcusd configuration"
+    },
+    {
+      "label": "EURUSD Configuration",
+      "file_type": "code",
+      "source_file": "config/EURUSD.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "eurusd_yaml",
+      "community": 5,
+      "norm_label": "eurusd configuration"
+    },
+    {
+      "label": "GBPUSD Configuration",
+      "file_type": "code",
+      "source_file": "config/GBPUSD.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gbpusd_yaml",
+      "community": 5,
+      "norm_label": "gbpusd configuration"
+    },
+    {
+      "label": "XAUUSD Configuration",
+      "file_type": "code",
+      "source_file": "config/XAUUSD.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "xauusd_yaml",
+      "community": 5,
+      "norm_label": "xauusd configuration"
+    },
+    {
+      "label": "LSB Spec Configuration",
+      "file_type": "code",
+      "source_file": "config/spec.yaml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "spec_yaml",
+      "community": 5,
+      "norm_label": "lsb spec configuration"
+    },
+    {
+      "label": "LSB Build Playbook",
+      "file_type": "document",
+      "source_file": "docs/BUILD_PLAYBOOK.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "build_playbook_build_playbook",
+      "community": 5,
+      "norm_label": "lsb build playbook"
+    },
+    {
+      "label": "LSB Canonical Gate Specification",
+      "file_type": "document",
+      "source_file": "docs/GATE_SPECIFICATION.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "gate_specification_gate_specification",
+      "community": 5,
+      "norm_label": "lsb canonical gate specification"
+    },
+    {
+      "label": "ADR-001 \u2014 Broker Bridge: native-Windows MT5",
+      "file_type": "document",
+      "source_file": "docs/decisions/ADR-001-broker-bridge.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "adr_001_broker_bridge",
+      "community": 5,
+      "norm_label": "adr-001 \u2014 broker bridge: native-windows mt5"
+    },
+    {
+      "label": "ADR-002 \u2014 Phase-A core schema design",
+      "file_type": "document",
+      "source_file": "docs/decisions/ADR-002-phase-a-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "adr_002_phase_a_schema",
+      "community": 7,
+      "norm_label": "adr-002 \u2014 phase-a core schema design"
+    },
+    {
+      "label": "ADR-003 \u2014 Gate 1 macro-trend timeframe: Daily (D1)",
+      "file_type": "document",
+      "source_file": "docs/decisions/ADR-003-trend-timeframe.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "adr_003_trend_timeframe",
+      "community": 5,
+      "norm_label": "adr-003 \u2014 gate 1 macro-trend timeframe: daily (d1)"
+    },
+    {
+      "label": "ADR-004 \u2014 Bull rejection geometry: lower-wick hammer",
+      "file_type": "document",
+      "source_file": "docs/decisions/ADR-004-rejection-geometry.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "adr_004_rejection_geometry",
+      "community": 5,
+      "norm_label": "adr-004 \u2014 bull rejection geometry: lower-wick hammer"
+    },
+    {
+      "label": "InstrumentConfig Dataclass",
+      "file_type": "code",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "lsb_config_models_instrumentconfig",
+      "community": 7,
+      "norm_label": "instrumentconfig dataclass"
+    },
+    {
+      "label": "SpecConfig Dataclass",
+      "file_type": "code",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "lsb_config_models_specconfig",
+      "community": 7,
+      "norm_label": "specconfig dataclass"
+    },
+    {
+      "label": "config_hash function",
+      "file_type": "code",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "lsb_config_hashing_config_hash",
+      "community": 7,
+      "norm_label": "config_hash function"
+    },
+    {
+      "label": "001_core.sql DDL",
+      "file_type": "code",
+      "source_file": "migrations/001_core.sql",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "sql_001_core",
+      "community": 7,
+      "norm_label": "001_core.sql ddl"
     }
   ],
   "links": [
@@ -1058,18 +1795,18 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "source_file": "",
+      "confidence_score": 1.0,
       "source": "determinism",
-      "target": "ga1_determinism_gate",
-      "confidence_score": 1.0
+      "target": "ga1_determinism_gate"
     },
     {
       "relation": "contains",
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "source_file": "",
+      "confidence_score": 1.0,
       "source": "phase_a",
-      "target": "ga1_determinism_gate",
-      "confidence_score": 1.0
+      "target": "ga1_determinism_gate"
     },
     {
       "relation": "contains",
@@ -1124,15 +1861,6 @@
       "confidence_score": 1.0,
       "source": "phase_a",
       "target": "phase_b"
-    },
-    {
-      "relation": "locks",
-      "confidence": 0.8,
-      "provenance": "EXTRACTED",
-      "source_file": "",
-      "confidence_score": 1.0,
-      "source": "phase_status",
-      "target": "phase_a"
     },
     {
       "relation": "executes",
@@ -1364,9 +2092,9 @@
       "confidence": 1.0,
       "provenance": "EXTRACTED",
       "source_file": "",
+      "confidence_score": 1.0,
       "source": "ga1_determinism_gate",
-      "target": "config_hash",
-      "confidence_score": 1.0
+      "target": "config_hash"
     },
     {
       "relation": "affected_by",
@@ -1727,7 +2455,1175 @@
       "confidence_score": 1.0,
       "source": "atr_extreme_filter",
       "target": "risk_tier_93"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "lsb_init_rationale_1",
+      "target": "lsb_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "config_init",
+      "target": "config_hashing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "config_init",
+      "target": "config_hashing_config_hash",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "config_init",
+      "target": "config_loader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "config_init",
+      "target": "config_loader_load_instrument",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "config_init",
+      "target": "config_loader_load_spec",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "config_init",
+      "target": "config_models",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "config_init",
+      "target": "config_models_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "config_init",
+      "target": "config_models_specconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "config_init_rationale_1",
+      "target": "config_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "config_hashing",
+      "target": "config_hashing_canonical_value",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "config_hashing",
+      "target": "config_hashing_config_hash",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "config_hashing",
+      "target": "decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "config_hashing_rationale_1",
+      "target": "config_hashing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "config_hashing_config_hash",
+      "target": "config_hashing_canonical_value",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "tests_test_config_test_decimal_precision_stability",
+      "target": "config_hashing_canonical_value"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "tests_test_config_test_key_order_invariance",
+      "target": "config_hashing_canonical_value"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "config_hashing_rationale_29",
+      "target": "config_hashing_config_hash",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_test_config_test_determinism",
+      "target": "config_hashing_config_hash"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "tests_test_config_test_different_instruments_differ",
+      "target": "config_hashing_config_hash"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L157",
+      "weight": 1.0,
+      "source": "tests_test_config_test_round_trip",
+      "target": "config_hashing_config_hash"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "config_loader",
+      "target": "config_loader_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "config_loader",
+      "target": "config_loader_load_instrument",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "config_loader",
+      "target": "config_loader_load_spec",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "config_loader",
+      "target": "config_loader_require",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "config_loader",
+      "target": "config_models",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "config_loader",
+      "target": "config_models_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "config_loader",
+      "target": "config_models_specconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "config_loader",
+      "target": "decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "config_loader_rationale_1",
+      "target": "config_loader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "config_loader_d",
+      "target": "decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "config_loader_load_instrument",
+      "target": "config_loader_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "config_loader_load_spec",
+      "target": "config_loader_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "config_loader_rationale_24",
+      "target": "config_loader_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "config_models",
+      "target": "decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 0.8,
+      "source": "decimal",
+      "target": "config_models_instrumentconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 0.8,
+      "source": "decimal",
+      "target": "config_models_specconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "tests_test_config_test_decimal_precision_stability",
+      "target": "decimal"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "tests_test_config_test_instrument_config_frozen",
+      "target": "decimal"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L152",
+      "weight": 1.0,
+      "source": "tests_test_config_test_round_trip",
+      "target": "decimal"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "tests_test_config_test_spec_config_frozen",
+      "target": "decimal"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "tests_test_config_test_spec_loads",
+      "target": "decimal"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "config_loader_load_instrument",
+      "target": "config_loader_require",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "config_loader_load_spec",
+      "target": "config_loader_require",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "config_loader_load_instrument",
+      "target": "config_models_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "config_loader_load_instrument",
+      "target": "instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "config_loader_load_instrument",
+      "target": "path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "config_loader_rationale_43",
+      "target": "config_loader_load_instrument",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "tests_test_config_test_all_loadable_instruments_load",
+      "target": "config_loader_load_instrument"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_test_config_test_determinism",
+      "target": "config_loader_load_instrument"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "tests_test_config_test_different_instruments_differ",
+      "target": "config_loader_load_instrument"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "tests_test_config_test_instrument_config_frozen",
+      "target": "config_loader_load_instrument"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "tests_test_config_test_key_order_invariance",
+      "target": "config_loader_load_instrument"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L143",
+      "weight": 1.0,
+      "source": "tests_test_config_test_round_trip",
+      "target": "config_loader_load_instrument"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "tests_test_config_test_xauusd_raises_on_tbd",
+      "target": "config_loader_load_instrument"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "config_loader_load_spec",
+      "target": "path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 0.8,
+      "source": "path",
+      "target": "config_models_instrumentconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 0.8,
+      "source": "path",
+      "target": "config_models_specconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 0.8,
+      "source": "instrumentconfig",
+      "target": "config_models_instrumentconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 0.8,
+      "source": "instrumentconfig",
+      "target": "config_models_specconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "config_loader_load_spec",
+      "target": "config_models_specconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "config_loader_load_spec",
+      "target": "specconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "config_loader_rationale_85",
+      "target": "config_loader_load_spec",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "tests_test_config_test_owner_decision_slots_validated",
+      "target": "config_loader_load_spec"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "tests_test_config_test_spec_config_frozen",
+      "target": "config_loader_load_spec"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_config.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "tests_test_config_test_spec_loads",
+      "target": "config_loader_load_spec"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 0.8,
+      "source": "specconfig",
+      "target": "config_models_instrumentconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/lsb/config/loader.py",
+      "source_location": "L13",
+      "weight": 0.8,
+      "source": "specconfig",
+      "target": "config_models_specconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "config_models",
+      "target": "config_models_instrumentconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "config_models",
+      "target": "config_models_specconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lsb/config/models.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "config_models_rationale_1",
+      "target": "config_models",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_all_loadable_instruments_load",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_decimal_precision_stability",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_determinism",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_different_instruments_differ",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_instrument_config_frozen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_key_order_invariance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_owner_decision_slots_validated",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L141",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_round_trip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_spec_config_frozen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_spec_loads",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "tests_test_config",
+      "target": "tests_test_config_test_xauusd_raises_on_tbd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_test_config_rationale_1",
+      "target": "tests_test_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "tests_test_config_rationale_25",
+      "target": "tests_test_config_test_all_loadable_instruments_load",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "tests_test_config_rationale_32",
+      "target": "tests_test_config_test_xauusd_raises_on_tbd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "tests_test_config_rationale_47",
+      "target": "tests_test_config_test_owner_decision_slots_validated",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "tests_test_config_rationale_87",
+      "target": "tests_test_config_test_determinism",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "tests_test_config_rationale_100",
+      "target": "tests_test_config_test_key_order_invariance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "tests_test_config_rationale_125",
+      "target": "tests_test_config_test_decimal_precision_stability",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_config.py",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "tests_test_config_rationale_142",
+      "target": "tests_test_config_test_round_trip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_smoke.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_smoke",
+      "target": "tests_test_smoke_test_package_imports",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_smoke.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_test_smoke_rationale_1",
+      "target": "tests_test_smoke",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claudemd_governing_instructions",
+      "target": "gate_specification_gate_specification"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claudemd_governing_instructions",
+      "target": "phase_status_phase_status"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plan-a1-config-schema.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "plan_a1_config_schema_implementation_plan",
+      "target": "adr_002_phase_a_schema"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plan-a1-config-schema.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "plan_a1_config_schema_implementation_plan",
+      "target": "lsb_config_hashing_config_hash"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plan-a1-config-schema.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "plan_a1_config_schema_implementation_plan",
+      "target": "lsb_config_models_instrumentconfig"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plan-a1-config-schema.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "plan_a1_config_schema_implementation_plan",
+      "target": "lsb_config_models_specconfig"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plan-a1-config-schema.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "plan_a1_config_schema_implementation_plan",
+      "target": "sql_001_core"
+    },
+    {
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "config/BTCUSD.yaml",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "btcusd_yaml",
+      "target": "gate_specification_gate_specification"
+    },
+    {
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "config/EURUSD.yaml",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "eurusd_yaml",
+      "target": "gate_specification_gate_specification"
+    },
+    {
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "config/GBPUSD.yaml",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "gbpusd_yaml",
+      "target": "gate_specification_gate_specification"
+    },
+    {
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "config/XAUUSD.yaml",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "xauusd_yaml",
+      "target": "gate_specification_gate_specification"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/decisions/ADR-003-trend-timeframe.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "adr_003_trend_timeframe",
+      "target": "spec_yaml"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/decisions/ADR-004-rejection-geometry.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "adr_004_rejection_geometry",
+      "target": "spec_yaml"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/BUILD_PLAYBOOK.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "build_playbook_build_playbook",
+      "target": "adr_001_broker_bridge"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/BUILD_PLAYBOOK.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "build_playbook_build_playbook",
+      "target": "gate_specification_gate_specification"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/GATE_SPECIFICATION.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "gate_specification_gate_specification",
+      "target": "adr_003_trend_timeframe"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/GATE_SPECIFICATION.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "gate_specification_gate_specification",
+      "target": "adr_004_rejection_geometry"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/decisions/ADR-002-phase-a-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "adr_002_phase_a_schema",
+      "target": "sql_001_core"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/lsb/config/hashing.py",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "lsb_config_hashing_config_hash",
+      "target": "lsb_config_models_instrumentconfig"
     }
   ],
-  "hyperedges": []
+  "hyperedges": [],
+  "built_at_commit": "96f2cd5b9cab252a7c30d90f98b2a50ee9934f8c"
 }
