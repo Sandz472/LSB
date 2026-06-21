@@ -29,3 +29,26 @@ invalidation_break_pct: "0.30"      # close >0.30% beyond resistance → INVALID
 # Gate 3 — liquidity sweep (§7.1.1, §7.2)
 block_min_touches: 2                # ≥2 touches to form the block
 sweep_expiry_candles: 3             # sweep must be within last N H1 candles
+
+# Gate 5 — rejection candle (§8.1#5, §4.3, ADR-004 §8.1-mirror)
+rejection_wick_body_mult: "2.0"    # dominant wick ≥ 2×body
+rejection_opp_wick_body_max: "0.30"  # opposite wick ≤ 0.30×body (pure-rejection case)
+
+# Gate 6 — session active (§3.3)
+session_edge_buffer_min: 30        # BLOCKED within 30 min of a session open/close
+news_buffer_min: 60                # BLOCKED within 60 min of a Tier-1 event (Phase-A stub: no feed)
+
+# Gate 7 — risk:reward minimum (§9.1, §9.4)
+rr_min: "2.5"                      # PASS iff R:R ≥ 2.5
+atr_target_mult: "3.0"            # ATR×3 structural target candidate (§9.4)
+
+# Sweep-probability score — NOT a gate (§7.3 → §9.3 risk tier). Formula: ADR-007.
+# Weights must sum to 100 (loader enforces).
+sweep_w_density: "30"
+sweep_w_wick: "20"
+sweep_w_close: "20"
+sweep_w_ema: "15"
+sweep_w_atr: "15"
+risk_tier_high_min: "80"          # score ≥80 → 1.0% tier (§9.3)
+risk_tier_mid_min: "50"           # score ≥50 → 0.5%; <50 → 0.25% or skip
+skip_below_50: false              # discretionary §9.3 "skip <50" — OFF in the validation baseline

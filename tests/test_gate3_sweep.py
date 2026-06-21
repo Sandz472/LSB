@@ -33,6 +33,12 @@ def _default_sp() -> StrategyParams:
         apex_proximity_lo=D("0.75"), apex_proximity_hi=D("0.95"),
         invalidation_break_pct=D("0.30"),
         block_min_touches=2, sweep_expiry_candles=3,
+        rejection_wick_body_mult=D("2.0"), rejection_opp_wick_body_max=D("0.30"),
+        session_edge_buffer_min=30, news_buffer_min=60,
+        rr_min=D("2.5"), atr_target_mult=D("3.0"),
+        sweep_w_density=D("30"), sweep_w_wick=D("20"), sweep_w_close=D("20"),
+        sweep_w_ema=D("15"), sweep_w_atr=D("15"),
+        risk_tier_high_min=D("80"), risk_tier_mid_min=D("50"), skip_below_50=False,
     )
 
 

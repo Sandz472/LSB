@@ -75,3 +75,21 @@ class StrategyParams:
     # Gate 3 — liquidity sweep (§7.1.1, §7.2)
     block_min_touches: int              # 2     ≥2 touches to form the block
     sweep_expiry_candles: int           # 3     sweep must be within last N H1 candles
+    # Gate 5 — rejection candle (§8.1#5, §4.3, ADR-004 mirror)
+    rejection_wick_body_mult: Decimal   # 2.0   dominant wick ≥ 2×body
+    rejection_opp_wick_body_max: Decimal  # 0.30 opposite wick ≤ 0.30×body (rejection case)
+    # Gate 6 — session (§3.3)
+    session_edge_buffer_min: int        # 30    BLOCKED within N min of a session open/close
+    news_buffer_min: int                # 60    BLOCKED within N min of a Tier-1 event (Phase-A stub)
+    # Gate 7 — risk:reward (§9.1, §9.4)
+    rr_min: Decimal                     # 2.5   PASS iff R:R ≥ 2.5
+    atr_target_mult: Decimal            # 3.0   ATR×3 structural target candidate (§9.4)
+    # Sweep-probability score (NOT a gate; §7.3 → §9.3 risk tier) — formula: ADR-007
+    sweep_w_density: Decimal            # 30    factor weights, sum to 100 (§7.3)
+    sweep_w_wick: Decimal               # 20
+    sweep_w_close: Decimal              # 20
+    sweep_w_ema: Decimal                # 15
+    sweep_w_atr: Decimal                # 15
+    risk_tier_high_min: Decimal         # 80    score ≥80 → 1.0% (§9.3)
+    risk_tier_mid_min: Decimal          # 50    score ≥50 → 0.5%; <50 → 0.25% or skip
+    skip_below_50: bool                 # False discretionary "skip <50" — OFF keeps score non-gating

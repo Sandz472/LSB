@@ -130,6 +130,19 @@ def load_strategy(path: str | Path) -> StrategyParams:
     if slope_lookback < 1:
         raise ValueError(f"slope_lookback must be >= 1, got {slope_lookback}")
 
+    # Sweep-score weights must sum to 100 (§7.3) — guard against a typo that would
+    # silently rescale the score and drift the risk tier.
+    sweep_weights = {
+        "sweep_w_density": _d(_require(raw, "sweep_w_density"), "sweep_w_density"),
+        "sweep_w_wick": _d(_require(raw, "sweep_w_wick"), "sweep_w_wick"),
+        "sweep_w_close": _d(_require(raw, "sweep_w_close"), "sweep_w_close"),
+        "sweep_w_ema": _d(_require(raw, "sweep_w_ema"), "sweep_w_ema"),
+        "sweep_w_atr": _d(_require(raw, "sweep_w_atr"), "sweep_w_atr"),
+    }
+    weight_sum = sum(sweep_weights.values(), Decimal("0"))
+    if weight_sum != Decimal("100"):
+        raise ValueError(f"sweep-score weights must sum to 100, got {weight_sum}")
+
     return StrategyParams(
         ema_fast=int(_require(raw, "ema_fast")),
         ema_mid=int(_require(raw, "ema_mid")),
@@ -149,4 +162,18 @@ def load_strategy(path: str | Path) -> StrategyParams:
         invalidation_break_pct=_d(_require(raw, "invalidation_break_pct"), "invalidation_break_pct"),
         block_min_touches=int(_require(raw, "block_min_touches")),
         sweep_expiry_candles=int(_require(raw, "sweep_expiry_candles")),
+        rejection_wick_body_mult=_d(_require(raw, "rejection_wick_body_mult"), "rejection_wick_body_mult"),
+        rejection_opp_wick_body_max=_d(_require(raw, "rejection_opp_wick_body_max"), "rejection_opp_wick_body_max"),
+        session_edge_buffer_min=int(_require(raw, "session_edge_buffer_min")),
+        news_buffer_min=int(_require(raw, "news_buffer_min")),
+        rr_min=_d(_require(raw, "rr_min"), "rr_min"),
+        atr_target_mult=_d(_require(raw, "atr_target_mult"), "atr_target_mult"),
+        sweep_w_density=sweep_weights["sweep_w_density"],
+        sweep_w_wick=sweep_weights["sweep_w_wick"],
+        sweep_w_close=sweep_weights["sweep_w_close"],
+        sweep_w_ema=sweep_weights["sweep_w_ema"],
+        sweep_w_atr=sweep_weights["sweep_w_atr"],
+        risk_tier_high_min=_d(_require(raw, "risk_tier_high_min"), "risk_tier_high_min"),
+        risk_tier_mid_min=_d(_require(raw, "risk_tier_mid_min"), "risk_tier_mid_min"),
+        skip_below_50=bool(raw.get("skip_below_50", False)),
     )
