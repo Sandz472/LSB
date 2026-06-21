@@ -1,252 +1,297 @@
 {
   ".claude/settings.local.json": {
-    "mtime": 1781991775.388727,
-    "ast_hash": "62e397758f248c9a3a8642329e3416c1",
-    "semantic_hash": ""
+    "mtime": 1781991902.7409706,
+    "ast_hash": "8b140b9fda66c1e9da9433836710b0fa",
+    "semantic_hash": "8b140b9fda66c1e9da9433836710b0fa"
   },
   "migrations/001_core.sql": {
     "mtime": 1781948976.416171,
     "ast_hash": "13741dd04a4790f0cdcc5ce270c4fa4d",
-    "semantic_hash": ""
+    "semantic_hash": "13741dd04a4790f0cdcc5ce270c4fa4d"
   },
   "pyproject.toml": {
-    "mtime": 1781948976.4200177,
-    "ast_hash": "ff34f9ff040beef5dd57410d93c717cc",
+    "mtime": 1782032668.6236198,
+    "ast_hash": "e33e1d6da3520c4186a97a9ba5689619",
     "semantic_hash": ""
   },
   "src/lsb/__init__.py": {
     "mtime": 1781947551.6320982,
     "ast_hash": "a6e4fe39ad5303f69a9609e678f99484",
-    "semantic_hash": ""
+    "semantic_hash": "a6e4fe39ad5303f69a9609e678f99484"
   },
   "src/lsb/config/__init__.py": {
-    "mtime": 1781948976.422193,
-    "ast_hash": "e8a04231a27a037a4730ebf11624c059",
+    "mtime": 1782048120.0706353,
+    "ast_hash": "9be6142d1be129a1e20251056e1f2f14",
     "semantic_hash": ""
   },
   "src/lsb/config/hashing.py": {
-    "mtime": 1781948976.422193,
-    "ast_hash": "7b428ce68714655d55f74da2441d11b3",
+    "mtime": 1782048090.9140158,
+    "ast_hash": "b58dfeaea912eb30bec9ed31cc5f25e5",
     "semantic_hash": ""
   },
   "src/lsb/config/loader.py": {
-    "mtime": 1781991711.6118336,
-    "ast_hash": "4211096124256ff661dd63109027439e",
+    "mtime": 1782048115.7069142,
+    "ast_hash": "3e91e5fa747bdaf8e3da5b9b9ac9600a",
     "semantic_hash": ""
   },
   "src/lsb/config/models.py": {
-    "mtime": 1781991718.1320317,
-    "ast_hash": "688efb16f711a70c227470c14101f781",
+    "mtime": 1782048078.419305,
+    "ast_hash": "a4d293f4df214c8725f67a9d43f227d9",
     "semantic_hash": ""
   },
   "tests/test_config.py": {
-    "mtime": 1781991750.77257,
-    "ast_hash": "603de698c9ae691bab46c830ef49a038",
+    "mtime": 1782048497.5344307,
+    "ast_hash": "479bb161a3e043fe608265ed19cab67a",
     "semantic_hash": ""
   },
   "tests/test_smoke.py": {
     "mtime": 1781947551.6320982,
     "ast_hash": "c3102672282305aa2b9c0d3e04dee1a3",
-    "semantic_hash": ""
+    "semantic_hash": "c3102672282305aa2b9c0d3e04dee1a3"
   },
   ".github/workflows/ci.yml": {
     "mtime": 1781947551.6045918,
     "ast_hash": "0c5f7a666178c0884dca7567b568e4a8",
-    "semantic_hash": ""
+    "semantic_hash": "0c5f7a666178c0884dca7567b568e4a8"
   },
   "CLAUDE.md": {
     "mtime": 1781947551.6045918,
     "ast_hash": "7507ebd7f82edccac877b9e3d5592fa9",
-    "semantic_hash": ""
+    "semantic_hash": "7507ebd7f82edccac877b9e3d5592fa9"
   },
   "PHASE_STATUS.md": {
     "mtime": 1781947551.6045918,
     "ast_hash": "a20564e661d1c5ef5789cd1a902ef557",
-    "semantic_hash": ""
+    "semantic_hash": "a20564e661d1c5ef5789cd1a902ef557"
   },
   "config/BTCUSD.yaml": {
-    "mtime": 1781948976.4082417,
-    "ast_hash": "2d686e175a94980d0fe3da49ae3b5915",
+    "mtime": 1782048148.7562282,
+    "ast_hash": "563b4cccead84076a17922c738b41259",
     "semantic_hash": ""
   },
   "config/EURUSD.yaml": {
-    "mtime": 1781948976.4082417,
-    "ast_hash": "13945663b37105ae10325bccec803743",
+    "mtime": 1782048138.7981403,
+    "ast_hash": "9008b73e64508d267be36acb08c5f109",
     "semantic_hash": ""
   },
   "config/GBPUSD.yaml": {
-    "mtime": 1781948976.4102552,
-    "ast_hash": "f80a26d1f24079aa485b497c7dbd1d8a",
+    "mtime": 1782048148.7542763,
+    "ast_hash": "894a6e9416b04ec7fbc36636260c96e3",
     "semantic_hash": ""
   },
   "config/XAUUSD.yaml": {
-    "mtime": 1781948976.4119945,
-    "ast_hash": "e86aedb88f5244102a425c6a2595eabb",
+    "mtime": 1782048148.755228,
+    "ast_hash": "fd44c38728c53ff3a6813f32e405c89a",
     "semantic_hash": ""
   },
   "config/spec.yaml": {
-    "mtime": 1781991654.6309886,
+    "mtime": 1781992610.810278,
     "ast_hash": "0ddb8ef31f218729dda7ac5d4d0fe784",
-    "semantic_hash": ""
+    "semantic_hash": "0ddb8ef31f218729dda7ac5d4d0fe784"
   },
   "docs/BUILD_PLAYBOOK.md": {
-    "mtime": 1781947551.6100655,
-    "ast_hash": "703e9e557f0875c46f17068c4d72d014",
+    "mtime": 1782047014.2916234,
+    "ast_hash": "11e288fed30613ed8e457f25c4589cbd",
     "semantic_hash": ""
   },
   "docs/GATE_SPECIFICATION.md": {
-    "mtime": 1781991739.892818,
-    "ast_hash": "2d87c2128924b2ec5ad109a48c2fba7c",
+    "mtime": 1782047037.090963,
+    "ast_hash": "a86d4a1b4103c1b2912ef6af331325f2",
     "semantic_hash": ""
   },
   "docs/decisions/ADR-001-broker-bridge.md": {
     "mtime": 1781947551.6111333,
     "ast_hash": "4ee3f9a14baa97517f4d1bc573b8da3a",
-    "semantic_hash": ""
+    "semantic_hash": "4ee3f9a14baa97517f4d1bc573b8da3a"
   },
   "docs/decisions/ADR-002-phase-a-schema.md": {
     "mtime": 1781948976.416171,
     "ast_hash": "70e260a8a41c54c49d7c7ec058e51b73",
-    "semantic_hash": ""
+    "semantic_hash": "70e260a8a41c54c49d7c7ec058e51b73"
   },
   "docs/decisions/ADR-003-trend-timeframe.md": {
-    "mtime": 1781991627.057202,
+    "mtime": 1781992610.813324,
     "ast_hash": "07f6b089e5c425766d428c9779159fc8",
-    "semantic_hash": ""
+    "semantic_hash": "07f6b089e5c425766d428c9779159fc8"
   },
   "docs/decisions/ADR-004-rejection-geometry.md": {
-    "mtime": 1781991645.0997386,
+    "mtime": 1781992610.814319,
     "ast_hash": "7519810b291c84c84ee263514e1ccfa5",
-    "semantic_hash": ""
+    "semantic_hash": "7519810b291c84c84ee263514e1ccfa5"
   },
   "plan-a1-config-schema.html": {
     "mtime": 1781948976.4181802,
     "ast_hash": "d648621f54a4eb40f8847103e0019d2e",
+    "semantic_hash": "d648621f54a4eb40f8847103e0019d2e"
+  },
+  "audit/BTCUSD_audit.json": {
+    "mtime": 1782032668.6100204,
+    "ast_hash": "8bb7d04a388fe6d0f117dec57a4fdde8",
     "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\.claude\\settings.local.json": {
-    "mtime": 1781991902.7409706,
-    "ast_hash": "8b140b9fda66c1e9da9433836710b0fa",
-    "semantic_hash": "8b140b9fda66c1e9da9433836710b0fa"
+  "audit/EURUSD_audit.json": {
+    "mtime": 1782032668.6176212,
+    "ast_hash": "cc5e8cd8bac54fd36c6e6e413eb7120e",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\migrations\\001_core.sql": {
-    "mtime": 1781948976.416171,
-    "ast_hash": "13741dd04a4790f0cdcc5ce270c4fa4d",
-    "semantic_hash": "13741dd04a4790f0cdcc5ce270c4fa4d"
+  "audit/GBPUSD_audit.json": {
+    "mtime": 1782032668.6196215,
+    "ast_hash": "21ddf01ee16debd1d093b731184d8f47",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\pyproject.toml": {
-    "mtime": 1781948976.4200177,
-    "ast_hash": "ff34f9ff040beef5dd57410d93c717cc",
-    "semantic_hash": "ff34f9ff040beef5dd57410d93c717cc"
+  "audit/XAUUSD_audit.json": {
+    "mtime": 1782032668.6196215,
+    "ast_hash": "c52991e1b5357e5386980e0c8426e119",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\__init__.py": {
-    "mtime": 1781947551.6320982,
-    "ast_hash": "a6e4fe39ad5303f69a9609e678f99484",
-    "semantic_hash": "a6e4fe39ad5303f69a9609e678f99484"
+  "src/lsb/data/__init__.py": {
+    "mtime": 1782032668.624626,
+    "ast_hash": "67d3f16ae8dc1134722d24a60e6d42ff",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\config\\__init__.py": {
-    "mtime": 1781948976.422193,
-    "ast_hash": "e8a04231a27a037a4730ebf11624c059",
-    "semantic_hash": "e8a04231a27a037a4730ebf11624c059"
+  "src/lsb/data/audit.py": {
+    "mtime": 1782032668.6256187,
+    "ast_hash": "a314599eb75f361d9bced88f88ee7530",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\config\\hashing.py": {
-    "mtime": 1781948976.422193,
-    "ast_hash": "7b428ce68714655d55f74da2441d11b3",
-    "semantic_hash": "7b428ce68714655d55f74da2441d11b3"
+  "src/lsb/data/cli.py": {
+    "mtime": 1782032668.6276183,
+    "ast_hash": "2369c18ab69bc72d31881152c85d5117",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\config\\loader.py": {
-    "mtime": 1781991711.6118336,
-    "ast_hash": "4211096124256ff661dd63109027439e",
-    "semantic_hash": "4211096124256ff661dd63109027439e"
+  "src/lsb/data/fetch.py": {
+    "mtime": 1782032668.6276183,
+    "ast_hash": "652551502308c545f25debf9f651e01b",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\src\\lsb\\config\\models.py": {
-    "mtime": 1781991718.1320317,
-    "ast_hash": "688efb16f711a70c227470c14101f781",
-    "semantic_hash": "688efb16f711a70c227470c14101f781"
+  "src/lsb/data/load.py": {
+    "mtime": 1782032668.62982,
+    "ast_hash": "40558947e67acbbba7243a098f5f6ea9",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\tests\\test_config.py": {
-    "mtime": 1781991750.77257,
-    "ast_hash": "603de698c9ae691bab46c830ef49a038",
-    "semantic_hash": "603de698c9ae691bab46c830ef49a038"
+  "src/lsb/data/resample.py": {
+    "mtime": 1782032668.630491,
+    "ast_hash": "7611b2df91dfa2f1a77bf0a78eb29e11",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\tests\\test_smoke.py": {
-    "mtime": 1781947551.6320982,
-    "ast_hash": "c3102672282305aa2b9c0d3e04dee1a3",
-    "semantic_hash": "c3102672282305aa2b9c0d3e04dee1a3"
+  "src/lsb/data/sources.py": {
+    "mtime": 1782032668.6326072,
+    "ast_hash": "961b3e86fd22af29c7a04bf11b319b79",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\.github\\workflows\\ci.yml": {
-    "mtime": 1781947551.6045918,
-    "ast_hash": "0c5f7a666178c0884dca7567b568e4a8",
-    "semantic_hash": "0c5f7a666178c0884dca7567b568e4a8"
+  "src/lsb/signal/__init__.py": {
+    "mtime": 1782048292.4152277,
+    "ast_hash": "17283ebe5e402dd1981d045543438ca4",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\CLAUDE.md": {
-    "mtime": 1781947551.6045918,
-    "ast_hash": "7507ebd7f82edccac877b9e3d5592fa9",
-    "semantic_hash": "7507ebd7f82edccac877b9e3d5592fa9"
+  "src/lsb/signal/gate1_trend.py": {
+    "mtime": 1782048204.1657138,
+    "ast_hash": "d39de9bd351aa1c6d7561e41761bef50",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\PHASE_STATUS.md": {
-    "mtime": 1781947551.6045918,
-    "ast_hash": "a20564e661d1c5ef5789cd1a902ef557",
-    "semantic_hash": "a20564e661d1c5ef5789cd1a902ef557"
+  "src/lsb/signal/gate2_structure.py": {
+    "mtime": 1782048245.484546,
+    "ast_hash": "09dee2c7856b03b4d0d6ebe598e0909b",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\BTCUSD.yaml": {
-    "mtime": 1781948976.4082417,
-    "ast_hash": "2d686e175a94980d0fe3da49ae3b5915",
-    "semantic_hash": "2d686e175a94980d0fe3da49ae3b5915"
+  "src/lsb/signal/gate3_sweep.py": {
+    "mtime": 1782048270.5745685,
+    "ast_hash": "35b37e769d2fba15969183ac3f7e3e9b",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\EURUSD.yaml": {
-    "mtime": 1781948976.4082417,
-    "ast_hash": "13945663b37105ae10325bccec803743",
-    "semantic_hash": "13945663b37105ae10325bccec803743"
+  "src/lsb/signal/gate4_ema.py": {
+    "mtime": 1782048284.752915,
+    "ast_hash": "ac53ba6ee407e9fa91f35b3b39934dfb",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\GBPUSD.yaml": {
-    "mtime": 1781948976.4102552,
-    "ast_hash": "f80a26d1f24079aa485b497c7dbd1d8a",
-    "semantic_hash": "f80a26d1f24079aa485b497c7dbd1d8a"
+  "src/lsb/signal/indicators.py": {
+    "mtime": 1782048181.1416986,
+    "ast_hash": "29570375af3bd2af6ab087a31553d839",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\XAUUSD.yaml": {
-    "mtime": 1781948976.4119945,
-    "ast_hash": "e86aedb88f5244102a425c6a2595eabb",
-    "semantic_hash": "e86aedb88f5244102a425c6a2595eabb"
+  "src/lsb/signal/types.py": {
+    "mtime": 1782048162.7476017,
+    "ast_hash": "5c8c44361db7d366fe614f3bf15efe3b",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\config\\spec.yaml": {
-    "mtime": 1781991654.6309886,
-    "ast_hash": "0ddb8ef31f218729dda7ac5d4d0fe784",
-    "semantic_hash": "0ddb8ef31f218729dda7ac5d4d0fe784"
+  "tests/conftest.py": {
+    "mtime": 1782032668.6326072,
+    "ast_hash": "b19680c033cb8b499dc0c36d45a06264",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\BUILD_PLAYBOOK.md": {
-    "mtime": 1781947551.6100655,
-    "ast_hash": "703e9e557f0875c46f17068c4d72d014",
-    "semantic_hash": "703e9e557f0875c46f17068c4d72d014"
+  "tests/test_audit.py": {
+    "mtime": 1782032668.6366231,
+    "ast_hash": "c42f5f03c9cfe0b0fcb27b0676e66713",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\GATE_SPECIFICATION.md": {
-    "mtime": 1781991739.892818,
-    "ast_hash": "2d87c2128924b2ec5ad109a48c2fba7c",
-    "semantic_hash": "2d87c2128924b2ec5ad109a48c2fba7c"
+  "tests/test_cli_reconcile.py": {
+    "mtime": 1782032668.6383502,
+    "ast_hash": "70cfe8e23c79ef174d4343abc30dc362",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\decisions\\ADR-001-broker-bridge.md": {
-    "mtime": 1781947551.6111333,
-    "ast_hash": "4ee3f9a14baa97517f4d1bc573b8da3a",
-    "semantic_hash": "4ee3f9a14baa97517f4d1bc573b8da3a"
+  "tests/test_fetch.py": {
+    "mtime": 1782032668.6404805,
+    "ast_hash": "e5774659667c8d9ce10642579e5ba452",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\decisions\\ADR-002-phase-a-schema.md": {
-    "mtime": 1781948976.416171,
-    "ast_hash": "70e260a8a41c54c49d7c7ec058e51b73",
-    "semantic_hash": "70e260a8a41c54c49d7c7ec058e51b73"
+  "tests/test_gate1_trend.py": {
+    "mtime": 1782053312.4556687,
+    "ast_hash": "eb4248e9e6099a14e61b0d5c34472de1",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\decisions\\ADR-003-trend-timeframe.md": {
-    "mtime": 1781991627.057202,
-    "ast_hash": "07f6b089e5c425766d428c9779159fc8",
-    "semantic_hash": "07f6b089e5c425766d428c9779159fc8"
+  "tests/test_gate2_structure.py": {
+    "mtime": 1782053140.0896084,
+    "ast_hash": "00623359a18be37c0cbfa17689858a14",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\docs\\decisions\\ADR-004-rejection-geometry.md": {
-    "mtime": 1781991645.0997386,
-    "ast_hash": "7519810b291c84c84ee263514e1ccfa5",
-    "semantic_hash": "7519810b291c84c84ee263514e1ccfa5"
+  "tests/test_gate3_sweep.py": {
+    "mtime": 1782052839.4340823,
+    "ast_hash": "1e707fe97a0809fcbc7e779311805e7f",
+    "semantic_hash": ""
   },
-  "C:\\Dev\\work\\SSR Holdings\\Sampu Dynamics\\LSB\\plan-a1-config-schema.html": {
-    "mtime": 1781948976.4181802,
-    "ast_hash": "d648621f54a4eb40f8847103e0019d2e",
-    "semantic_hash": "d648621f54a4eb40f8847103e0019d2e"
+  "tests/test_gate4_ema.py": {
+    "mtime": 1782048467.003237,
+    "ast_hash": "58d233cd4b8f9e6d3d3eb824f479f500",
+    "semantic_hash": ""
+  },
+  "tests/test_indicators.py": {
+    "mtime": 1782048319.8693142,
+    "ast_hash": "1343e9d31b15ed3cac2d71c073a9e8d9",
+    "semantic_hash": ""
+  },
+  "tests/test_load.py": {
+    "mtime": 1782032668.6404805,
+    "ast_hash": "f6cb0c18e1d42e3c2d78d1d35e5b77b6",
+    "semantic_hash": ""
+  },
+  "tests/test_resample.py": {
+    "mtime": 1782032668.64249,
+    "ast_hash": "8067990665a2037b1a49d1a48afb6178",
+    "semantic_hash": ""
+  },
+  "config/strategy.yaml": {
+    "mtime": 1782048138.645665,
+    "ast_hash": "8d2c4180556df3e085595f50bdda1d94",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-005-swing-window.md": {
+    "mtime": 1782046947.3130064,
+    "ast_hash": "9bddc9532a6fec2e9462e314f5a5c74c",
+    "semantic_hash": ""
+  },
+  "docs/decisions/ADR-006-macro-trend-atr.md": {
+    "mtime": 1782046960.1967995,
+    "ast_hash": "e5718ce0471eb0dfd862796224920795",
+    "semantic_hash": ""
+  },
+  "plan-a2-a3-data-acquisition.html": {
+    "mtime": 1782032668.6226213,
+    "ast_hash": "08ac0758031ea4476cbaa9870f51cc3d",
+    "semantic_hash": ""
+  },
+  "plan-a4-c2-gates-1-4.html": {
+    "mtime": 1782047155.5987659,
+    "ast_hash": "a3f9caf9e2207b78cf26a042c80b1d55",
+    "semantic_hash": ""
   }
 }

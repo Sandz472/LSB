@@ -128,10 +128,10 @@ terminate. Every step builds a module, then its regression guard, then verifies.
 | **A0** | scaffold; `PHASE_STATUS.md` (A active, B/C locked); CLAUDE.md; carry ADR-001; CI | tree matches; CI green-on-empty; B/C locked |
 | **A1** | config system (YAML→frozen dataclass→sha256 `config_hash`) + `001_core.sql` (4 tables) | identical configs→identical hashes; 4 tables; round-trip tests |
 | **A2–A3** | `fetch_history` + `audit_history` + load for all 4 | EUR/GBP/XAU 3y Dukascopy, BTC 3y Binance; every `gap>2` dispositioned; **GBPUSD audit generated**; counts reconcile |
-| **A4** | C2 gates **1–4** per §8.1 (Trend D1, Structure incl. **Invalidation**, Sweep vs **block high**, **EMA-Interaction**) | each gate's pass-path reachable on a hand-labelled fixture + ≥2 near-miss rejects; **no silent dead gate** |
-| **A5** | C2 gates **5–8** (Rejection §4.3/§8.1, Session §3.3 incl. crypto 24/7, R:R §9.4, Global-Risk stub) + the conjunction; sweep score as **risk-tier**, not a gate | all 8 green on fixtures; conjunction matches §8.1 verbatim; shuffled-history property test passes |
+| **A4** | C2 gates **1–4** per §8.1 (Trend D1, Structure incl. **Invalidation**, Sweep vs **block high**, **EMA-Interaction**) as **pure functions — no DB writes** | each gate's pass-path reachable on a hand-labelled fixture + ≥2 near-miss rejects; **no silent dead gate**; A4 establishes the **golden gate-fixtures** (hand-labelled candles → expected per-gate verdicts, correctness — frozen once owner-verified) |
+| **A5** | C2 gates **5–8** (Rejection §4.3/§8.1, Session §3.3 incl. crypto 24/7, R:R §9.4, Global-Risk stub) + the conjunction; sweep score as **risk-tier**, not a gate; the **single persistence boundary** lives here | all 8 green on fixtures; conjunction `evaluate()` returns a complete `SignalResult`; persistence writes a **`signal` row for 100% of evaluated candles** (QUALIFIED/REJECTED/INVALIDATED) with per-gate pass/fail + reasons; conjunction matches §8.1 verbatim; shuffled-history property test passes |
 | **A6–A7** | C3 backtest: event loop, position lifecycle, `SimulatedBroker` (Part 7.1 pessimistic fills) | sample month → signal rows for 100% candles; every fill matches hand-computed; no fill kinder than the model |
-| **A8** | determinism gate in CI (replay ×2, identical hashes) | **GA-1:** identical hashes; injected nondeterminism is caught |
+| **A8** | full-pipeline determinism replay in CI (fixed sample month replayed ×2, identical hashes) — distinct from A4's golden gate-fixtures (correctness) | **GA-1:** identical signal/trade/equity hashes; injected nondeterminism is caught |
 | **A9** | C4 walk-forward: 18m train / 6m test, roll 3m, all 4 instruments; `wf_run`+`sim_trade` keyed to `config_hash` | full window set reproducible; no test span overlaps its train span |
 | **A10** | C5 verdict report: OOS metrics, equity/DD, per-window stability; verdict vs **spec §17.1 thresholds read from config, never re-typed** | renders from a real run; verdict logic unit-tested; no hard-coded threshold |
 | **A11** | full run; `docs/anomaly_review.md`; record verdict in `ADR-002-go-no-go.md` | **Gate GA** rendered honestly |
@@ -197,9 +197,13 @@ verdict. The gate moved from week 7 to week 3 (v3.0); the bar did not move.
 1. **Minimum trade count** for the INSUFFICIENT boundary — §17.1 omits it (see §7).
    Pin a number in spec config before A11.
 2. **Rejection geometry** — the §4.3 (`REJECTION_BULL` = upper wick) vs §8.1/glossary
-   (bull = lower wick) conflict. Resolve before A5; the long side is unbuildable
-   until then.
-3. **Trend timeframe** — §3.2 (Daily macro) vs §4.1 (EMAs on H1). Resolve before A4.
+   (bull = lower wick) conflict. **RESOLVED — ADR-004** (§8.1 mirror governs; bull =
+   lower-wick hammer). In force from A5.
+3. **Trend timeframe** — §3.2 (Daily macro) vs §4.1 (EMAs on H1). **RESOLVED —
+   ADR-003** (Gate 1 macro trend on D1; Gate 4 keeps H1 EMAs) and **ADR-006**
+   (Gate 1 ATR-relative thresholds use D1 ATR; H1 ATR retained for execution-scale
+   uses). In force from A4.
 
-Items 2–3 are spec defects; record each as an owner ADR in `docs/decisions/`.
+Items 2–3 were spec defects, each resolved by an owner ADR in `docs/decisions/`
+(item 1 — minimum trade count — remains open; pin before A11).
 Everything else needed for a faithful from-scratch rebuild is in the corpus.

@@ -17,3 +17,6 @@ stop_buffer: "2"            # normal ATR state §9.1
 stop_buffer_elev: "4"       # elevated ATR state §9.1
 stop_buffer_unit: pips
 data_source: dukascopy
+swing_lookback: 2        # ADR-005: fractal pivot half-width (5-bar fractal)
+ema_touch: "3"           # Gate 4 §8.1#4: EMA-interaction tolerance
+ema_touch_unit: pips
