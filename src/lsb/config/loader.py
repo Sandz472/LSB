@@ -143,11 +143,29 @@ def load_strategy(path: str | Path) -> StrategyParams:
     if weight_sum != Decimal("100"):
         raise ValueError(f"sweep-score weights must sum to 100, got {weight_sum}")
 
+    # ATR-state classifier (ADR-011): boundaries must be strictly ordered and
+    # straddle the baseline (compressed < 1 ≤ elevated < extreme).
+    atr_baseline_window = int(_require(raw, "atr_baseline_window"))
+    if atr_baseline_window < 1:
+        raise ValueError(f"atr_baseline_window must be >= 1, got {atr_baseline_window}")
+    atr_compressed_mult = _d(_require(raw, "atr_compressed_mult"), "atr_compressed_mult")
+    atr_elevated_mult = _d(_require(raw, "atr_elevated_mult"), "atr_elevated_mult")
+    atr_extreme_mult = _d(_require(raw, "atr_extreme_mult"), "atr_extreme_mult")
+    if not (Decimal("0") < atr_compressed_mult < atr_elevated_mult < atr_extreme_mult):
+        raise ValueError(
+            "ATR-state multiples must satisfy 0 < compressed < elevated < extreme; "
+            f"got {atr_compressed_mult}, {atr_elevated_mult}, {atr_extreme_mult}"
+        )
+
     return StrategyParams(
         ema_fast=int(_require(raw, "ema_fast")),
         ema_mid=int(_require(raw, "ema_mid")),
         ema_slow=int(_require(raw, "ema_slow")),
         atr_period=int(_require(raw, "atr_period")),
+        atr_baseline_window=atr_baseline_window,
+        atr_compressed_mult=atr_compressed_mult,
+        atr_elevated_mult=atr_elevated_mult,
+        atr_extreme_mult=atr_extreme_mult,
         ema_compression_atr_mult=_d(_require(raw, "ema_compression_atr_mult"), "ema_compression_atr_mult"),
         ema_slope_atr_mult=_d(_require(raw, "ema_slope_atr_mult"), "ema_slope_atr_mult"),
         slope_lookback=slope_lookback,

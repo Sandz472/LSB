@@ -11,16 +11,18 @@ class Side(Enum):
 
 
 class AtrState(Enum):
-    """Volatility regime (§4.2.2 / §9.3).
+    """Volatility regime (§4.2.2 / §9.3 / §15.1).
 
-    Explicit INPUT to Gate 7 (buffer selection) and Gate 8 (EXTREME pre-filter).
-    The numeric classifier that derives this from an ATR series is a deferred
-    owner decision (ADR-008) pinned before backtest integration (A6-A7); it is
-    deliberately kept OUT of the gate decision path so A5 invents no thresholds.
+    Derived from current H1 ATR(14) vs a 20-period SMA-of-ATR baseline by
+    lsb.signal.atr_state.classify (thresholds pinned in ADR-011).  Consumed by
+    Gate 7 (stop-buffer selection: ELEVATED/EXTREME → wider buffer) and Gate 8
+    (EXTREME → no-trade pre-filter).  Still accepted as an explicit input so
+    callers may override the classifier.
     """
-    NORMAL = "NORMAL"
-    ELEVATED = "ELEVATED"
-    EXTREME = "EXTREME"
+    COMPRESSED = "COMPRESSED"   # ATR < 0.75× baseline (§4.2.2)
+    NORMAL = "NORMAL"           # 0.75× ≤ ATR < 1.25× baseline
+    ELEVATED = "ELEVATED"       # 1.25× ≤ ATR < 2.0× baseline (§15.1)
+    EXTREME = "EXTREME"         # ATR ≥ 2.0× baseline (§15.1) → no trade
 
 
 class Verdict(Enum):

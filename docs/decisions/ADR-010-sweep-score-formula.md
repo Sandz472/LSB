@@ -31,7 +31,7 @@ normalisations, each clamped to [0, 1]:
 | wick | 20 | `clamp(penetration / ref, 0, 1)` — sweep-wick depth beyond the block edge, `ref` = H1 ATR (or block width if ATR absent) |
 | close | 20 | dominant-wick fraction of the sweep candle range (`(high−close)/range` bear; mirror bull) — rejection strength |
 | EMA | 15 | `clamp(1 − ema_delta / ema_tol, 0, 1)` — proximity of the Gate-4 probe to the nearest EMA |
-| ATR | 15 | regime factor: NORMAL → 1.0, ELEVATED → 0.5, EXTREME → 0.0 |
+| ATR | 15 | regime factor: COMPRESSED → 1.0, NORMAL → 1.0, ELEVATED → 0.5, EXTREME → 0.0 (regimes per ADR-011) |
 
 `score = Σ weightᵢ · factorᵢ ∈ [0, 100]`.
 

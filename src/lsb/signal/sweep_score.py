@@ -28,8 +28,10 @@ _ONE = Decimal("1")
 _HUNDRED = Decimal("100")
 _DENSITY_TARGET = Decimal("4")   # touches at/above which density factor saturates (ADR-007)
 
-# ATR-regime favourability factor (ADR-007): calmer regime → higher sweep quality.
+# ATR-regime favourability factor (ADR-010): calmer regime → higher sweep quality.
+# COMPRESSED (coiled, low vol) is treated as favourable as NORMAL.
 _ATR_FACTOR = {
+    AtrState.COMPRESSED: _ONE,
     AtrState.NORMAL: _ONE,
     AtrState.ELEVATED: Decimal("0.5"),
     AtrState.EXTREME: _ZERO,

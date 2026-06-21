@@ -8,7 +8,15 @@
 ema_fast: 21
 ema_mid: 50
 ema_slow: 89
-atr_period: 14
+atr_period: 14                      # fixed (§15.1 "do not change")
+
+# ATR-state classifier (§4.2.2 / §15.1, ADR-011) — current H1 ATR(14) vs a
+# 20-period SMA-of-ATR(14) baseline. r = ATR / baseline:
+#   r < 0.75 → COMPRESSED · 0.75 ≤ r < 1.25 → NORMAL · 1.25 ≤ r < 2.0 → ELEVATED · r ≥ 2.0 → EXTREME
+atr_baseline_window: 20             # 20-period SMA of ATR(14) (§4.2.2)
+atr_compressed_mult: "0.75"         # < 0.75× baseline → COMPRESSED (§4.2.2; fixed, not a tuning surface)
+atr_elevated_mult: "1.25"           # ≥ 1.25× baseline → ELEVATED (§15.1 default)
+atr_extreme_mult: "2.0"             # ≥ 2.0× baseline → EXTREME (§15.1 default)
 
 # Gate 1 — macro-trend thresholds, D1 ATR-relative (ADR-006, §4.1.2, §5.2)
 ema_compression_atr_mult: "0.10"    # |EMA21−EMA89| < ATR×0.10 → INVALID (§5.2)

@@ -10,7 +10,7 @@ from decimal import Decimal as D
 
 from lsb.config import load_strategy, load_instrument, config_hash
 from lsb.signal import conjunction, persistence
-from lsb.signal.types import Side, Verdict
+from lsb.signal.types import Side, Verdict, AtrState
 
 from test_conjunction import build_qualified_h1, _flat_h1, _d1, _h4
 
@@ -31,7 +31,9 @@ def _hash():
 
 
 def _eval(h1):
-    return conjunction.evaluate("EURUSD", Side.BEAR, _d1(), _h4(), h1, _sp(), _ic())
+    # NORMAL pinned: these tests assert row shape/idempotency, not regime behaviour.
+    return conjunction.evaluate("EURUSD", Side.BEAR, _d1(), _h4(), h1, _sp(), _ic(),
+                                atr_state=AtrState.NORMAL)
 
 
 def test_to_row_qualified_shape(fake_executor):

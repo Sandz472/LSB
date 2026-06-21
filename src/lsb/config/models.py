@@ -57,7 +57,12 @@ class StrategyParams:
     ema_fast: int                       # 21
     ema_mid: int                        # 50
     ema_slow: int                       # 89
-    atr_period: int                     # 14 — D1 for Gate 1 (ADR-006); H1 for exec-scale gates
+    atr_period: int                     # 14 — D1 for Gate 1 (ADR-006); H1 for exec-scale gates; §15.1 "do not change"
+    # ATR-state classifier (§4.2.2 / §15.1, ADR-011) — current H1 ATR(14) vs baseline
+    atr_baseline_window: int            # 20    SMA-of-ATR(14) baseline length (§4.2.2)
+    atr_compressed_mult: Decimal        # 0.75  < 0.75× baseline → COMPRESSED (§4.2.2, fixed)
+    atr_elevated_mult: Decimal          # 1.25  ≥ 1.25× baseline → ELEVATED (§15.1 default)
+    atr_extreme_mult: Decimal           # 2.0   ≥ 2.0× baseline → EXTREME (§15.1 default)
     # Gate 1 — macro-trend, D1 ATR-relative (§4.1.2, §5.2, ADR-006)
     ema_compression_atr_mult: Decimal   # 0.10  |EMA21−EMA89| < ATR×0.10 → INVALID
     ema_slope_atr_mult: Decimal         # 0.05  per-bar slope threshold

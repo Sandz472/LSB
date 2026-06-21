@@ -52,8 +52,10 @@ def evaluate(
     entry = candles_h1[n - 1]["close"]
 
     # Buffer: elevated for ELEVATED or EXTREME (§9.1 "4 pip if ATR ELEVATED").
-    buf_val = (ic.stop_buffer if atr_state is AtrState.NORMAL
-               else ic.stop_buffer_elev)
+    # COMPRESSED and NORMAL use the normal buffer.  (EXTREME is moot — Gate 8
+    # blocks the trade — but the wider buffer is the correct choice regardless.)
+    buf_val = (ic.stop_buffer_elev if atr_state in (AtrState.ELEVATED, AtrState.EXTREME)
+               else ic.stop_buffer)
     buffer = to_price_delta(buf_val, ic.stop_buffer_unit, rejection_extreme, ic.pip_size)
 
     if side is Side.BEAR:

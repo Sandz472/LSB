@@ -31,6 +31,7 @@ from lsb.config.models import InstrumentConfig, StrategyParams
 from . import (gate1_trend, gate2_structure, gate3_sweep, gate4_ema,
                gate5_rejection, gate6_session, gate7_rr, gate8_global_risk)
 from . import sweep_score as _sweep
+from .atr_state import classify as _classify_atr_state
 from .indicators import atr as _atr
 from .types import (GateResult, Side, AtrState, Verdict, RiskTier, SignalResult)
 
@@ -92,16 +93,24 @@ def evaluate(
     sp: StrategyParams,
     ic: InstrumentConfig,
     *,
-    atr_state: AtrState = AtrState.NORMAL,
+    atr_state: AtrState | None = None,
     trading_allowed: bool = True,
     news_windows: Sequence = (),
 ) -> SignalResult:
-    """Evaluate the §8.1 conjunction for the LAST H1 bar.  Returns a SignalResult."""
+    """Evaluate the §8.1 conjunction for the LAST H1 bar.  Returns a SignalResult.
+
+    atr_state: volatility regime for Gate 7 (buffer) and Gate 8 (EXTREME pre-filter).
+    When None (default) it is derived from the H1 ATR series by the ADR-011
+    classifier; callers may pass an explicit AtrState to override.
+    """
     ts = candles_h1[-1]["ts"]
 
     # H1 ATR(14) at the entry bar — for Gate 7 target and the sweep score.
     atr_series = _atr(list(candles_h1), sp.atr_period)
     atr_h1 = atr_series[-1] if atr_series else None
+
+    if atr_state is None:
+        atr_state = _classify_atr_state(candles_h1, sp)
 
     g1 = gate1_trend.evaluate(candles_d1, sp, ic, side)
     g2 = gate2_structure.evaluate(candles_h4, sp, ic, side)

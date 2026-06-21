@@ -38,6 +38,8 @@ def _default_sp() -> StrategyParams:
         sweep_w_density=D("30"), sweep_w_wick=D("20"), sweep_w_close=D("20"),
         sweep_w_ema=D("15"), sweep_w_atr=D("15"),
         risk_tier_high_min=D("80"), risk_tier_mid_min=D("50"), skip_below_50=False,
+        atr_baseline_window=20, atr_compressed_mult=D("0.75"),
+        atr_elevated_mult=D("1.25"), atr_extreme_mult=D("2.0"),
     )
 
 

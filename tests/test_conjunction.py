@@ -13,8 +13,8 @@ from decimal import Decimal as D
 from datetime import datetime, timezone, timedelta
 
 from lsb.config import load_strategy, load_instrument
-from lsb.signal import conjunction
-from lsb.signal.types import Side, Verdict, RiskTier
+from lsb.signal import conjunction, atr_state
+from lsb.signal.types import Side, Verdict, RiskTier, AtrState
 
 from test_gate1_trend import _d1_candles, _bear_closes, _bull_closes
 from test_gate2_structure import _build_triangle
@@ -85,8 +85,10 @@ def _h4():
 # ---------------------------------------------------------------------------
 
 def test_conjunction_qualified():
+    # Pin NORMAL so this composition fixture is decoupled from classifier tuning
+    # (the ADR-011 classifier has its own reference tests in test_atr_state.py).
     r = conjunction.evaluate("EURUSD", Side.BEAR, _d1(), _h4(), build_qualified_h1(),
-                             _sp(), _ic())
+                             _sp(), _ic(), atr_state=AtrState.NORMAL)
     assert len(r.gates) == 8
     assert all(g.passed for g in r.gates), [(i + 1, g.state) for i, g in enumerate(r.gates) if not g.passed]
     assert r.all_gates is True
@@ -100,7 +102,7 @@ def test_conjunction_qualified():
 def test_and_invariant_holds():
     """all_gates is exactly the AND of the 8 gate.passed flags (§8.1 verbatim)."""
     r = conjunction.evaluate("EURUSD", Side.BEAR, _d1(), _h4(), build_qualified_h1(),
-                             _sp(), _ic())
+                             _sp(), _ic(), atr_state=AtrState.NORMAL)
     assert r.all_gates == all(g.passed for g in r.gates)
 
 
@@ -167,3 +169,18 @@ def test_shuffled_history_property():
     r1 = conjunction.evaluate("EURUSD", Side.BEAR, _d1(), _h4(), h1, _sp(), _ic())
     r2 = conjunction.evaluate("EURUSD", Side.BEAR, _d1(), _h4(), shuffled, _sp(), _ic())
     assert r1 == r2
+
+
+def test_atr_state_classifier_is_wired():
+    """Default (atr_state=None) derives the regime via the ADR-011 classifier.
+
+    The qualified fixture classifies ELEVATED; passing that state explicitly must
+    reproduce the default-path result exactly — proving the conjunction uses the
+    classifier rather than a hard-coded NORMAL."""
+    h1, sp, ic = build_qualified_h1(), _sp(), _ic()
+    derived = atr_state.classify(h1, sp)
+    assert derived is AtrState.ELEVATED
+    r_default = conjunction.evaluate("EURUSD", Side.BEAR, _d1(), _h4(), h1, sp, ic)
+    r_explicit = conjunction.evaluate("EURUSD", Side.BEAR, _d1(), _h4(), h1, sp, ic,
+                                      atr_state=derived)
+    assert r_default == r_explicit
