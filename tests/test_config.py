@@ -28,10 +28,13 @@ def test_all_loadable_instruments_load():
         assert cfg.instrument == sym
 
 
-def test_xauusd_raises_on_tbd():
-    """XAUUSD loader raises ValueError until owner fills tbd fields."""
-    with pytest.raises(ValueError, match="tbd|placeholder"):
-        load_instrument(CONFIG_DIR / "XAUUSD.yaml")
+def test_xauusd_loads_with_owner_values():
+    """XAUUSD now has owner-confirmed pip_size=0.01 and max_spread=30 (A2)."""
+    cfg = load_instrument(CONFIG_DIR / "XAUUSD.yaml")
+    from decimal import Decimal
+    assert cfg.instrument == "XAUUSD"
+    assert cfg.pip_size == Decimal("0.01")
+    assert cfg.max_spread == Decimal("30")
 
 
 def test_spec_loads():

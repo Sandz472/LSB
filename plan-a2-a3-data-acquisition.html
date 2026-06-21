@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Implementation Plan — A2–A3 Data Acquisition</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --border:#30363d; --text:#e6edf3;
+    --muted:#9da7b3; --accent:#2563eb; --accent2:#3fb950; --warn:#f0883e;
+    --danger:#f85149; --code:#0b0f14; --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 24px 96px}
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:36px}
+  h1{font-size:30px;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:15px}
+  h2{font-size:21px;margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+  h2 .tag{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:2px 9px}
+  section{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+    padding:18px 22px;margin-bottom:18px}
+  p{margin:8px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#1c2330;color:var(--text);font-weight:600}
+  .choice{color:var(--accent2);font-weight:600}
+  pre{background:var(--code);border:1px solid var(--border);border-radius:8px;
+    padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.5}
+  code{font-family:var(--mono);font-size:.92em}
+  .del{color:var(--danger)} .add{color:var(--accent2)}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:6px 0}
+  ol.steps li{counter-increment:s;position:relative;padding:10px 0 10px 42px;border-bottom:1px solid var(--border)}
+  ol.steps li:last-child{border-bottom:0}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;
+    background:var(--accent);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700}
+  ol.steps .files{display:block;color:var(--muted);font-size:13px;font-family:var(--mono);margin-top:3px}
+  .mock{border:1px dashed var(--border);border-radius:8px;padding:20px;background:#0b0f14;margin:12px 0}
+  .fail th:first-child{width:44%}
+  .warn{color:var(--warn)} .q{color:var(--warn);font-weight:600}
+  ul.q-list li{margin:6px 0}
+  .pill{font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;border:1px solid var(--border);color:var(--muted)}
+  footer{color:var(--muted);font-size:13px;margin-top:40px;border-top:1px solid var(--border);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>A2–A3 — Data-acquisition module</h1>
+    <div class="sub">Implementation plan · 2026-06-21 · LSB Phase A · Issue <a style="color:var(--accent)" href="https://github.com/Sandz472/LSB/issues/7">#7</a></div>
+  </header>
+
+  <h2><span class="tag">1</span> Overview</h2>
+  <section>
+    <p>Build the data-acquisition layer that feeds every downstream module: <code>fetch_history</code>
+    (raw OHLCV from Dukascopy for EUR/GBP/XAU and Binance for BTC), <code>audit_history</code>
+    (gap detection + mandatory disposition of every <code>gap&gt;2</code>), a deterministic
+    <code>resample</code> (H1 → H4/D1), and a <code>load</code> step that writes normalized candles
+    into the <code>candle</code> table built in A1.</p>
+    <p>Per BUILD_PLAYBOOK §5 the accept-when is: <strong>EUR/GBP/XAU 3y Dukascopy + BTC 3y Binance,
+    every <code>gap&gt;2</code> dispositioned, GBPUSD audit generated, counts reconcile.</strong>
+    Correctness is proven by fixture-based unit tests <em>before</em> any bulk pull or live DB
+    integration (CLAUDE.md §3); the multi-year download is an operational run, not a PR gate.</p>
+  </section>
+
+  <h2><span class="tag">2</span> Approach &amp; decisions</h2>
+  <section>
+    <table>
+      <thead><tr><th>Decision</th><th>Options</th><th>Trade-off</th><th>Choice</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Timeframe sourcing</td>
+          <td>Native H1/H4/D1 pulls vs fetch H1 + resample</td>
+          <td>Native = 3× source round-trips &amp; reconciliation surface; resample = one canonical series, pure function</td>
+          <td class="choice">Fetch H1, resample to H4/D1 — confirmed with owner; resampling is deterministic &amp; unit-testable</td>
+        </tr>
+        <tr>
+          <td>Determinism of fetch</td>
+          <td>Live fetch each run vs cache pinned raw downloads</td>
+          <td>Live = non-reproducible audits; cache = byte-identical re-runs, offline tests</td>
+          <td class="choice">Cache raw downloads to a pinned local store; audit/resample/load read the cache, never the network</td>
+        </tr>
+        <tr>
+          <td>Gap policy</td>
+          <td>Drop/ignore gaps vs disposition every <code>gap&gt;2</code></td>
+          <td>Silent drop hides data quality; explicit disposition is auditable</td>
+          <td class="choice">Every <code>gap&gt;2</code> classified (weekend/holiday/DST/genuine-missing); no silent gap → HALT if unclassifiable</td>
+        </tr>
+        <tr>
+          <td>Numeric type</td>
+          <td>float vs Decimal/str</td>
+          <td>float breaks byte-identical hashing; Decimal matches A1 precision path</td>
+          <td class="choice">Decimal/str end-to-end, mirroring A1's loader</td>
+        </tr>
+        <tr>
+          <td>Load target coupling</td>
+          <td>Direct psycopg writes vs thin loader + injectable connection</td>
+          <td>Hard DB dependency blocks fixture tests; injectable sink enables round-trip test without a live DB</td>
+          <td class="choice">Loader takes an injectable executor; round-trip tested against an in-memory/fake sink, real DB behind the CLI</td>
+        </tr>
+        <tr>
+          <td>Audit artifact format</td>
+          <td>Free text vs structured (JSON/CSV) per instrument</td>
+          <td>Structured = diffable, machine-checkable counts</td>
+          <td class="choice">Structured per-instrument audit file (incl. required GBPUSD), with reconciling counts</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2><span class="tag">3</span> Key code changes</h2>
+  <section>
+    <p>New package <code>src/lsb/data/</code> — independent units, wired by a CLI. Shapes are illustrative.</p>
+<pre><span class="add">src/lsb/data/__init__.py</span>
+<span class="add">src/lsb/data/sources.py      # DukascopySource, BinanceSource → raw H1 rows (cached)</span>
+<span class="add">src/lsb/data/fetch.py        # fetch_history(cfg, start, end) -> CachedSeries (picks source from cfg.data_source)</span>
+<span class="add">src/lsb/data/resample.py     # resample_h1(rows, "H4"|"D1") -> rows   (pure, deterministic)</span>
+<span class="add">src/lsb/data/audit.py        # audit_history(series) -> AuditReport (gap>2 disposition, counts)</span>
+<span class="add">src/lsb/data/load.py         # load_candles(executor, cfg_hash, instrument, tf, rows)</span>
+<span class="add">src/lsb/data/cli.py          # fetch -> audit -> load per instrument</span></pre>
+<pre># audit.py — disposition is total; an unclassifiable gap is an error, not a skip
+<span class="add">def classify_gap(prev_ts, next_ts, sessions) -> str:</span>
+<span class="add">    # 'weekend' | 'holiday' | 'dst' | 'genuine_missing'</span>
+<span class="add">    # crypto (sessions == "24_7") has no weekend/holiday exemption</span>
+<span class="add">    ...</span></pre>
+<pre># load.py — Decimal in, idempotent on (config_hash, instrument, timeframe, ts)
+<span class="add">def load_candles(execute, config_hash, instrument, timeframe, rows):</span>
+<span class="add">    # INSERT ... ON CONFLICT (config_hash,instrument,timeframe,ts) DO NOTHING</span>
+<span class="add">    # mirrors the UNIQUE in migrations/001_core.sql; re-runs do not duplicate</span>
+<span class="add">    ...</span></pre>
+  </section>
+
+  <h2><span class="tag">4</span> CLI surface <span style="font-size:12px;color:var(--muted)">(no GUI — this is the operator view)</span></h2>
+  <section>
+    <div class="mock">
+<pre style="margin:0;border:0;background:transparent">$ python -m lsb.data.cli fetch-audit-load --instrument GBPUSD --years 3
+
+[fetch ] GBPUSD  dukascopy  H1   2023-06-21 → 2026-06-21   18,742 bars (cached)
+[resamp] GBPUSD  H1→H4  4,690 bars   H1→D1  782 bars
+[audit ] GBPUSD  gaps>2: 161  →  weekend 156 · holiday 4 · dst 1 · genuine 0
+[audit ] wrote audit/GBPUSD_audit.json   <span class="add">counts reconcile ✓</span>
+[load  ] GBPUSD  H1 18,742 · H4 4,690 · D1 782   inserted (0 dup)
+<span class="choice">DONE  GBPUSD  source=18,742  audited=18,742  loaded=18,742  ✓</span></pre>
+    </div>
+    <p style="color:var(--muted);font-size:13px">The three counts on the DONE line are the reconciliation invariant: source rows = audited rows = loaded rows (gaps are dispositioned, never dropped).</p>
+  </section>
+
+  <h2><span class="tag">5</span> Step plan</h2>
+  <section>
+    <ol class="steps">
+      <li>Scaffold the package and a tiny H1 fixture (a few days incl. a weekend + a holiday gap).
+        <span class="files">src/lsb/data/__init__.py · tests/fixtures/h1_sample.csv</span></li>
+      <li>Pure <code>resample_h1</code> (H4/D1) + unit tests vs hand-computed OHLCV aggregates.
+        <span class="files">src/lsb/data/resample.py · tests/test_resample.py</span></li>
+      <li><code>audit_history</code> + <code>classify_gap</code>; test gap&gt;2 disposition incl. crypto-24/7 (no weekend exemption) and a forced genuine-missing.
+        <span class="files">src/lsb/data/audit.py · tests/test_audit.py</span></li>
+      <li><code>load_candles</code> with injectable executor; round-trip test against a fake sink + idempotent re-run (0 dup).
+        <span class="files">src/lsb/data/load.py · tests/test_load.py</span></li>
+      <li>Cached sources (Dukascopy/Binance) reading <code>cfg.data_source</code>; offline test from the fixture cache (no live network in tests).
+        <span class="files">src/lsb/data/sources.py · src/lsb/data/fetch.py · tests/test_fetch.py</span></li>
+      <li>CLI wiring fetch→audit→load; count-reconciliation assertion; GBPUSD audit artifact generated.
+        <span class="files">src/lsb/data/cli.py · tests/test_cli_reconcile.py</span></li>
+      <li><code>pytest -q</code> green → <code>graphify update .</code> → commit incl. <code>graphify-out/</code>.
+        <span class="files">graphify-out/ · all of the above</span></li>
+    </ol>
+  </section>
+
+  <h2><span class="tag">6</span> Failure modes</h2>
+  <section>
+    <table class="fail">
+      <thead><tr><th>What could go wrong</th><th>How the plan handles it</th></tr></thead>
+      <tbody>
+        <tr><td class="warn">Live network makes audits non-reproducible</td><td>Raw downloads cached to a pinned store; audit/resample/load read the cache only — tests run offline.</td></tr>
+        <tr><td class="warn">A gap&gt;2 silently dropped → counts still "reconcile" falsely</td><td>Disposition is total; an unclassifiable gap raises (no default bucket). Reconciliation compares source vs audited vs loaded, so a drop fails the invariant.</td></tr>
+        <tr><td class="warn">Crypto treated with FX weekend/holiday exemptions</td><td><code>classify_gap</code> branches on <code>sessions == "24_7"</code> (BTC) — no weekend/holiday excuse; matches §3.3 / CLAUDE.md.</td></tr>
+        <tr><td class="warn">float creeps into prices → hash divergence later</td><td>Decimal/str on the precision path end-to-end, asserted in load round-trip test.</td></tr>
+        <tr><td class="warn">DST boundary double-counts or skips an hour</td><td>Timestamps normalized to UTC on fetch; DST is an explicit disposition class, not an implicit shift.</td></tr>
+        <tr><td class="warn">Re-running load duplicates rows (breaks A8 determinism)</td><td><code>ON CONFLICT DO NOTHING</code> on the table's UNIQUE key; idempotent re-run test asserts 0 duplicates.</td></tr>
+        <tr><td class="warn">Resample produces partial trailing bar (incomplete week/day)</td><td>Resampler emits only complete buckets; partial-tail test pins the boundary behavior.</td></tr>
+        <tr><td class="warn">Scope creep into gates / broker paths</td><td>Package is data-only; no signal/broker imports. Phase B locked in PHASE_STATUS.md.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2><span class="tag">7</span> Open questions</h2>
+  <section>
+    <ul class="q-list">
+      <li><span class="pill">resolved</span> Timeframe sourcing → fetch H1 + resample (owner-confirmed).</li>
+      <li><span class="q">?</span> Raw-cache location &amp; whether it is committed: propose <code>data/raw/</code> (git-ignored, machine-local) with small cache fixtures under <code>tests/fixtures/</code> committed. Confirm before A11 if reproducibility needs the raw cache versioned.</li>
+      <li><span class="q">?</span> Audit artifact path: propose <code>audit/&lt;INSTRUMENT&gt;_audit.json</code> committed (small, diffable). OK to commit, or keep out of git like raw data?</li>
+    </ul>
+  </section>
+
+  <footer>Generated by the <code>plan-html</code> skill. Edit this file directly as the plan evolves. Linked from issue #7.</footer>
+</div>
+</body>
+</html>
