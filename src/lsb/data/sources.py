@@ -30,8 +30,9 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from decimal import Decimal
 
-_DUKA_RETRY_DELAYS = (5, 15, 30)   # backoff seconds on 503 / network error
-_DUKA_MAX_WORKERS = 16             # concurrent hourly bi5 downloads per month
+_DUKA_RETRY_DELAYS = (3, 8, 20, 40, 60)  # backoff seconds on 503 / network error
+_DUKA_MAX_WORKERS = 10                    # concurrent hourly bi5 downloads per month
+_DUKA_TIMEOUT = 60                        # per-request read timeout (seconds)
 _DUKA_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 
 
@@ -73,7 +74,7 @@ def _fetch_dukascopy_hour(
     compressed: bytes | None = None
     for backoff in (*_DUKA_RETRY_DELAYS, None):
         try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
+            with urllib.request.urlopen(req, timeout=_DUKA_TIMEOUT) as resp:
                 compressed = resp.read()
             break
         except urllib.error.HTTPError as exc:
