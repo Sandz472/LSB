@@ -20,12 +20,16 @@ M3 trend = **BEARISH**: `EMA21 < EMA50 < EMA89` AND slope(EMA21) NEGATIVE AND
 slope(EMA50) NEGATIVE. NEUTRAL and INVALID are hard blockers (§5.1).
 INVALID when EMA compression `|EMA21−EMA89| < ATR×0.10` (§5.2) or an EMA21/EMA50
 cross within the last 3 candles. Slope threshold = ATR×0.05 over 3 candles (§4.1.2).
+**The ATR in both thresholds is D1 ATR(14)** (ADR-006).
 
 **Timeframe:** Gate 1 macro trend is evaluated on **Daily (D1)** — owner-resolved
 in **ADR-003** (`spec.trend_timeframe = "D1"`), faithful to §3.2 "Macro Context:
 Daily." §4.1 computes the EMAs on H1 for the indicator engine; those H1 EMAs are
-consumed by Gate 4 (EMA-Interaction), not Gate 1. The D1-vs-H1 wording was a spec
-ambiguity, now closed.
+consumed by Gate 4 (EMA-Interaction), not Gate 1. **ADR-006** extends this: Gate 1's
+ATR-relative thresholds (slope §4.1.2, compression §5.2) use **D1 ATR(14)** — same
+timeframe as the series they scale — while H1 ATR is retained for execution-scale
+uses (Gate 6 ATR-state, §7.3 sweep factor, §9.1 stop buffer, §9.4 R:R ATR×3). The
+D1-vs-H1 wording was a spec ambiguity, now closed.
 
 Bull mirror: BULLISH.
 

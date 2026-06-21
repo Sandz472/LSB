@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Implementation Plan — A4 · C2 Signal Engine, Gates 1–4</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --border:#30363d; --text:#e6edf3;
+    --muted:#9da7b3; --accent:#2563eb; --accent2:#3fb950; --warn:#f0883e;
+    --danger:#f85149; --code:#0b0f14; --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 24px 96px}
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:36px}
+  h1{font-size:30px;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:15px}
+  h2{font-size:21px;margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+  h2 .tag{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:2px 9px}
+  section{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+    padding:18px 22px;margin-bottom:18px}
+  p{margin:8px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#1c2330;color:var(--text);font-weight:600}
+  .choice{color:var(--accent2);font-weight:600}
+  pre{background:var(--code);border:1px solid var(--border);border-radius:8px;
+    padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.5}
+  code{font-family:var(--mono);font-size:.92em}
+  .del{color:var(--danger)} .add{color:var(--accent2)}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:6px 0}
+  ol.steps li{counter-increment:s;position:relative;padding:10px 0 10px 42px;border-bottom:1px solid var(--border)}
+  ol.steps li:last-child{border-bottom:0}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;
+    background:var(--accent);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700}
+  ol.steps .files{display:block;color:var(--muted);font-size:13px;font-family:var(--mono);margin-top:3px}
+  .mock{border:1px dashed var(--border);border-radius:8px;padding:20px;background:#0b0f14;margin:12px 0}
+  .fail th:first-child{width:44%}
+  .warn{color:var(--warn)} .q{color:var(--warn);font-weight:600}
+  ul.q-list li{margin:6px 0}
+  .pill{font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;border:1px solid var(--border)}
+  .spec{color:var(--muted);font-family:var(--mono);font-size:12px}
+  footer{color:var(--muted);font-size:13px;margin-top:40px;border-top:1px solid var(--border);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>A4 — C2 Signal Engine · Gates 1–4</h1>
+    <div class="sub">Implementation plan · 2026-06-21 · LSB Phase A · issue #9 · branch <code>feat/9-a4-c2-gates-1-4</code></div>
+  </header>
+
+  <h2><span class="tag">1</span> Overview</h2>
+  <section>
+    <p>Build the first four of the eight <span class="spec">§8.1</span> gates that make up the C2 signal
+       engine, implemented <strong>verbatim per <code>GATE_SPECIFICATION.md</code></strong> (CLAUDE.md rule 1).
+       Each gate is a pure, deterministic function over already-loaded OHLCV candles (Decimal, no wall-clock /
+       randomness / dict-order — rule 4), evaluating the <strong>bearish short</strong> setup and its exact
+       <strong>bullish mirror</strong>.</p>
+    <p>Scope is gates <strong>1 Trend</strong>, <strong>2 Structure (incl. the Invalidation rule)</strong>,
+       <strong>3 Liquidity Sweep (vs the block HIGH)</strong>, <strong>4 EMA-Interaction</strong>. Gates 5–8 and
+       the full conjunction are <strong>A5</strong> — out of scope here. No DB writes, no backtest loop, no
+       broker — gates are <strong>pure functions</strong>; the <code>signal</code>-row persistence boundary is A5
+       (Decision 3). Acceptance: every gate's pass-path is reachable on a hand-labelled fixture with ≥2 near-miss
+       rejects, <strong>no silent dead gate</strong>, A4 establishes the <strong>golden gate-fixtures</strong>
+       (the full-pipeline determinism replay is A8), and <code>pytest -q</code> is green (rules 5–6).</p>
+  </section>
+
+  <h2><span class="tag">2</span> Approach &amp; decisions</h2>
+  <section>
+    <table>
+      <thead><tr><th>Decision</th><th>Options</th><th>Trade-off</th><th>Choice</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Where the universal gate thresholds live</td>
+          <td>(A) hard-code in gate code · (B) extend per-instrument <code>InstrumentConfig</code> · (C) new spec-level <code>StrategyParams</code> read from <code>spec.yaml</code></td>
+          <td>Spec-universal numbers (rising-low 0.20%, compression 60%, apex 75–95%, duration 8–60, invalidation 0.30%, ATR mults 0.10/0.05, EMA-touch 0.03%, sweep-expiry 3) are the <em>same for all 4 instruments</em>; unit-bearing ones (sweep_penetration, block_min_width) are already per-instrument.</td>
+          <td class="choice">(C) — add a frozen <code>StrategyParams</code> dataclass + <code>strategy.yaml</code>, folded into the same sha256 <code>config_hash</code>. Hard-coding violates rule 1 ("never silent code") and rule 4. Per-instrument is the wrong home for universal constants.</td>
+        </tr>
+        <tr>
+          <td>Module layout for the engine</td>
+          <td>(A) one <code>gates.py</code> with 4 functions · (B) package <code>signal/</code> with one module per gate + shared <code>indicators.py</code></td>
+          <td>Risk code gets adversarial tests (rule 5); "no silent dead gate" needs each gate independently traceable and fixture-testable.</td>
+          <td class="choice">(B) <code>src/lsb/signal/</code> — <code>indicators.py</code>, <code>gate1_trend.py</code> … <code>gate4_ema.py</code>, <code>types.py</code> (<code>GateResult</code>). One file per gate = isolated tests + clean graphify nodes.</td>
+        </tr>
+        <tr>
+          <td>Indicator numeric type</td>
+          <td>float (fast) · Decimal (exact)</td>
+          <td>EMA/ATR feed a decision path; float repr differs across platforms → non-byte-identical decisions.</td>
+          <td class="choice">Decimal end-to-end, mirroring <code>config/models.py</code>. Determinism is law (rule 4).</td>
+        </tr>
+        <tr>
+          <td>EMA seeding (warm-up)</td>
+          <td>seed = first close · seed = SMA of first N · skip until N bars</td>
+          <td>Seed choice changes early EMA values → must be deterministic and documented, not incidental.</td>
+          <td class="choice">SMA-of-first-N seed; emit EMA only from bar N onward (earlier bars → <code>None</code>, gate returns FALSE not a crash). Pinned in an ADR-worthy docstring.</td>
+        </tr>
+        <tr>
+          <td>Bull mirror</td>
+          <td>duplicate bull/bear functions · single function parameterized by <code>side</code></td>
+          <td>Two copies drift; the spec says bull = "exact mirror" (§8.1 footnote).</td>
+          <td class="choice">One function per gate taking <code>side: Side</code> (BEAR/BULL); geometry keyed off <code>spec.rejection_geometry</code> / comparison-direction flips. One code path, mirrored inputs.</td>
+        </tr>
+        <tr>
+          <td>Gate output contract</td>
+          <td>return bool · return rich <code>GateResult</code></td>
+          <td>A5 conjunction + A10 verdict need the <em>reason</em> a gate failed and intermediate values (block high, sweep candle, INVALIDATED state).</td>
+          <td class="choice"><code>GateResult(passed: bool, state: str|None, detail: dict)</code> frozen dataclass. Gate 2 can return <code>state="INVALIDATED"</code> → feeds the signal-row <code>verdict</code> later.</td>
+        </tr>
+        <tr>
+          <td>Swing-high/low detection</td>
+          <td>fractal window N (config) · zig-zag % · scipy peaks</td>
+          <td>Blocks (§7.1.1) and triangle pivots (§6.1.1) both need swings; method must be deterministic and pure-Python (no scipy in the decision path).</td>
+          <td class="choice">Fractal pivot, half-width <code>InstrumentConfig.swing_lookback = 2</code> (5-bar fractal, ADR-005); pure Decimal comparisons. Per-instrument + hashed; swept over N∈{1,2,3} at A9/A10.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2><span class="tag">3</span> Key code changes</h2>
+  <section>
+    <p><code>src/lsb/signal/types.py</code> — shared result + side enum</p>
+<pre><span class="add">+ from __future__ import annotations</span>
+<span class="add">+ from dataclasses import dataclass, field</span>
+<span class="add">+ from enum import Enum</span>
+<span class="add">+</span>
+<span class="add">+ class Side(Enum):</span>
+<span class="add">+     BEAR = "BEAR"   # short setup (spec primary)</span>
+<span class="add">+     BULL = "BULL"   # exact mirror (§8.1 footnote)</span>
+<span class="add">+</span>
+<span class="add">+ @dataclass(frozen=True, slots=True)</span>
+<span class="add">+ class GateResult:</span>
+<span class="add">+     passed: bool</span>
+<span class="add">+     state: str | None = None        # e.g. "INVALIDATED" (Gate 2, §6.1.1)</span>
+<span class="add">+     detail: dict = field(default_factory=dict)  # block_high, sweep_ts, ema_vals…</span></pre>
+
+    <p style="margin-top:18px"><code>src/lsb/config/models.py</code> — new spec-level strategy params (decision C)</p>
+<pre><span class="add">+ @dataclass(frozen=True, slots=True)</span>
+<span class="add">+ class StrategyParams:</span>
+<span class="add">+     # Gate 1 (§5.1/§4.1.2) — multiples of ATR on the trend timeframe</span>
+<span class="add">+     ema_compression_atr_mult: Decimal   # 0.10  |EMA21-EMA89| &lt; ATR*0.10 -&gt; INVALID</span>
+<span class="add">+     ema_slope_atr_mult: Decimal         # 0.05  slope over 3 candles</span>
+<span class="add">+     ema_cross_lookback: int             # 3     recent-cross blocker</span>
+<span class="add">+     # Gate 2 (§6.1.1) ascending/descending triangle</span>
+<span class="add">+     rising_low_min_pct: Decimal         # 0.20  each higher low above prior</span>
+<span class="add">+     triangle_min_candles: int           # 8</span>
+<span class="add">+     triangle_max_candles: int           # 60</span>
+<span class="add">+     compression_max_ratio: Decimal      # 0.60  last range / first range</span>
+<span class="add">+     apex_proximity_lo: Decimal          # 0.75</span>
+<span class="add">+     apex_proximity_hi: Decimal          # 0.95</span>
+<span class="add">+     invalidation_break_pct: Decimal     # 0.30  close beyond level -&gt; INVALIDATED</span>
+<span class="add">+     # Gate 3 (§7.2) sweep timing  /  Gate 4 (§8.1#4) EMA touch</span>
+<span class="add">+     sweep_expiry_candles: int           # 3     last-3-H1 window</span>
+<span class="add">+     ema_touch_pips: Decimal             # 3     | ema_touch_pct: 0.03 (per unit)</span></pre>
+    <p class="spec">Swing-window half-width is <strong>per-instrument</strong> (liquidity-dependent), so it lives in
+       <code>InstrumentConfig.swing_lookback</code> (= 2, <strong>ADR-005</strong>) — not in the universal
+       <code>StrategyParams</code>. Added to all four YAMLs <em>and</em> the dataclass, since
+       <code>config_hash</code> is computed over <code>asdict(cfg)</code> — a YAML-only key would never enter the hash.</p>
+
+    <p style="margin-top:18px"><code>src/lsb/signal/gate1_trend.py</code> — D1 trend, all thresholds read from config (never typed)</p>
+<pre>def evaluate(
+    candles_tf: Sequence[dict],      # candles on spec.trend_timeframe (D1, ADR-003)
+    sp: StrategyParams,
+    side: Side,
+) -> GateResult:
+    ema21, ema50, ema89 = ema(closes, 21), ema(closes, 50), ema(closes, 89)
+    atr_v = atr(candles_tf, 14)       <span class="add"># D1 ATR(14) — same TF as the EMAs it scales (ADR-006)</span>
+    <span class="add"># INVALID blockers first (§5.2): compression OR recent EMA21/50 cross</span>
+    if abs(ema21 - ema89) &lt; atr_v * sp.ema_compression_atr_mult:
+        return GateResult(False, state="INVALID", detail={"reason": "compression"})
+    if crossed_within(ema21, ema50, sp.ema_cross_lookback):
+        return GateResult(False, state="INVALID", detail={"reason": "recent_cross"})
+    <span class="add"># Stack + slope, mirrored by side (BEAR shown; BULL flips &lt; to &gt;)</span>
+    stack = ema21 &lt; ema50 &lt; ema89 if side is Side.BEAR else ema21 &gt; ema50 &gt; ema89
+    slope_ok = slope_neg(ema21, sp) and slope_neg(ema50, sp)  # mirrored for BULL
+    return GateResult(stack and slope_ok)</pre>
+    <p class="spec">Gate 1 consumes <code>spec.trend_timeframe</code> candles (= "D1", ADR-003); Gate 4 consumes the §4.1
+       <strong>H1</strong> EMAs. The two timeframes are read from config, never hard-coded.</p>
+  </section>
+
+  <h2><span class="tag">4</span> Gate evaluation data-flow</h2>
+  <section>
+    <p>What each gate reads and emits on a single evaluated <strong>H1</strong> bar. Timeframe per gate is the
+       crux the ADRs settled — shown in the left column.</p>
+    <div class="mock">
+<pre style="border:0;background:transparent;padding:0;margin:0">  candle table (config_hash, instrument, timeframe ∈ {H1,H4,D1})
+        │
+        ├─ <span class="pill" style="color:#3fb950;border-color:#3fb950">D1</span> ─▶ Gate 1  Trend State    EMA21&lt;50&lt;89 + slopes, INVALID blockers   ──┐
+        │                         §8.1#1 · §3.2 · ADR-003                        │
+        ├─ <span class="pill" style="color:#f0883e;border-color:#f0883e">H4</span> ─▶ Gate 2  Structure      ascending triangle + Invalidation rule   │  AND
+        │                         §8.1#2 · §6.1.1   ──▶ state can be INVALIDATED │ (A5 joins
+        ├─ <span class="pill" style="color:#2563eb;border-color:#2563eb">H1</span> ─▶ Gate 3  Liquidity Sweep block(§7.1.1) + sweep vs block HIGH    │  5–8 +
+        │                         §8.1#3 · §7.2     last 3 H1, false-sweep filter│  conj.)
+        └─ <span class="pill" style="color:#2563eb;border-color:#2563eb">H1</span> ─▶ Gate 4  EMA-Interaction sweep/confirm HIGH within 3pip/0.03%   ──┘
+                                  §8.1#4            of H1 EMA21/EMA50  (HARD gate)
+
+  each ▶ returns GateResult(passed, state, detail) — pure, Decimal, deterministic</pre>
+    </div>
+    <p class="spec">Gate 2 is the only gate that can emit <code>state="INVALIDATED"</code> (close &gt;0.30% beyond the level
+       without returning) — which lands in the signal-row <code>verdict</code> column once A5 wires the conjunction.</p>
+  </section>
+
+  <h2><span class="tag">5</span> Step plan</h2>
+  <section>
+    <ol class="steps">
+      <li>Query graph for gate nodes. Add <code>StrategyParams</code> + <code>config/strategy.yaml</code> (universal numbers) <em>and</em> <code>InstrumentConfig.swing_lookback=2</code> (ADR-005) to the dataclass + loader + all four instrument YAMLs; all fold into <code>config_hash</code> (asdict-based). Round-trip + new-hash tests; record the four updated hashes.
+        <span class="files">src/lsb/config/{models,loader,hashing}.py · config/strategy.yaml · config/{EURUSD,GBPUSD,XAUUSD,BTCUSD}.yaml · tests/test_config.py</span></li>
+      <li><code>indicators.py</code>: Decimal <code>ema</code> (SMA-seed), <code>atr</code>, fractal <code>swing_highs/lows</code>, <code>slope</code>. Unit-test each against hand-computed reference values.
+        <span class="files">src/lsb/signal/indicators.py · tests/test_indicators.py</span></li>
+      <li><code>types.py</code>: <code>Side</code>, <code>GateResult</code>.
+        <span class="files">src/lsb/signal/types.py</span></li>
+      <li>Gate 1 Trend (D1, ADR-003): stack + slopes + INVALID blockers, side-mirrored. Fixture: 1 pass + ≥2 near-miss (compression, recent-cross).
+        <span class="files">src/lsb/signal/gate1_trend.py · tests/test_gate1_trend.py · tests/fixtures/gates/</span></li>
+      <li>Gate 2 Structure (H4): triangle params + <strong>Invalidation rule</strong> → <code>state="INVALIDATED"</code> reachable. Fixture: pass + ≥2 rejects + 1 invalidation.
+        <span class="files">src/lsb/signal/gate2_structure.py · tests/test_gate2_structure.py</span></li>
+      <li>Gate 3 Sweep (H1): block §7.1.1 (lowest swing-high close → highest swing-high wick, ≥2 touches, min width), sweep vs <strong>block HIGH</strong>, last-3 window, false-sweep filter. Fixture: pass + ≥2 rejects (no penetration, closes beyond block).
+        <span class="files">src/lsb/signal/gate3_sweep.py · tests/test_gate3_sweep.py</span></li>
+      <li>Gate 4 EMA-Interaction (H1, HARD gate): sweep/confirmation HIGH within 3pip/0.03% of EMA21/50. Fixture: pass + ≥2 rejects.
+        <span class="files">src/lsb/signal/gate4_ema.py · tests/test_gate4_ema.py</span></li>
+      <li>Public re-exports; assert no gate is unreachable (each pass-path proven green = "no silent dead gate").
+        <span class="files">src/lsb/signal/__init__.py</span></li>
+      <li><code>pytest -q</code> + golden-fixture replay green; <code>graphify update .</code>; commit incl. <code>graphify-out/</code>; PR → #9.
+        <span class="files">graphify-out/ · (CI)</span></li>
+    </ol>
+  </section>
+
+  <h2><span class="tag">6</span> Failure modes</h2>
+  <section>
+    <table class="fail">
+      <thead><tr><th>What could go wrong</th><th>How the plan handles it</th></tr></thead>
+      <tbody>
+        <tr><td class="warn">A threshold gets hard-coded in gate code (silent strategy drift — rule 1)</td>
+            <td>All numbers live in <code>StrategyParams</code>/<code>InstrumentConfig</code>; a grep-for-numeric-literals test in <code>tests/test_no_magic_numbers.py</code> guards the decision path.</td></tr>
+        <tr><td class="warn">A gate's pass-path is unreachable — a "silent dead gate"</td>
+            <td>Acceptance requires a green pass fixture <em>and</em> ≥2 near-miss rejects per gate; CI fails if any gate has no passing fixture.</td></tr>
+        <tr><td class="warn">float creeps into EMA/ATR → non-byte-identical decisions across machines (rule 4)</td>
+            <td>Decimal end-to-end; a property test feeds the same candles twice and asserts identical <code>GateResult.detail</code>.</td></tr>
+        <tr><td class="warn">pip-vs-pct unit confusion (FX uses pips, crypto uses %)</td>
+            <td>Unit travels with the value (<code>*_unit</code> fields already in <code>InstrumentConfig</code>); a single <code>to_price_delta(value, unit, price, pip_size)</code> helper, tested on FX + BTC.</td></tr>
+        <tr><td class="warn">Sweep accidentally targets a mean level, not the block HIGH (the ADR-006 prior-build drift)</td>
+            <td>Gate 3 computes <code>block_high = max swing-high wick</code> explicitly; a regression test asserts the comparator is the block high, with the §R divergence cited in the test docstring.</td></tr>
+        <tr><td class="warn">D1 EMA89 needs ~89+ days of warm-up; early bars have no trend</td>
+            <td>EMA returns <code>None</code> before the seed window; Gate 1 returns <code>passed=False</code> (not an exception). Fixtures include a warm-up-deficient case.</td></tr>
+        <tr><td class="warn">Bull mirror silently diverges from bear</td>
+            <td>One parameterized function per gate; a mirrored-fixture test feeds a vertically-flipped bear fixture as BULL and asserts symmetric results.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2><span class="tag">7</span> Resolved decisions <span style="font-size:12px;color:var(--muted)">(owner, 2026-06-21)</span></h2>
+  <section>
+    <ul class="q-list">
+      <li><span style="color:var(--accent2);font-weight:700">✓</span> <strong>Swing-window N = 2</strong> (5-bar fractal: a pivot needs 2 strictly-bracketing bars each side). Per-instrument <code>swing_lookback</code>, hashed. Swept over N∈{1,2,3} at A9/A10 — a verdict that flips on N fails the §17.1 sensitivity check. <span class="spec">→ ADR-005</span></li>
+      <li><span style="color:var(--accent2);font-weight:700">✓</span> <strong>Gate 1 uses D1 ATR(14)</strong> for the slope (§4.1.2) and compression (§5.2) thresholds — same timeframe as the D1 EMAs it scales. H1 ATR is retained for all execution-scale uses (Gate 6 state, §7.3 sweep factor, §9.1 stop buffer, §9.4 R:R ATR×3) — do not switch those. <span class="spec">→ ADR-006 (extends ADR-003)</span></li>
+      <li><span style="color:var(--accent2);font-weight:700">✓</span> <strong>A4 gates are pure functions; no DB.</strong> A single persistence boundary at the <strong>A5 conjunction</strong> writes a <code>signal</code> row for 100% of evaluated candles (QUALIFIED/REJECTED/INVALIDATED) with per-gate reasons. No partial rows at A4. <span class="spec">→ BUILD_PLAYBOOK §5 (A4/A5 accept-when updated)</span></li>
+      <li><span style="color:var(--accent2);font-weight:700">✓</span> <strong>A4 establishes the golden gate-fixtures</strong> (hand-labelled candles → expected per-gate verdicts = correctness; frozen once owner-verified). The full-pipeline determinism replay is <strong>A8 / GA-1</strong>. No A0–A3 decision-golden exists (no gate logic before A4). <span class="spec">→ BUILD_PLAYBOOK §5 (A8 row clarified)</span></li>
+    </ul>
+  </section>
+
+  <footer>Generated by the <code>plan-html</code> skill. Spec authority: <code>GATE_SPECIFICATION.md</code> §8.1 · ADR-003 (D1 trend) · ADR-006 (D1 ATR for Gate 1) · ADR-005 (swing-window N=2) · ADR-004 (rejection geometry, A5). Open questions resolved by owner 2026-06-21.</footer>
+</div>
+</body>
+</html>
