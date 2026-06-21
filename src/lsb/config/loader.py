@@ -10,7 +10,7 @@ from pathlib import Path
 
 import yaml
 
-from .models import InstrumentConfig, SpecConfig
+from .models import InstrumentConfig, SpecConfig, StrategyParams
 
 _VALID_CLASSES = {"fx_major", "commodity", "crypto"}
 _VALID_SESSIONS = {"fx", "24_7"}
@@ -53,7 +53,8 @@ def load_instrument(path: str | Path) -> InstrumentConfig:
     if sessions not in _VALID_SESSIONS:
         raise ValueError(f"sessions must be one of {_VALID_SESSIONS}")
 
-    for unit_field in ("max_spread_unit", "sweep_pen_unit", "block_width_unit", "stop_buffer_unit"):
+    for unit_field in ("max_spread_unit", "sweep_pen_unit", "block_width_unit",
+                       "stop_buffer_unit", "ema_touch_unit"):
         val = str(_require(raw, unit_field))
         if val not in _VALID_UNITS:
             raise ValueError(f"{unit_field} must be one of {_VALID_UNITS}")
@@ -61,6 +62,10 @@ def load_instrument(path: str | Path) -> InstrumentConfig:
     data_source = str(_require(raw, "data_source"))
     if data_source not in _VALID_SOURCES:
         raise ValueError(f"data_source must be one of {_VALID_SOURCES}")
+
+    swing_lookback = int(_require(raw, "swing_lookback"))
+    if swing_lookback < 1:
+        raise ValueError(f"swing_lookback must be >= 1, got {swing_lookback}")
 
     return InstrumentConfig(
         instrument=instrument,
@@ -78,6 +83,9 @@ def load_instrument(path: str | Path) -> InstrumentConfig:
         stop_buffer_elev=_d(_require(raw, "stop_buffer_elev"), "stop_buffer_elev"),
         stop_buffer_unit=str(raw["stop_buffer_unit"]),
         data_source=data_source,
+        swing_lookback=swing_lookback,
+        ema_touch=_d(_require(raw, "ema_touch"), "ema_touch"),
+        ema_touch_unit=str(raw["ema_touch_unit"]),
     )
 
 
@@ -86,8 +94,6 @@ def load_spec(path: str | Path) -> SpecConfig:
     path = Path(path)
     raw: dict = yaml.safe_load(path.read_text(encoding="utf-8"))
 
-    # Owner-decision slots: None means "unset" (allowed); a present value must be
-    # a recognised choice so a typo cannot silently change a decision-path enum.
     trend_timeframe = raw.get("trend_timeframe")              # ADR-003
     if trend_timeframe is not None and trend_timeframe not in _VALID_TREND_TF:
         raise ValueError(f"trend_timeframe must be one of {_VALID_TREND_TF}")
@@ -102,7 +108,45 @@ def load_spec(path: str | Path) -> SpecConfig:
         min_sharpe=_d(_require(raw, "min_sharpe"), "min_sharpe"),
         min_coverage_years=int(_require(raw, "min_coverage_years")),
         min_coverage_instruments=int(_require(raw, "min_coverage_instruments")),
-        min_trade_count=raw.get("min_trade_count"),           # None until owner pins (before A11)
-        rejection_geometry=rejection_geometry,                # ADR-004: "section_8_1_mirror"
-        trend_timeframe=trend_timeframe,                      # ADR-003: "D1"
+        min_trade_count=raw.get("min_trade_count"),
+        rejection_geometry=rejection_geometry,
+        trend_timeframe=trend_timeframe,
+    )
+
+
+def load_strategy(path: str | Path) -> StrategyParams:
+    """Load and validate the universal strategy-parameter YAML file."""
+    path = Path(path)
+    raw: dict = yaml.safe_load(path.read_text(encoding="utf-8"))
+
+    triangle_min = int(_require(raw, "triangle_min_candles"))
+    triangle_max = int(_require(raw, "triangle_max_candles"))
+    if triangle_min >= triangle_max:
+        raise ValueError(
+            f"triangle_min_candles ({triangle_min}) must be < triangle_max_candles ({triangle_max})"
+        )
+
+    slope_lookback = int(_require(raw, "slope_lookback"))
+    if slope_lookback < 1:
+        raise ValueError(f"slope_lookback must be >= 1, got {slope_lookback}")
+
+    return StrategyParams(
+        ema_fast=int(_require(raw, "ema_fast")),
+        ema_mid=int(_require(raw, "ema_mid")),
+        ema_slow=int(_require(raw, "ema_slow")),
+        atr_period=int(_require(raw, "atr_period")),
+        ema_compression_atr_mult=_d(_require(raw, "ema_compression_atr_mult"), "ema_compression_atr_mult"),
+        ema_slope_atr_mult=_d(_require(raw, "ema_slope_atr_mult"), "ema_slope_atr_mult"),
+        slope_lookback=slope_lookback,
+        ema_cross_lookback=int(_require(raw, "ema_cross_lookback")),
+        resistance_min_touches=int(_require(raw, "resistance_min_touches")),
+        rising_low_min_pct=_d(_require(raw, "rising_low_min_pct"), "rising_low_min_pct"),
+        triangle_min_candles=triangle_min,
+        triangle_max_candles=triangle_max,
+        compression_max_ratio=_d(_require(raw, "compression_max_ratio"), "compression_max_ratio"),
+        apex_proximity_lo=_d(_require(raw, "apex_proximity_lo"), "apex_proximity_lo"),
+        apex_proximity_hi=_d(_require(raw, "apex_proximity_hi"), "apex_proximity_hi"),
+        invalidation_break_pct=_d(_require(raw, "invalidation_break_pct"), "invalidation_break_pct"),
+        block_min_touches=int(_require(raw, "block_min_touches")),
+        sweep_expiry_candles=int(_require(raw, "sweep_expiry_candles")),
     )

@@ -26,6 +26,9 @@ class InstrumentConfig:
     stop_buffer_elev: Decimal      # elevated ATR state
     stop_buffer_unit: str          # "pips" | "pct"
     data_source: str               # "dukascopy" | "binance"
+    swing_lookback: int            # ADR-005: fractal pivot half-width (2 = classic 5-bar fractal)
+    ema_touch: Decimal             # Gate 4 EMA-interaction tolerance §8.1#4
+    ema_touch_unit: str            # "pips" | "pct"
 
 
 @dataclass(frozen=True, slots=True)
@@ -41,3 +44,34 @@ class SpecConfig:
     min_trade_count: int | None       # §17.1 gap; pin before A11 — STILL OPEN
     rejection_geometry: str | None    # ADR-004: "section_8_1_mirror" (bull = lower-wick)
     trend_timeframe: str | None       # ADR-003: "D1" (Gate 1 macro trend on Daily)
+
+
+@dataclass(frozen=True, slots=True)
+class StrategyParams:
+    """Universal strategy constants from §5.1 / §6.1.1 / §7.2 / §8.1.
+
+    All thresholds live here — never hard-coded in gate functions (CLAUDE.md rule 1).
+    Folded into config_hash alongside InstrumentConfig.
+    """
+    # EMA periods (§5.1)
+    ema_fast: int                       # 21
+    ema_mid: int                        # 50
+    ema_slow: int                       # 89
+    atr_period: int                     # 14 — D1 for Gate 1 (ADR-006); H1 for exec-scale gates
+    # Gate 1 — macro-trend, D1 ATR-relative (§4.1.2, §5.2, ADR-006)
+    ema_compression_atr_mult: Decimal   # 0.10  |EMA21−EMA89| < ATR×0.10 → INVALID
+    ema_slope_atr_mult: Decimal         # 0.05  per-bar slope threshold
+    slope_lookback: int                 # 3     bars over which slope is measured (§4.1.2)
+    ema_cross_lookback: int             # 3     recent-cross blocker window
+    # Gate 2 — structure / ascending triangle (§6.1.1)
+    resistance_min_touches: int         # 2     ≥2 swing highs within ±flat_tolerance
+    rising_low_min_pct: Decimal         # 0.20  each higher low ≥0.20% above prior
+    triangle_min_candles: int           # 8     duration floor (H4 bars)
+    triangle_max_candles: int           # 60    duration cap
+    compression_max_ratio: Decimal      # 0.60  last range / first range
+    apex_proximity_lo: Decimal          # 0.75
+    apex_proximity_hi: Decimal          # 0.95
+    invalidation_break_pct: Decimal     # 0.30  close beyond level → INVALIDATED
+    # Gate 3 — liquidity sweep (§7.1.1, §7.2)
+    block_min_touches: int              # 2     ≥2 touches to form the block
+    sweep_expiry_candles: int           # 3     sweep must be within last N H1 candles

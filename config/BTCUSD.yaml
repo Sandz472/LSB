@@ -17,3 +17,7 @@ stop_buffer: "0.02"
 stop_buffer_elev: "0.04"
 stop_buffer_unit: pct
 data_source: binance
+
+swing_lookback: 2        # ADR-005: fractal pivot half-width (5-bar fractal)
+ema_touch: "0.03"        # Gate 4 §8.1#4: EMA-interaction tolerance (pct for crypto)
+ema_touch_unit: pct
