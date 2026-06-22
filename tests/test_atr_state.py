@@ -118,3 +118,38 @@ def test_classify_determinism():
     c = _series(["0.0010"] * 30 + ["0.0030"] * 30)
     sp = _sp()
     assert atr_state.classify(c, sp) == atr_state.classify(c, sp)
+
+
+# ---------------------------------------------------------------------------
+# Golden boundary fixture — the EXTREME edge (ratio == 2.0) is CI-guarded
+#
+# With flat closes and a constant range C, Wilder ATR(14) == C across the whole
+# 20-bar baseline window, so baseline == C exactly.  A single final bar with
+# TR == 15C lifts current ATR to (13C + 15C)/14 == 2C  → ratio EXACTLY 2.0
+# (EXTREME, upper boundary inclusive).  TR == 14.3C gives (13C + 14.3C)/14 ==
+# 1.95C → ratio EXACTLY 1.95 (ELEVATED, one notch shy of EXTREME).  Both ratios
+# are exact in Decimal, so the 2.0 boundary is frozen against accidental drift
+# (the convention here is exclude-current — see ADR-011).  C = 0.0010.
+# ---------------------------------------------------------------------------
+
+def _ratio(c, sp):
+    """Realised current-ATR / prior-20-mean ratio (current bar excluded)."""
+    series = atr(c, sp.atr_period)
+    baseline = sum(series[-1 - sp.atr_baseline_window:-1], D("0")) / D(str(sp.atr_baseline_window))
+    return series[-1] / baseline
+
+
+def test_classify_extreme_boundary_exactly_2x_is_extreme():
+    """A bar at EXACTLY 2.0× the prior-20 mean lands on EXTREME."""
+    sp = _sp()
+    c = _series(["0.0010"] * 60 + ["0.0150"])     # TR_last = 15C → current ATR = 2C
+    assert _ratio(c, sp) == D("2.0")              # exact, no rounding slack
+    assert atr_state.classify(c, sp) is AtrState.EXTREME
+
+
+def test_classify_just_below_extreme_is_not_extreme():
+    """A bar at EXACTLY 1.95× the prior-20 mean stays ELEVATED — does NOT trip EXTREME."""
+    sp = _sp()
+    c = _series(["0.0010"] * 60 + ["0.0143"])     # TR_last = 14.3C → current ATR = 1.95C
+    assert _ratio(c, sp) == D("1.95")             # exact
+    assert atr_state.classify(c, sp) is AtrState.ELEVATED

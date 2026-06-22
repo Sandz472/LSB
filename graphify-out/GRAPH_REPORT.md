@@ -1,65 +1,59 @@
-# Graph Report - LSB  (2026-06-21)
+# Graph Report - .  (2026-06-22)
 
 ## Corpus Check
-- 67 files · ~40,712 words
-- Verdict: corpus is large enough that graph structure adds value.
+- cluster-only mode — file stats not available
 
 ## Summary
-- 774 nodes · 1830 edges · 42 communities (36 shown, 6 thin omitted)
-- Extraction: 66% EXTRACTED · 29% INFERRED · 0% AMBIGUOUS · INFERRED: 526 edges (avg confidence: 0.63)
+- 782 nodes · 1848 edges · 37 communities (31 shown, 6 thin omitted)
+- Extraction: 66% EXTRACTED · 29% INFERRED · 0% AMBIGUOUS · INFERRED: 530 edges (avg confidence: 0.63)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `87acd997`
+- Built from commit: `f54e5854`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Config Hashing & Tests|Config Hashing & Tests]]
-- [[_COMMUNITY_§8.1 Gate Logic|§8.1 Gate Logic]]
-- [[_COMMUNITY_Phase-A Data & Modules|Phase-A Data & Modules]]
-- [[_COMMUNITY_Config Loader & Models|Config Loader & Models]]
-- [[_COMMUNITY_Verdict & Phase Gating|Verdict & Phase Gating]]
-- [[_COMMUNITY_Project Docs & ADRs|Project Docs & ADRs]]
-- [[_COMMUNITY_Governing Specs & Rules|Governing Specs & Rules]]
-- [[_COMMUNITY_A1 Schema Design|A1 Schema Design]]
-- [[_COMMUNITY_Smoke Test|Smoke Test]]
-- [[_COMMUNITY_Package Init|Package Init]]
+- [[_COMMUNITY_Configuration Subsystem|Configuration Subsystem]]
+- [[_COMMUNITY_Project Architecture and Specs|Project Architecture and Specs]]
+- [[_COMMUNITY_CLI and Data Fetching|CLI and Data Fetching]]
+- [[_COMMUNITY_Strategy Constants and Gates|Strategy Constants and Gates]]
+- [[_COMMUNITY_Gap Detection and Audit|Gap Detection and Audit]]
+- [[_COMMUNITY_Asset Configuration ADRs|Asset Configuration ADRs]]
+- [[_COMMUNITY_Liquidity Sweep Logic|Liquidity Sweep Logic]]
+- [[_COMMUNITY_Schema Design ADRs|Schema Design ADRs]]
+- [[_COMMUNITY_Smoke Tests|Smoke Tests]]
+- [[_COMMUNITY_Package Metadata|Package Metadata]]
 - [[_COMMUNITY_CI Workflow|CI Workflow]]
-- [[_COMMUNITY_LSB Package Root|LSB Package Root]]
-- [[_COMMUNITY_Community 12|Community 12]]
-- [[_COMMUNITY_Community 13|Community 13]]
-- [[_COMMUNITY_Community 14|Community 14]]
-- [[_COMMUNITY_Community 15|Community 15]]
-- [[_COMMUNITY_Community 16|Community 16]]
-- [[_COMMUNITY_Community 17|Community 17]]
-- [[_COMMUNITY_Community 18|Community 18]]
-- [[_COMMUNITY_Community 19|Community 19]]
-- [[_COMMUNITY_Community 20|Community 20]]
-- [[_COMMUNITY_Community 21|Community 21]]
-- [[_COMMUNITY_Community 22|Community 22]]
-- [[_COMMUNITY_Community 23|Community 23]]
-- [[_COMMUNITY_Community 24|Community 24]]
-- [[_COMMUNITY_Community 25|Community 25]]
-- [[_COMMUNITY_Community 26|Community 26]]
-- [[_COMMUNITY_Community 27|Community 27]]
-- [[_COMMUNITY_Community 28|Community 28]]
-- [[_COMMUNITY_Community 29|Community 29]]
-- [[_COMMUNITY_Community 30|Community 30]]
-- [[_COMMUNITY_Community 31|Community 31]]
-- [[_COMMUNITY_Community 32|Community 32]]
-- [[_COMMUNITY_Community 33|Community 33]]
-- [[_COMMUNITY_Community 34|Community 34]]
-- [[_COMMUNITY_Community 35|Community 35]]
-- [[_COMMUNITY_Community 36|Community 36]]
-- [[_COMMUNITY_Community 37|Community 37]]
-- [[_COMMUNITY_Community 38|Community 38]]
-- [[_COMMUNITY_Community 39|Community 39]]
-- [[_COMMUNITY_Community 40|Community 40]]
-- [[_COMMUNITY_Community 41|Community 41]]
+- [[_COMMUNITY_Project Identity|Project Identity]]
+- [[_COMMUNITY_Timeframe Resampling|Timeframe Resampling]]
+- [[_COMMUNITY_Database Persistence|Database Persistence]]
+- [[_COMMUNITY_Trend Validation Tests|Trend Validation Tests]]
+- [[_COMMUNITY_Signal Conjunction Tests|Signal Conjunction Tests]]
+- [[_COMMUNITY_Risk and Reward Gates|Risk and Reward Gates]]
+- [[_COMMUNITY_Gate Specifications|Gate Specifications]]
+- [[_COMMUNITY_Build Playbook|Build Playbook]]
+- [[_COMMUNITY_ATR Volatility Analysis|ATR Volatility Analysis]]
+- [[_COMMUNITY_Trading Session Tests|Trading Session Tests]]
+- [[_COMMUNITY_Rejection Geometry ADRs|Rejection Geometry ADRs]]
+- [[_COMMUNITY_Swing Window ADRs|Swing Window ADRs]]
+- [[_COMMUNITY_Macro Trend ADRs|Macro Trend ADRs]]
+- [[_COMMUNITY_Phase Status Tracking|Phase Status Tracking]]
+- [[_COMMUNITY_Governing Instructions|Governing Instructions]]
+- [[_COMMUNITY_Signal Persistence|Signal Persistence]]
+- [[_COMMUNITY_Core Strategy Gates|Core Strategy Gates]]
+- [[_COMMUNITY_Sweep Score ADRs|Sweep Score ADRs]]
+- [[_COMMUNITY_Volatility Regime ADRs|Volatility Regime ADRs]]
+- [[_COMMUNITY_Signal Evaluation Engine|Signal Evaluation Engine]]
+- [[_COMMUNITY_Risk Tier Scoring|Risk Tier Scoring]]
+- [[_COMMUNITY_Global Risk Tests|Global Risk Tests]]
+- [[_COMMUNITY_Session Validation|Session Validation]]
+- [[_COMMUNITY_Market Structure Analysis|Market Structure Analysis]]
+- [[_COMMUNITY_Rejection Candle Tests|Rejection Candle Tests]]
+- [[_COMMUNITY_ATR State Classification|ATR State Classification]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `D()` - 78 edges
+1. `D()` - 81 edges
 2. `StrategyParams` - 72 edges
 3. `GateResult` - 70 edges
 4. `Side` - 67 edges
@@ -102,168 +96,148 @@
 - 1-file cycle: `tests/test_load.py -> tests/test_load.py`
 - 1-file cycle: `tests/test_resample.py -> tests/test_resample.py`
 
-## Communities (42 total, 6 thin omitted)
+## Communities (37 total, 6 thin omitted)
 
-### Community 0 - "Config Hashing & Tests"
-Cohesion: 0.08
-Nodes (50): _canonical_value(), config_hash(), Deterministic sha256 config_hash.  Invariant: same field values → same hex diges, Return sha256 of the canonical combined JSON of all *cfgs*.      Each config is, LSB config subsystem — public re-exports., _d(), load_instrument(), load_spec() (+42 more)
+### Community 0 - "Configuration Subsystem"
+Cohesion: 0.09
+Nodes (42): _canonical_value(), config_hash(), Deterministic sha256 config_hash.  Invariant: same field values → same hex diges, Return sha256 of the canonical combined JSON of all *cfgs*.      Each config is, LSB config subsystem — public re-exports., _d(), load_instrument(), load_spec() (+34 more)
 
-### Community 1 - "§8.1 Gate Logic"
+### Community 1 - "Project Architecture and Specs"
 Cohesion: 0.05
 Nodes (63): ADR-001 broker bridge, ADR-002 go/no-go, ATR EXTREME → No-Trade Pre-filter (§4.2.2/§9.3), Block HIGH (sweep target), Master Blueprint v2.1, BUILD_PLAYBOOK.md, CLAUDE.md (governing), .claude/settings.local.json (+55 more)
 
-### Community 2 - "Phase-A Data & Modules"
-Cohesion: 0.19
-Nodes (19): fetch_history(), _month_cache_path(), _months_between(), Fetch H1 OHLCV for *instrument* over [start, end].      Month files are cached t, Return all (year, month) pairs covering start..end inclusive., date, Path, Unit tests for fetch_history — offline, reads from fixture cache. (+11 more)
+### Community 2 - "CLI and Data Fetching"
+Cohesion: 0.08
+Nodes (40): cmd_fetch_audit_load(), _default_path(), main(), CLI entry point: fetch → audit → load for a single instrument.  Usage:     pytho, Resolve *relative* against the repo root (3 levels up from this file)., CachedSeries, _csv_to_rows(), fetch_history() (+32 more)
 
-### Community 3 - "Config Loader & Models"
-Cohesion: 0.13
-Nodes (51): InstrumentConfig, Universal strategy constants from §5.1 / §6.1.1 / §7.2 / §8.1.      All threshol, StrategyParams, evaluate(), _fx_bands(), Gate 6 — Session Active (§8.1#6 · §3.3).  Session VALID per §3.3 (all times UTC), Return Gate 6 result for a single H1 *candle* (uses candle['ts']).      *side* i, evaluate() (+43 more)
+### Community 3 - "Strategy Constants and Gates"
+Cohesion: 0.12
+Nodes (51): InstrumentConfig, Universal strategy constants from §5.1 / §6.1.1 / §7.2 / §8.1.      All threshol, StrategyParams, evaluate(), Return Gate 1 result for the LAST bar in *candles_d1*.      candles_d1 must be s, evaluate(), Return Gate 4 result for the LAST bar of *candles_h1*.      sweep_bar: index of, _anatomy() (+43 more)
 
-### Community 4 - "Verdict & Phase Gating"
-Cohesion: 0.17
-Nodes (19): classify_gap(), _is_dst_gap(), _is_holiday_gap(), _is_weekend_gap(), Gap detection and mandatory disposition for H1 OHLCV series.  Every gap > 2 bars, Classify a gap between *prev_ts* and *next_ts*.      Returns one of: 'weekend',, True if the gap spans at least one Saturday or Sunday (UTC)., True if the gap falls on a known FX holiday (month, day) in UTC. (+11 more)
+### Community 4 - "Gap Detection and Audit"
+Cohesion: 0.07
+Nodes (57): audit_history(), AuditReport, classify_gap(), GapRecord, _is_dst_gap(), _is_holiday_gap(), _is_weekend_gap(), Gap detection and mandatory disposition for H1 OHLCV series.  Every gap > 2 bars (+49 more)
 
-### Community 5 - "Project Docs & ADRs"
+### Community 5 - "Asset Configuration ADRs"
 Cohesion: 0.11
 Nodes (18): ADR-004 — Bull rejection geometry: lower-wick hammer, BTCUSD Configuration, LSB Build Playbook, LSB Governing Instructions, ADR-001 — Broker Bridge: native-Windows MT5, Consequences, Context, Decision (+10 more)
 
-### Community 6 - "Governing Specs & Rules"
-Cohesion: 0.06
-Nodes (61): ema(), EMA with SMA seed.  Returns None for the first period-1 positions.      Seed  =, ATR-state classifier reference tests (§4.2.2 / §15.1 — ADR-011).  Two layers:, Volatile baseline then a calm tail → current ATR < 0.75× baseline → COMPRESSED., Build candles with given high-low ranges, centred on 1.3000 (close flat).      F, Constant range → current ATR == baseline → ratio 1.0 → NORMAL., Calm baseline, volatility spike concentrated in the last few bars → EXTREME., _series() (+53 more)
+### Community 6 - "Liquidity Sweep Logic"
+Cohesion: 0.07
+Nodes (67): ema(), EMA with SMA seed.  Returns None for the first period-1 positions.      Seed  =, _build_bear_sweep_series(), _default_ic(), _default_sp(), _h1(), Golden gate-fixtures for Gate 3 — Liquidity Sweep Detected (§8.1#3).  Pass-path, Pass-path: block established, sweep 20 pips above block HIGH, close below → SWEE (+59 more)
 
-### Community 7 - "A1 Schema Design"
+### Community 7 - "Schema Design ADRs"
 Cohesion: 0.22
 Nodes (10): ADR-002 — Phase-A core schema design, Consequences, Context, Decision, Key design choices, config_hash function, InstrumentConfig Dataclass, SpecConfig Dataclass (+2 more)
 
-### Community 12 - "Community 12"
+### Community 12 - "Timeframe Resampling"
 Cohesion: 0.10
 Nodes (31): _aggregate(), _d1_bucket(), _expected_d1_bars_approx(), _expected_h4_bars(), _h4_bucket(), Pure, deterministic H1-to-H4/D1 resampler.  Input rows are dicts with keys: ts (, Return the H4 bucket open timestamp for *ts* (00:00/04:00/…/20:00 UTC)., Return the D1 bucket open timestamp for *ts* (midnight UTC). (+23 more)
 
-### Community 13 - "Community 13"
+### Community 13 - "Database Persistence"
 Cohesion: 0.12
 Nodes (22): Executor, load_candles(), Candle-table loader.  Writes normalized OHLCV rows into the candle table using a, Minimal protocol for a DB cursor or test fake., Insert *rows* into the candle table via *executor*.      Returns the number of r, fake_executor(), FakeExecutor, Shared pytest fixtures. (+14 more)
 
-### Community 14 - "Community 14"
+### Community 14 - "Trend Validation Tests"
 Cohesion: 0.17
 Nodes (25): _bear_closes(), _bull_closes(), _d1_candles(), _default_ic(), _default_sp(), Golden gate-fixtures for Gate 1 — Trend State Confirmed (§8.1#1).  Each fixture, Near-miss 1: flat closes (EMAs converge) → compression → INVALID., Near-miss 2: long downtrend then a moderate reversal → recent EMA cross → INVALI (+17 more)
 
-### Community 15 - "Community 15"
-Cohesion: 0.18
-Nodes (29): _bar(), build_qualified_h1(), _d1(), _flat_h1(), _h4(), _ic(), A5 conjunction tests — §8.1 verbatim composition → SignalResult.  Covers:   - a, all_gates is exactly the AND of the 8 gate.passed flags (§8.1 verbatim). (+21 more)
+### Community 15 - "Signal Conjunction Tests"
+Cohesion: 0.10
+Nodes (48): _bar(), build_qualified_h1(), _d1(), _flat_h1(), _h4(), _ic(), A5 conjunction tests — §8.1 verbatim composition → SignalResult.  Covers:   - a, all_gates is exactly the AND of the 8 gate.passed flags (§8.1 verbatim). (+40 more)
 
-### Community 16 - "Community 16"
-Cohesion: 0.24
-Nodes (19): _default_ic(), _default_sp(), _find_ema21_at_bar(), _h1_series(), Decimal, Golden gate-fixtures for Gate 4 — EMA Interaction Confirmed (§8.1#4).  Gate 4 is, Near-miss 1: bar high is 20 pips above EMA21/50 → NO_EMA_TOUCH., Near-miss 2: sweep_bar and eval bar both far from EMAs → NO_EMA_TOUCH. (+11 more)
+### Community 16 - "Risk and Reward Gates"
+Cohesion: 0.16
+Nodes (17): evaluate(), Gate 7 — Risk:Reward Minimum (§8.1#7 · §9.1 · §9.4).  Structural stop (§9.1):, Return Gate 7 result for the LAST bar of *candles_h1* (the entry candle).      r, evaluate(), Gate 8 — Global Risk State Clear (§8.1#8 · §9.3 · §12).  M11 = TRADING_ALLOWED:, Return Gate 8 result.      atr_state:        ATR EXTREME forces no-trade (§4.2.2, AtrState, Volatility regime (§4.2.2 / §9.3 / §15.1).      Derived from current H1 ATR(14) (+9 more)
 
-### Community 17 - "Community 17"
+### Community 17 - "Gate Specifications"
 Cohesion: 0.15
 Nodes (12): Gate 1 — Trend State Confirmed  (§8.1#1 · §5.1 · §3.2), Gate 2 — Structure Confirmed  (§8.1#2 · §6.1.1), Gate 3 — Liquidity Sweep Detected  (§8.1#3 · §7.2 · §7.1.1), Gate 4 — EMA Interaction Confirmed  (§8.1#4), Gate 5 — Rejection Candle Confirmed  (§8.1#5 · §4.3), Gate 6 — Session Active  (§8.1#6 · §3.3), Gate 7 — Risk:Reward Minimum  (§8.1#7 · §9.1 · §9.4), Gate 8 — Global Risk State Clear  (§8.1#8 · §9.3 · §12) (+4 more)
 
-### Community 18 - "Community 18"
+### Community 18 - "Build Playbook"
 Cohesion: 0.18
 Nodes (10): 0. Goal, termination, and the two rules, 1. Phase structure (v3.0), 2. Environment (MT5 + Postgres already installed), 3. CLAUDE.md (governing file — create before any code; blueprint 15.2), 4. Doc manifest (all provided — seed into graphify), 5. The recursive build-and-validate loop (Phase A, A0–A11), 6. R-DECIDE — owner gate (human only), 7. Gate GA criteria (spec §17.1, tested out-of-sample per v2.1 Part 7.2) (+2 more)
 
-### Community 19 - "Community 19"
-Cohesion: 0.20
-Nodes (7): True iff candle i has strictly the highest `high` in [i-lookback, i+lookback]., swing_high_mask(), _candles(), Decimal, Unit tests for signal indicators.  Each function is tested against hand-computed, TestAtr, TestSwingMasks
+### Community 19 - "ATR Volatility Analysis"
+Cohesion: 0.13
+Nodes (24): atr(), Wilder's ATR.  Candles are dicts with Decimal keys high, low, close.      TR[0], _ratio(), ATR-state classifier reference tests (§4.2.2 / §15.1 — ADR-011).  Two layers:, Volatile baseline then a calm tail → current ATR < 0.75× baseline → COMPRESSED., Realised current-ATR / prior-20-mean ratio (current bar excluded)., A bar at EXACTLY 2.0× the prior-20 mean lands on EXTREME., A bar at EXACTLY 1.95× the prior-20 mean stays ELEVATED — does NOT trip EXTREME. (+16 more)
 
-### Community 20 - "Community 20"
+### Community 20 - "Trading Session Tests"
 Cohesion: 0.35
 Nodes (14): _bar(), _btc(), _fx(), Golden gate-fixtures for Gate 6 — Session Active (§8.1#6 · §3.3).  Pass-path  :, 13:15 UTC: NY just opened (within edge buffer) but London is mid-session → valid, _sp(), test_session_crypto_24_7(), test_session_determinism() (+6 more)
 
-### Community 21 - "Community 21"
+### Community 21 - "Rejection Geometry ADRs"
 Cohesion: 0.40
 Nodes (4): ADR-004 — Bull rejection geometry: lower-wick hammer (§8.1 mirror), Consequences, Context, Decision
 
-### Community 22 - "Community 22"
+### Community 22 - "Swing Window ADRs"
 Cohesion: 0.40
 Nodes (4): ADR-005 — Swing-window half-width (spec-silent default), Consequences, Context, Decision
 
-### Community 23 - "Community 23"
+### Community 23 - "Macro Trend ADRs"
 Cohesion: 0.40
 Nodes (4): ADR-006 — Macro-trend gate ATR timeframe = D1 (extends ADR-003), Consequences, Context, Decision
 
-### Community 26 - "Community 26"
-Cohesion: 0.20
-Nodes (10): Protocol, Executor, _gate_cell(), persist_signals(), NULL for a dependency short-circuit (ADR-002 'not evaluated'); else pass/fail., Map a SignalResult to the signal-table parameter tuple (deterministic order)., Write one signal row per result.  Returns the number of rows submitted.      Dup, to_row() (+2 more)
+### Community 26 - "Signal Persistence"
+Cohesion: 0.22
+Nodes (10): Protocol, Executor, _gate_cell(), persist_signals(), The single persistence boundary for the C2 signal engine (A5).  Every evaluated, NULL for a dependency short-circuit (ADR-002 'not evaluated'); else pass/fail., Map a SignalResult to the signal-table parameter tuple (deterministic order)., Write one signal row per result.  Returns the number of rows submitted.      Dup (+2 more)
 
-### Community 27 - "Community 27"
-Cohesion: 0.13
-Nodes (23): evaluate(), Gate 1 — Trend State Confirmed (§8.1#1 · §5.1 · §3.2 · ADR-003 · ADR-006).  Eval, Return Gate 1 result for the LAST bar in *candles_d1*.      candles_d1 must be s, evaluate(), _find_block_bear(), _find_block_bull(), Gate 3 — Liquidity Sweep Detected (§8.1#3 · §7.1.1 · §7.2).  Block (§7.1.1):   z, Return (block_low, block_high, touch_count) for the most recent valid BEAR block (+15 more)
+### Community 27 - "Core Strategy Gates"
+Cohesion: 0.14
+Nodes (16): Gate 1 — Trend State Confirmed (§8.1#1 · §5.1 · §3.2 · ADR-003 · ADR-006).  Eval, evaluate(), _find_block_bear(), _find_block_bull(), Gate 3 — Liquidity Sweep Detected (§8.1#3 · §7.1.1 · §7.2).  Block (§7.1.1):   z, Return (block_low, block_high, touch_count) for the most recent valid BEAR block, Bull mirror: block_high = highest swing-low CLOSE, block_low = lowest swing-low, Return Gate 3 result for the LAST bar of *candles_h1*. (+8 more)
 
-### Community 28 - "Community 28"
+### Community 28 - "Sweep Score ADRs"
 Cohesion: 0.33
 Nodes (5): ADR-010 — Sweep-probability score: sub-factor formulas, Consequences, Context, Decision (proposed), Why this is safe to build now (not a HALT)
 
-### Community 29 - "Community 29"
-Cohesion: 0.33
-Nodes (5): ADR-011 — ATR-state classification (COMPRESSED / NORMAL / ELEVATED / EXTREME), Consequences, Context, Decision (pinned values), Implementation
+### Community 29 - "Volatility Regime ADRs"
+Cohesion: 0.25
+Nodes (7): ADR-011 — ATR-state classification (COMPRESSED / NORMAL / ELEVATED / EXTREME), Boundary is CI-guarded (golden fixture), Consequences, Context, Decision (pinned values), Implementation, Scope — governs *all* "20-period avg" baselines, not just M6
 
-### Community 30 - "Community 30"
-Cohesion: 0.19
-Nodes (22): Enum, evaluate(), §8.1 conjunction — evaluate all 8 gates on one H1 bar → SignalResult.  §8.1: all, Evaluate the §8.1 conjunction for the LAST H1 bar.  Returns a SignalResult., Best-effort §7.3 score when a block+sweep exist; else None (ADR-007 formulas)., _sweep_score_for(), Gate 8 — Global Risk State Clear (§8.1#8 · §9.3 · §12).  M11 = TRADING_ALLOWED:, The single persistence boundary for the C2 signal engine (A5).  Every evaluated (+14 more)
-
-### Community 31 - "Community 31"
-Cohesion: 0.16
-Nodes (20): RiskTier, evaluate(), Gate 7 — Risk:Reward Minimum (§8.1#7 · §9.1 · §9.4).  Structural stop (§9.1):, Return Gate 7 result for the LAST bar of *candles_h1* (the entry candle).      r, _clamp01(), Sweep Probability Score — NOT a gate (§7.3 → §9.3 risk tier).  The 5-factor 0–10, Return the 0–100 sweep-probability score (Decimal).  ADR-007 formulas.      bloc, Map a sweep score to a §9.3 risk tier.      ATR EXTREME or a drawdown breach for (+12 more)
-
-### Community 32 - "Community 32"
-Cohesion: 0.19
-Nodes (19): _build_compressed_triangle(), _build_triangle(), _default_ic(), _default_sp(), _h4_candle(), Golden gate-fixtures for Gate 2 — Structure Confirmed (§8.1#2 · §6.1.1).  Pass-p, Ascending triangle where the current range is about 30% of the first range., Pass-path: 40 H4 bars with flat resistance + rising lows → ASCENDING_TRIANGLE. (+11 more)
-
-### Community 33 - "Community 33"
+### Community 30 - "Signal Evaluation Engine"
 Cohesion: 0.24
-Nodes (16): audit_history(), Detect and classify all H1 gaps > 2 bars.      *rows* must be sorted ascending b, _make_series(), Unit tests for audit_history and classify_gap — hand-verified reference values., ACCEPT-WHEN criterion: GBPUSD audit is generated., Counts dict must sum to gaps_found., BTC (24_7): weekend gap is classified as genuine_missing, not weekend., _row() (+8 more)
+Nodes (20): Enum, evaluate(), §8.1 conjunction — evaluate all 8 gates on one H1 bar → SignalResult.  §8.1: all, Evaluate the §8.1 conjunction for the LAST H1 bar.  Returns a SignalResult., Best-effort §7.3 score when a block+sweep exist; else None (ADR-007 formulas)., _sweep_score_for(), Shared types for the C2 signal engine., Terminal classification of an evaluated candle (A5 persistence boundary). (+12 more)
 
-### Community 34 - "Community 34"
-Cohesion: 0.22
-Nodes (16): _apex_proximity(), evaluate(), _find_declining_highs(), _find_resistance(), _find_rising_lows(), _find_support(), _pct_diff(), Gate 2 — Structure Confirmed (§8.1#2 · §6.1.1).  Evaluates the LAST bar of *cand (+8 more)
+### Community 31 - "Risk Tier Scoring"
+Cohesion: 0.29
+Nodes (10): RiskTier, _clamp01(), Sweep Probability Score — NOT a gate (§7.3 → §9.3 risk tier).  The 5-factor 0–10, Return the 0–100 sweep-probability score (Decimal).  ADR-007 formulas.      bloc, Map a sweep score to a §9.3 risk tier.      ATR EXTREME or a drawdown breach for, risk_tier_for(), score(), AtrState (+2 more)
 
-### Community 35 - "Community 35"
-Cohesion: 0.22
-Nodes (15): _make_fixture_cache(), _make_rows(), Path, CLI reconciliation tests — GBPUSD audit generated, counts reconcile.  These test, Running the full pipeline twice produces identical results., Write rows as a fixture month CSV and return the cache root., Return a minimal fixture H1 series for *instrument*: 3 bars + 1 weekend gap., Loader receives the same row count that audit saw (no rows dropped). (+7 more)
+### Community 32 - "Global Risk Tests"
+Cohesion: 0.50
+Nodes (8): _ic(), Golden gate-fixtures for Gate 8 — Global Risk State Clear (§8.1#8 · §9.3 · §12)., _sp(), test_gate8_atr_extreme_no_trade(), test_gate8_determinism(), test_gate8_elevated_still_passes(), test_gate8_stub_pass_normal(), test_gate8_trading_halted()
 
-### Community 36 - "Community 36"
-Cohesion: 0.18
-Nodes (13): _csv_to_rows(), _fetch_live(), fetch_history — cached H1 data retrieval.  Raw downloads are cached to data/raw/, Call the appropriate live source. Import is deferred so tests never hit it., _rows_to_csv(), _decimal(), fetch_binance_month(), _fetch_dukascopy_hour() (+5 more)
+### Community 33 - "Session Validation"
+Cohesion: 0.47
+Nodes (5): evaluate(), _fx_bands(), Gate 6 — Session Active (§8.1#6 · §3.3).  Session VALID per §3.3 (all times UTC), Return Gate 6 result for a single H1 *candle* (uses candle['ts']).      *side* i, datetime
 
-### Community 37 - "Community 37"
+### Community 34 - "Market Structure Analysis"
+Cohesion: 0.14
+Nodes (21): _apex_proximity(), evaluate(), _find_declining_highs(), _find_resistance(), _find_rising_lows(), _find_support(), _pct_diff(), Gate 2 — Structure Confirmed (§8.1#2 · §6.1.1).  Evaluates the LAST bar of *cand (+13 more)
+
+### Community 37 - "Rejection Candle Tests"
 Cohesion: 0.33
 Nodes (14): _bar(), _ic(), Golden gate-fixtures for Gate 5 — Rejection Candle Confirmed (§8.1#5 · §4.3 · AD, Upper wick 30 pips = 3×body, lower wick 1 pip, bearish, closes below sweep high., Bearish engulfing with a large upper wick and a NON-tiny lower wick.      Lower, ADR-004 mirror: lower wick ≥2×body, tiny upper wick, bullish, closes above sweep, _sp(), test_gate5_bear_rejection_pass() (+6 more)
 
-### Community 38 - "Community 38"
-Cohesion: 0.24
-Nodes (8): AuditReport, GapRecord, Write an AuditReport to *audit_dir*/<instrument>_audit.json., write_audit(), CachedSeries, LSB data-acquisition subsystem — public re-exports., Path, datetime
-
-### Community 39 - "Community 39"
+### Community 39 - "ATR State Classification"
 Cohesion: 0.36
 Nodes (8): classify(), ATR-state classifier (§4.2.2 / §15.1 — ADR-011, Accepted).  Volatility regime fr, Map an ATR/baseline ratio to a regime (the pure threshold rule)., Classify the volatility regime at the LAST H1 bar.  Defaults to NORMAL on     in, state_for_ratio(), AtrState, Decimal, StrategyParams
 
-### Community 40 - "Community 40"
-Cohesion: 0.36
-Nodes (7): cmd_fetch_audit_load(), _default_path(), main(), CLI entry point: fetch → audit → load for a single instrument.  Usage:     pytho, Resolve *relative* against the repo root (3 levels up from this file)., Namespace, Path
-
-### Community 41 - "Community 41"
-Cohesion: 0.43
-Nodes (6): _anatomy(), evaluate(), Gate 5 — Rejection Candle Confirmed (§8.1#5 · §4.3 · ADR-004).  BEAR (short) set, Return (body, upper_wick, lower_wick) as non-negative Decimals., Return Gate 5 result for the LAST bar of *candles_h1*.      sweep_high / sweep_l, Decimal
-
 ## Knowledge Gaps
-- **57 isolated node(s):** `lsb`, `Path`, `Namespace`, `LSB — Governing Instructions`, `Current session pointer` (+52 more)
+- **59 isolated node(s):** `lsb`, `Path`, `Namespace`, `LSB — Governing Instructions`, `Current session pointer` (+54 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `load_instrument()` connect `Config Hashing & Tests` to `Config Loader & Models`, `Community 37`, `Governing Specs & Rules`, `Community 40`, `Community 15`, `Community 20`?**
-  _High betweenness centrality (0.270) - this node is a cross-community bridge._
-- **Why does `cmd_fetch_audit_load()` connect `Community 40` to `Config Hashing & Tests`, `Community 33`, `Phase-A Data & Modules`, `Community 38`, `Community 12`, `Community 13`?**
-  _High betweenness centrality (0.248) - this node is a cross-community bridge._
-- **Why does `InstrumentConfig` connect `Config Loader & Models` to `Config Hashing & Tests`, `Community 34`, `Community 41`, `Community 16`, `Community 27`, `Community 30`, `Community 31`?**
-  _High betweenness centrality (0.157) - this node is a cross-community bridge._
-- **Are the 64 inferred relationships involving `D()` (e.g. with `_series()` and `test_classify_compressed()`) actually correct?**
-  _`D()` has 64 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `load_instrument()` connect `Configuration Subsystem` to `Global Risk Tests`, `CLI and Data Fetching`, `Strategy Constants and Gates`, `Rejection Candle Tests`, `Liquidity Sweep Logic`, `Signal Conjunction Tests`, `Trading Session Tests`?**
+  _High betweenness centrality (0.268) - this node is a cross-community bridge._
+- **Why does `cmd_fetch_audit_load()` connect `CLI and Data Fetching` to `Configuration Subsystem`, `Timeframe Resampling`, `Gap Detection and Audit`, `Database Persistence`?**
+  _High betweenness centrality (0.246) - this node is a cross-community bridge._
+- **Why does `InstrumentConfig` connect `Strategy Constants and Gates` to `Configuration Subsystem`, `Session Validation`, `Market Structure Analysis`, `Liquidity Sweep Logic`, `Risk and Reward Gates`, `Core Strategy Gates`, `Signal Evaluation Engine`?**
+  _High betweenness centrality (0.154) - this node is a cross-community bridge._
+- **Are the 67 inferred relationships involving `D()` (e.g. with `_ratio()` and `_series()`) actually correct?**
+  _`D()` has 67 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 67 inferred relationships involving `StrategyParams` (e.g. with `RiskTier` and `SpecConfig`) actually correct?**
   _`StrategyParams` has 67 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 49 inferred relationships involving `GateResult` (e.g. with `Executor` and `AtrState`) actually correct?**

@@ -49,6 +49,39 @@ Bands (upper boundary inclusive):
 open ("20-period SMA"); excluding the current bar makes a genuine spike read as a
 deviation rather than being damped by its own inclusion. Recorded here explicitly.
 
+Why it is not cosmetic: on a clean 2× spike, including the current bar pulls its
+own baseline up by 1/20, so the realised ratio reads ≈1.9× — **ELEVATED instead
+of EXTREME**. EXTREME is not a label; it is a hard trading halt (§4.2.2 / §9.3
+risk tier 0%) and the §11 in-trade full-exit trigger. Inclusion would therefore
+make a genuine 2× spike *fail to halt* — exactly backwards for a volatility
+safety gate. Excluding the current bar makes the 1.25 / 2.0 multiples behave as
+the true deviation thresholds they are meant to be.
+
+### Scope — governs *all* "20-period avg" baselines, not just M6
+
+This exclude-current convention is **not local to the M6 classifier**. The v2.0
+spec reuses the same "20-period average" baseline in at least two other places,
+and they must read it identically or a single bar could be EXTREME to the state
+engine yet not to the exit rule — a silent inconsistency:
+
+- **§11 — in-trade full-exit:** `ATR > 20-period avg × 2.0`. Same baseline, same
+  exclude-current convention. (Phase B; **LOCKED** — not yet built. This ADR
+  binds the convention forward so it is built correct, not retrofitted.)
+- **§13 — spread baseline:** `2.0× the 20-period rolling average spread` (and the
+  `3× normal baseline` rule). Same exclude-current convention on the rolling
+  average. (Phase B; **LOCKED**.)
+
+**ADR-011 governs every 20-period-avg baseline in the system.** Any Phase-B code
+that computes one excludes the current bar, period.
+
+### Boundary is CI-guarded (golden fixture)
+
+The 2.0 (EXTREME) edge is pinned by a constructed-bar fixture in
+`tests/test_atr_state.py` so it cannot drift: with flat closes and constant range
+C, ATR(14) == C across the baseline window; a final bar with TR == 15C gives
+current ATR == 2C → ratio **exactly 2.0 → EXTREME**, and TR == 14.3C gives ratio
+**exactly 1.95 → ELEVATED** (not EXTREME). Both ratios are exact in Decimal.
+
 ### Implementation
 
 - `src/lsb/signal/atr_state.py`: `state_for_ratio(ratio, sp)` (pure threshold rule)
