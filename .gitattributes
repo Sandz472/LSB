@@ -1,0 +1,11 @@
+# Sampu repo line-ending policy - canon: sampu-codex standards/templates/.gitattributes
+# (decided 2026-08-21, after the HP Victus migration: clones made under core.autocrlf=true then
+# restored to =input left 2,862 files CRLF in the tree and 2,858 phantom-modified index entries).
+# Line endings belong to the repo, not the machine: with this file, git ignores core.autocrlf.
+* text=auto eol=lf
+
+# PowerShell 5.1 misparses LF-only here-strings with cascading, mislocated errors; cmd/bat need
+# CRLF for labels and multi-line constructs. Keep Windows script types CRLF on checkout.
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
