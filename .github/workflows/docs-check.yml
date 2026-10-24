@@ -1,0 +1,17 @@
+# Canon copy: sampu-codex/standards/agents-md/docs-check.yml -> .github/workflows/docs-check.yml
+# Fails when AGENTS.md lies: dead paths, missing npm scripts, missing shim, canon block or DNA copy.
+name: docs-check
+on:
+  pull_request:
+  push:
+    branches: [main, master, develop]
+jobs:
+  docs-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node .github/docs-check.mjs
