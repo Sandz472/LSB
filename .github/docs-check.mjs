@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-disable */
+// Synced canon file: repo linters skip it (eslint above; repos running `prettier --check` list it in .prettierignore).
 // docs-check: fails when a repo's agent map lies. Canon copy lives in
 // sampu-codex/standards/agents-md/; each repo carries it at .github/docs-check.mjs (CI: docs-check.yml).
 // Checks, from the repo root:
