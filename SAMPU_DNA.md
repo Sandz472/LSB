@@ -6,16 +6,17 @@
 <!--
 SOURCE OF TRUTH. This file lives in the sampu-codex repo and is the ONLY copy
 you edit. Every product repo carries a *committed copy* of it at its root,
-pushed here by the `sync-dna` skill and imported via a relative line:
+imported via a relative line:
 
     @SAMPU_DNA.md
 
 That relative import resolves anywhere the repo goes — laptop, CI, cloud agent,
-teammate, fresh clone. Do not hand-edit the copies; edit THIS file, then run:
+teammate, fresh clone. Do not hand-edit the copies; edit THIS file, then copy
+it by hand into each product repo's root (the `sync-dna` skill that automated
+this was removed in the 2026-07-28 global skill-bundle cleanup):
 
-    sync-dna           (current repo)   or   sync-dna <path-to-repo>
+    cp SAMPU_DNA.md "<path-to-repo>/SAMPU_DNA.md"
 
-to re-push the DNA into a product and refresh its import line.
 Run /memory in a target repo to confirm it loaded.
 -->
 
@@ -57,7 +58,7 @@ Run /memory in a target repo to confirm it loaded.
 - **Solve a real, felt problem.** If you cannot name the user and the pain in one sentence, do not build it.
 - **Speed and finishing both matter.** Ship fast and improve in public — but "it runs" is not "it's done."
 - **Compound, never repeat.** Reuse what exists; never solve the same thing twice. Write what you learn back into the repo / codex so the company gets structurally smarter.
-- **Every product is navigable.** Each repo carries a graphify knowledge graph (`graphify-out/`), kept correctly labelled on every commit, so any agent can map the system before it changes it. Code an agent cannot map, it cannot safely change. The graph build is run deliberately (it costs reasoning) — it is never forced automatically.
+- **Every product is navigable.** Any agent should be able to map the system — `GLOSSARY.md`, ADRs, and clear naming — before it changes it; code an agent cannot map, it cannot safely change. (Repos with a pre-existing graphify knowledge graph in `graphify-out/` may keep reading it, but graphify was removed from the global skill tier in the 2026-07-28 cleanup — it is no longer this DNA clause's mechanism company-wide, and an existing graph can no longer be rebuilt.)
 - **Tell the truth about reality** — what works, what failed, where we are weak — fast and without flinching.
 - **Sovereignty.** Keep IP, core data, and leverage with Sampu Dynamics and the people we serve. Protect user data as if it were our own most private information.
 - **Dignity.** Meet users in their language, on their device, without condescension.
